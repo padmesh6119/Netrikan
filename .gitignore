@@ -1,0 +1,11 @@
+data/cic-ids2018/
+data/processed/
+models/
+*.pdf
+*.xlsx
+*.7z
+*.7CcE4fEA
+out.txt
+__pycache__/
+*.pyc
+.env
