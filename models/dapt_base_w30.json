@@ -1,0 +1,63 @@
+{
+  "tag": "dapt_base_w30",
+  "model": "base_w30.pt",
+  "data": "sih-base-w30",
+  "window": 30,
+  "features": 24,
+  "n_windows": 86391,
+  "roc_auc": 0.697396521418618,
+  "pr_auc": 0.35260951650019207,
+  "tp": 18314,
+  "fp": 29739,
+  "fn": 4665,
+  "tn": 33673,
+  "binary_report": {
+    "Benign": {
+      "precision": 0.8783191611455997,
+      "recall": 0.5310193654197943,
+      "f1-score": 0.6618771498771499,
+      "support": 63412.0
+    },
+    "Attack": {
+      "precision": 0.38112084573283667,
+      "recall": 0.7969885547673963,
+      "f1-score": 0.5156549160941547,
+      "support": 22979.0
+    },
+    "accuracy": 0.6017640726464563,
+    "macro avg": {
+      "precision": 0.6297200034392182,
+      "recall": 0.6640039600935953,
+      "f1-score": 0.5887660329856523,
+      "support": 86391.0
+    },
+    "weighted avg": {
+      "precision": 0.7460701989866957,
+      "recall": 0.6017640726464563,
+      "f1-score": 0.6229837384095265,
+      "support": 86391.0
+    }
+  },
+  "per_phase": {
+    "Benign": {
+      "n": 63412,
+      "rate": 0.5310193654197943
+    },
+    "Reconnaissance": {
+      "n": 11909,
+      "rate": 0.7974641027794105
+    },
+    "Establish Foothold": {
+      "n": 8604,
+      "rate": 0.7560437006043701
+    },
+    "Lateral Movement": {
+      "n": 2451,
+      "rate": 0.9420644634842922
+    },
+    "Data Exfiltration": {
+      "n": 15,
+      "rate": 0.2
+    }
+  }
+}

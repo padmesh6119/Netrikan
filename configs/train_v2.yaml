@@ -1,0 +1,10 @@
+window: 10
+epochs: 25
+patience: 5
+batch: 1024
+samples: 1200000
+horizon: 0
+state_weight: 0.3
+seed: 42
+n_blocks: 500
+val_frac: 0.2

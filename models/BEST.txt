@@ -1,0 +1,1 @@
+ports_w30 macroF1=0.9249 infiltration=0.755

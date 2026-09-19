@@ -1,0 +1,100 @@
+{
+  "model": "lstm_world_model.pt",
+  "window": 10,
+  "features": 24,
+  "segment": {
+    "tag": "segment",
+    "binary": {
+      "n": 86591,
+      "tp": 19279,
+      "fp": 26456,
+      "fn": 3700,
+      "tn": 37156,
+      "recall": 0.839,
+      "precision": 0.4215,
+      "fpr": 0.4159,
+      "roc_auc": 0.7306
+    },
+    "stages": {
+      "Benign": {
+        "n": 63612,
+        "correct_benign": 0.5841
+      },
+      "Reconnaissance": {
+        "n": 11909,
+        "attack_detected": 0.7856
+      },
+      "Establish Foothold": {
+        "n": 8604,
+        "attack_detected": 0.8877
+      },
+      "Lateral Movement": {
+        "n": 2451,
+        "attack_detected": 0.931
+      },
+      "Data Exfiltration": {
+        "n": 15,
+        "attack_detected": 0.2
+      }
+    },
+    "lateral": {
+      "n_windows": 2451,
+      "detected": 2282,
+      "recall": 0.931,
+      "as_infiltration": 2282,
+      "as_benign": 169
+    }
+  },
+  "per_host": {
+    "tag": "per_host",
+    "binary": {
+      "n": 82338,
+      "tp": 19317,
+      "fp": 29709,
+      "fn": 3517,
+      "tn": 29795,
+      "recall": 0.846,
+      "precision": 0.394,
+      "fpr": 0.4993,
+      "roc_auc": 0.7034
+    },
+    "stages": {
+      "Benign": {
+        "n": 59504,
+        "correct_benign": 0.5007
+      },
+      "Reconnaissance": {
+        "n": 11869,
+        "attack_detected": 0.775
+      },
+      "Establish Foothold": {
+        "n": 8567,
+        "attack_detected": 0.9127
+      },
+      "Lateral Movement": {
+        "n": 2397,
+        "attack_detected": 0.9587
+      },
+      "Data Exfiltration": {
+        "n": 1,
+        "attack_detected": 1.0
+      }
+    },
+    "lateral": {
+      "n_windows": 2397,
+      "detected": 2298,
+      "recall": 0.9587,
+      "as_infiltration": 2296,
+      "as_benign": 99
+    }
+  },
+  "lateral_hosts": {
+    "192.168.3.29": 2292,
+    "209.147.138.38": 81,
+    "192.168.3.34": 42,
+    "206.207.50.50": 22,
+    "209.147.138.11": 6,
+    "209.147.138.211": 4,
+    "72.201.228.135": 4
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "tag": "baseline_ports_w10",
+  "data": "/storage/sih-ports-w10",
+  "window": 10,
+  "results": {
+    "last": {
+      "macro_f1": 0.6072547520448452,
+      "per_class": {
+        "Benign": 0.7523792242202149,
+        "InitialAccess": 0.7380924794341819,
+        "DoS": 0.49367545155967224,
+        "Infiltration": 0.0773398691738938,
+        "Botnet": 0.9747867358362636
+      },
+      "n_features": 36
+    },
+    "flat": {
+      "macro_f1": 0.7414525607688923,
+      "per_class": {
+        "Benign": 0.857652906716385,
+        "InitialAccess": 0.9548021214830783,
+        "DoS": 0.7677641613632777,
+        "Infiltration": 0.14006766899378112,
+        "Botnet": 0.9869759452879395
+      },
+      "n_features": 360
+    }
+  },
+  "minutes": 4.3
+}

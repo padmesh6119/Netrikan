@@ -1,0 +1,47 @@
+# ---- large datasets: download separately, see README ----
+data/cic-ids2018/
+data/dapt2020/
+data/processed
+/storage/
+*.7CcE4fEA
+
+# ---- model checkpoints: only the two we ship are tracked (see !rules below) ----
+models/*
+!models/lstm_world_model.pt
+!models/base_w30.pt
+!models/scaler.pkl
+!models/scaler_w30.pkl
+!models/*.json
+!models/BEST.txt
+
+# ---- logs and scratch ----
+*.log
+out.txt
+models/STATUS.txt
+
+# ---- personal / non-project files ----
+*.pdf
+*.xlsx
+*.pptx
+resume*
+SIH2026_SCHEDULE*
+SIH_202*
+
+# ---- python ----
+__pycache__/
+*.pyc
+.env
+.venv/
+
+# presentation / idea files
+SIH*.pdf
+SIH*.pptx
+SIH*.md
+AI_HANDOFF.md
+COMPETITIVE_ANALYSIS.md
+RESUME.md
+*.bak
+
+# large capture files — too big for GitHub (>100MB)
+demo_attack_lab/attack_capture.pcap
+*.pcapng

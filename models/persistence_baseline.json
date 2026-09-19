@@ -1,0 +1,72 @@
+[
+  {
+    "k": 0,
+    "persistence_macro_f1": 0.906004,
+    "lstm_macro_f1": 0.8889,
+    "gap": -0.017104,
+    "change_rate": 0.092528,
+    "per_class": {
+      "Benign": 0.937911,
+      "InitialAccess": 0.994621,
+      "DoS": 0.621048,
+      "Infiltration": 0.999978,
+      "Botnet": 0.97646
+    }
+  },
+  {
+    "k": 30,
+    "persistence_macro_f1": 0.918807,
+    "lstm_macro_f1": 0.8704,
+    "gap": -0.048407,
+    "change_rate": 0.079131,
+    "per_class": {
+      "Benign": 0.946901,
+      "InitialAccess": 0.994095,
+      "DoS": 0.679045,
+      "Infiltration": 0.999329,
+      "Botnet": 0.974667
+    }
+  },
+  {
+    "k": 90,
+    "persistence_macro_f1": 0.914389,
+    "lstm_macro_f1": 0.8661,
+    "gap": -0.048289,
+    "change_rate": 0.08313,
+    "per_class": {
+      "Benign": 0.944217,
+      "InitialAccess": 0.993672,
+      "DoS": 0.663427,
+      "Infiltration": 0.99803,
+      "Botnet": 0.972599
+    }
+  },
+  {
+    "k": 180,
+    "persistence_macro_f1": 0.912114,
+    "lstm_macro_f1": 0.8621,
+    "gap": -0.050014,
+    "change_rate": 0.084711,
+    "per_class": {
+      "Benign": 0.943156,
+      "InitialAccess": 0.993159,
+      "DoS": 0.658643,
+      "Infiltration": 0.996082,
+      "Botnet": 0.969531
+    }
+  },
+  {
+    "k": 360,
+    "persistence_macro_f1": 0.909194,
+    "lstm_macro_f1": 0.8622,
+    "gap": -0.046994,
+    "change_rate": 0.086223,
+    "per_class": {
+      "Benign": 0.942143,
+      "InitialAccess": 0.99222,
+      "DoS": 0.655996,
+      "Infiltration": 0.992186,
+      "Botnet": 0.963423
+    }
+  }
+]
