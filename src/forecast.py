@@ -52,7 +52,7 @@ TRANSITION = _build_transition()
 CHAIN_POS = {BENIGN: 0, INITIAL_ACCESS: 1, LATERAL: 2, C2: 3, EXFIL: 4, DOS: 99}
 
 DEFAULT_FLOW_INTERVAL = 1.2   # seconds per flow when timestamps absent
-HORIZON_SECONDS = 60
+HORIZON_SECONDS = 900
 MAX_STEPS = 400
 
 # DAPT's campaign advanced roughly one phase per day, so a 60s horizon is right
@@ -135,7 +135,8 @@ def _phrase(seq, current_stage):
 
 
 def forecast(stage_probs: np.ndarray, flow_interval: float = DEFAULT_FLOW_INTERVAL,
-             window: int = 10, horizon_seconds: float = HORIZON_SECONDS) -> dict:
+             window: int = 10, horizon_seconds: float = HORIZON_SECONDS,
+             projections=None) -> dict:
     """
     stage_probs: (N_STAGES,) current distribution from the fusion layer.
     Returns the predicted trajectory over `horizon_seconds`, confidence, and ETA.
@@ -147,7 +148,11 @@ def forecast(stage_probs: np.ndarray, flow_interval: float = DEFAULT_FLOW_INTERV
 
     current_stage = int(np.argmax(p))
     steps = _steps_for_horizon(flow_interval, window, horizon_seconds)
-    projections = project(p, steps)
+    if projections is None:
+        projections = project(p, steps)
+    else:
+        projections = [np.asarray(pr, dtype=np.float64) for pr in projections]
+        steps = len(projections)
     peaks = _peaks(projections)
     end = projections[-1]
 

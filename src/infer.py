@@ -25,13 +25,14 @@ FEATURES = [
     'Pkt Len Var', 'Active Mean', 'Idle Mean',
 ]
 
-WINDOW = 10
+WINDOW = 30
 _ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-MODEL_PATH = os.path.join(_ROOT, 'models', 'lstm_world_model.pt')
+MODEL_PATH = os.path.join(_ROOT, 'models', 'base_w30.pt')
+WORLD_PATH = os.path.join(_ROOT, 'models', 'world_w30.pt')
 
 # Prefer the copy shipped in models/ so a fresh clone works without the large
 # processed dataset; fall back to the build directory when it is present.
-_S1 = os.path.join(_ROOT, 'models', 'scaler.pkl')
+_S1 = os.path.join(_ROOT, 'models', 'scaler_w30.pkl')
 _S2 = os.path.join(_ROOT, 'data', 'processed', 'scaler.pkl')
 SCALER_PATH = _S1 if os.path.exists(_S1) else _S2
 
@@ -40,6 +41,7 @@ SCALER_PATH = _S1 if os.path.exists(_S1) else _S2
 MODEL_WEIGHT = 0.30
 
 _model = None
+_world = None
 _scaler = None
 _device = torch.device('cpu')
 
@@ -59,6 +61,26 @@ def _load_model():
         m.eval()
         _model = m
     return _model
+
+
+def _load_world():
+    global _world
+    if _world is None and os.path.exists(WORLD_PATH):
+        m = WorldModel()
+        m.load_state_dict(torch.load(WORLD_PATH, map_location=_device,
+                                     weights_only=True), strict=False)
+        m.eval()
+        _world = m
+    return _world
+
+
+def _rollout_to_chain(rollout_stages):
+    n, steps, _ = rollout_stages.shape
+    chain = np.zeros((n, steps, N_STAGES))
+    for mi, ci in MODEL_TO_CHAIN.items():
+        chain[:, :, ci] = rollout_stages[:, :, mi]
+    chain /= chain.sum(axis=2, keepdims=True) + 1e-12
+    return chain
 
 
 def _load_scaler():
@@ -132,6 +154,12 @@ def analyze(df: pd.DataFrame, horizon_seconds: float = fc.HORIZON_SECONDS) -> di
     attribution = (t2.grad.detach().numpy() * X).mean(axis=1)
 
     interval = _flow_interval(df)
+    steps = fc._steps_for_horizon(interval, WINDOW, horizon_seconds)
+    world = _load_world()
+    rollout_chain = None
+    if world is not None:
+        _, rs = world.rollout(t, steps)
+        rollout_chain = _rollout_to_chain(rs.numpy())
 
     windows = []
     stage_prob_series = []
@@ -142,7 +170,8 @@ def analyze(df: pd.DataFrame, horizon_seconds: float = fc.HORIZON_SECONDS) -> di
                if pkt_raw is not None else None)
         s = sig.detect(rawwin, pw, pkt)
         fused = _fuse(model_probs[i], s)
-        f = fc.forecast(fused, interval, WINDOW, horizon_seconds)
+        projs = list(rollout_chain[i]) if rollout_chain is not None else None
+        f = fc.forecast(fused, interval, WINDOW, horizon_seconds, projections=projs)
         stage_prob_series.append(fused)
         windows.append({
             "idx": i,

@@ -1,0 +1,26 @@
+[
+  {
+    "tag": "in_distribution",
+    "label": "base_w30 held-out val",
+    "hit_rate": 0.9628,
+    "false_alarm_rate": 0.03,
+    "sedi": 0.9801,
+    "peirce_skill_score": 0.9328
+  },
+  {
+    "tag": "segment",
+    "label": "DAPT 2020 cross-dataset",
+    "hit_rate": 0.839,
+    "false_alarm_rate": 0.4159,
+    "sedi": 0.5825,
+    "peirce_skill_score": 0.4231
+  },
+  {
+    "tag": "per_host",
+    "label": "DAPT 2020 per-host windowing",
+    "hit_rate": 0.846,
+    "false_alarm_rate": 0.4993,
+    "sedi": 0.4983,
+    "peirce_skill_score": 0.3467
+  }
+]
