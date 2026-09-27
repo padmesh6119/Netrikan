@@ -1,0 +1,306 @@
+{
+  "data": "/tmp/netrikan-cic-full-w30",
+  "eval_set": "DAPT 2020 (unseen by every member)",
+  "why_not_heldout_day": "Only lodo_fN never saw day N; the other six trained on it, so a 7-member ensemble scored on day N would leak. Restricting to clean members leaves one, which is just that fold's own result. A cross-day LODO ensemble is not possible with these checkpoints.",
+  "n_windows": 86391,
+  "n_attack": 22979,
+  "members": [
+    "lodo_f0_w30.pt",
+    "lodo_f1_w30.pt",
+    "lodo_f2_w30.pt",
+    "lodo_f3_w30.pt",
+    "lodo_f4_w30.pt",
+    "lodo_f5_w30.pt",
+    "lodo_f6_w30.pt"
+  ],
+  "per_member": {
+    "lodo_f0_w30.pt": {
+      "breach_roc_auc": 0.8245,
+      "breach_pr_auc": 0.5596,
+      "onset_auc": {
+        "k1": 0.6175,
+        "k5": 0.6053,
+        "k15": 0.6327,
+        "k30": 0.6007
+      },
+      "at_fpr05_persist3": {
+        "threshold": 0.74444,
+        "window_level": {
+          "tp": 4741,
+          "fp": 3172,
+          "fn": 18238,
+          "tn": 60240,
+          "recall": 0.2063,
+          "fpr": 0.05,
+          "precision": 0.5991,
+          "f1": 0.3069,
+          "sedi": 0.3288
+        },
+        "bucket": "1h",
+        "attack_cells": 63,
+        "benign_cells": 2273,
+        "attack_cells_detected": 13,
+        "entity_recall": 0.2063,
+        "false_alarm_cells": 29,
+        "false_alarm_rate_per_benign_cell": 0.0128
+      }
+    },
+    "lodo_f1_w30.pt": {
+      "breach_roc_auc": 0.8026,
+      "breach_pr_auc": 0.4854,
+      "onset_auc": {
+        "k1": 0.6339,
+        "k5": 0.6471,
+        "k15": 0.6551,
+        "k30": 0.6456
+      },
+      "at_fpr05_persist3": {
+        "threshold": 0.94408,
+        "window_level": {
+          "tp": 1444,
+          "fp": 3173,
+          "fn": 21535,
+          "tn": 60239,
+          "recall": 0.0628,
+          "fpr": 0.05,
+          "precision": 0.3128,
+          "f1": 0.1047,
+          "sedi": 0.0411
+        },
+        "bucket": "1h",
+        "attack_cells": 63,
+        "benign_cells": 2273,
+        "attack_cells_detected": 6,
+        "entity_recall": 0.0952,
+        "false_alarm_cells": 4,
+        "false_alarm_rate_per_benign_cell": 0.0018
+      }
+    },
+    "lodo_f2_w30.pt": {
+      "breach_roc_auc": 0.5956,
+      "breach_pr_auc": 0.3165,
+      "onset_auc": {
+        "k1": 0.5302,
+        "k5": 0.5312,
+        "k15": 0.5809,
+        "k30": 0.573
+      },
+      "at_fpr05_persist3": {
+        "threshold": 0.75652,
+        "window_level": {
+          "tp": 704,
+          "fp": 3173,
+          "fn": 22275,
+          "tn": 60239,
+          "recall": 0.0306,
+          "fpr": 0.05,
+          "precision": 0.1816,
+          "f1": 0.0524,
+          "sedi": -0.0778
+        },
+        "bucket": "1h",
+        "attack_cells": 63,
+        "benign_cells": 2273,
+        "attack_cells_detected": 4,
+        "entity_recall": 0.0635,
+        "false_alarm_cells": 16,
+        "false_alarm_rate_per_benign_cell": 0.007
+      }
+    },
+    "lodo_f3_w30.pt": {
+      "breach_roc_auc": 0.7948,
+      "breach_pr_auc": 0.4798,
+      "onset_auc": {
+        "k1": 0.6133,
+        "k5": 0.6396,
+        "k15": 0.6497,
+        "k30": 0.6031
+      },
+      "at_fpr05_persist3": {
+        "threshold": 0.77784,
+        "window_level": {
+          "tp": 6232,
+          "fp": 3173,
+          "fn": 16747,
+          "tn": 60239,
+          "recall": 0.2712,
+          "fpr": 0.05,
+          "precision": 0.6626,
+          "f1": 0.3849,
+          "sedi": 0.4189
+        },
+        "bucket": "1h",
+        "attack_cells": 63,
+        "benign_cells": 2273,
+        "attack_cells_detected": 16,
+        "entity_recall": 0.254,
+        "false_alarm_cells": 40,
+        "false_alarm_rate_per_benign_cell": 0.0176
+      }
+    },
+    "lodo_f4_w30.pt": {
+      "breach_roc_auc": 0.7046,
+      "breach_pr_auc": 0.3949,
+      "onset_auc": {
+        "k1": 0.5806,
+        "k5": 0.5939,
+        "k15": 0.6176,
+        "k30": 0.5878
+      },
+      "at_fpr05_persist3": {
+        "threshold": 0.92386,
+        "window_level": {
+          "tp": 615,
+          "fp": 3171,
+          "fn": 22364,
+          "tn": 60241,
+          "recall": 0.0268,
+          "fpr": 0.05,
+          "precision": 0.1624,
+          "f1": 0.046,
+          "sedi": -0.097
+        },
+        "bucket": "1h",
+        "attack_cells": 63,
+        "benign_cells": 2273,
+        "attack_cells_detected": 8,
+        "entity_recall": 0.127,
+        "false_alarm_cells": 6,
+        "false_alarm_rate_per_benign_cell": 0.0026
+      }
+    },
+    "lodo_f5_w30.pt": {
+      "breach_roc_auc": 0.7922,
+      "breach_pr_auc": 0.4934,
+      "onset_auc": {
+        "k1": 0.5891,
+        "k5": 0.6272,
+        "k15": 0.7046,
+        "k30": 0.6629
+      },
+      "at_fpr05_persist3": {
+        "threshold": 0.97706,
+        "window_level": {
+          "tp": 2820,
+          "fp": 3171,
+          "fn": 20159,
+          "tn": 60241,
+          "recall": 0.1227,
+          "fpr": 0.05,
+          "precision": 0.4707,
+          "f1": 0.1947,
+          "sedi": 0.1853
+        },
+        "bucket": "1h",
+        "attack_cells": 63,
+        "benign_cells": 2273,
+        "attack_cells_detected": 11,
+        "entity_recall": 0.1746,
+        "false_alarm_cells": 14,
+        "false_alarm_rate_per_benign_cell": 0.0062
+      }
+    },
+    "lodo_f6_w30.pt": {
+      "breach_roc_auc": 0.7294,
+      "breach_pr_auc": 0.4319,
+      "onset_auc": {
+        "k1": 0.6009,
+        "k5": 0.6417,
+        "k15": 0.6383,
+        "k30": 0.6241
+      },
+      "at_fpr05_persist3": {
+        "threshold": 0.78885,
+        "window_level": {
+          "tp": 3167,
+          "fp": 3171,
+          "fn": 19812,
+          "tn": 60241,
+          "recall": 0.1378,
+          "fpr": 0.05,
+          "precision": 0.4997,
+          "f1": 0.2161,
+          "sedi": 0.2146
+        },
+        "bucket": "1h",
+        "attack_cells": 63,
+        "benign_cells": 2273,
+        "attack_cells_detected": 15,
+        "entity_recall": 0.2381,
+        "false_alarm_cells": 37,
+        "false_alarm_rate_per_benign_cell": 0.0163
+      }
+    }
+  },
+  "baseline": {
+    "checkpoint": "cic_v2_w30.pt",
+    "breach_roc_auc": 0.6936,
+    "breach_pr_auc": 0.3699,
+    "onset_auc": {
+      "k1": 0.6286,
+      "k5": 0.6664,
+      "k15": 0.7047,
+      "k30": 0.6792
+    },
+    "at_fpr05_persist3": {
+      "threshold": 0.85878,
+      "window_level": {
+        "tp": 1613,
+        "fp": 3173,
+        "fn": 21366,
+        "tn": 60239,
+        "recall": 0.0702,
+        "fpr": 0.05,
+        "precision": 0.337,
+        "f1": 0.1162,
+        "sedi": 0.0623
+      },
+      "bucket": "1h",
+      "attack_cells": 63,
+      "benign_cells": 2273,
+      "attack_cells_detected": 16,
+      "entity_recall": 0.254,
+      "false_alarm_cells": 42,
+      "false_alarm_rate_per_benign_cell": 0.0185
+    }
+  },
+  "ensemble": {
+    "breach_roc_auc": 0.8118,
+    "breach_pr_auc": 0.4998,
+    "onset_auc": {
+      "k1": 0.6216,
+      "k5": 0.6483,
+      "k15": 0.6857,
+      "k30": 0.6477
+    },
+    "at_fpr05_persist3": {
+      "threshold": 0.83918,
+      "window_level": {
+        "tp": 1391,
+        "fp": 3173,
+        "fn": 21588,
+        "tn": 60239,
+        "recall": 0.0605,
+        "fpr": 0.05,
+        "precision": 0.3048,
+        "f1": 0.101,
+        "sedi": 0.0341
+      },
+      "bucket": "1h",
+      "attack_cells": 63,
+      "benign_cells": 2273,
+      "attack_cells_detected": 5,
+      "entity_recall": 0.0794,
+      "false_alarm_cells": 5,
+      "false_alarm_rate_per_benign_cell": 0.0022
+    }
+  },
+  "summary": {
+    "baseline_breach_auc": 0.6936,
+    "member_breach_auc_mean": 0.7491,
+    "member_breach_auc_best": 0.8245,
+    "ensemble_breach_auc": 0.8118,
+    "ensemble_gain_over_baseline": 0.1182,
+    "ensemble_gain_over_best_member": -0.0127
+  }
+}

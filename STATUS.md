@@ -236,6 +236,52 @@ of attack host-hours at a 1.85% false-alarm rate, or 70% at an unusable 50%. The
 improves how the result is *reported and deployed*, not the underlying discrimination.
 Raising ROC-AUC 0.679 needs a better model, not a better threshold.
 
+**Improvement item (b) — LODO ensemble on DAPT**
+(`models/lodo_ensemble_dapt.json`, `bench/lodo_ensemble.py`, 2026-09-27).
+
+**Why DAPT and not a held-out day.** Only `lodo_fN` never saw day N; the other six
+trained on it. A 7-member ensemble scored on day N would let six members predict data
+they trained on. Restricting to clean members leaves exactly one — that fold's own
+number. **A cross-day LODO ensemble is not possible with these checkpoints.** DAPT is
+clean for all seven (every member trained on CIC only).
+
+| model | breach AUC | PR-AUC | recall@FPR5% | SEDI | entity recall | FA/benign host-hour |
+|---|---|---|---|---|---|---|
+| **deployed cic_v2** | 0.694 | 0.370 | 0.070 | 0.062 | 0.254 | 1.85% (42/2273) |
+| lodo_f0 | **0.825** | 0.560 | 0.206 | 0.329 | 0.206 | 1.28% (29) |
+| lodo_f1 | 0.803 | 0.485 | 0.063 | 0.041 | 0.095 | 0.18% (4) |
+| lodo_f2 | 0.596 | 0.317 | 0.031 | -0.078 | 0.064 | 0.70% (16) |
+| lodo_f3 | 0.795 | 0.480 | **0.271** | **0.419** | 0.254 | 1.76% (40) |
+| lodo_f4 | 0.705 | 0.395 | 0.027 | -0.097 | 0.127 | 0.26% (6) |
+| lodo_f5 | 0.792 | 0.493 | 0.123 | 0.185 | 0.175 | 0.62% (14) |
+| lodo_f6 | 0.729 | 0.432 | 0.138 | 0.215 | 0.238 | 1.63% (37) |
+| **ensemble (mean prob)** | 0.812 | 0.500 | 0.061 | 0.034 | 0.079 | 0.22% (5) |
+
+All operating points achieved exactly FPR 0.0500, so these are matched comparisons.
+
+**The finding is not the ensemble — it is that training on LESS data transfers BETTER.**
+Member breach AUC mean **0.749 ± 0.074**, with **6 of 7 above** the deployed model's
+0.694 (same 6/7 on PR-AUC). Holding out one capture day acts as regularization; the
+deployed `cic_v2_w30`, trained on all 7 days and selected on `combined`, is over-fitted
+to CIC for cross-domain use. This is the actionable result: for deployment on an unseen
+network, a day-held-out (or otherwise less-fitted) checkpoint is the better starting
+point, and that costs nothing to adopt because the checkpoints already exist.
+
+**The ensemble is a qualified win only.** +0.118 AUC over deployed but **-0.013 against
+its own best member**, and at the 5% FPR operating point it is no better than baseline
+(recall 0.061 vs 0.070) — its ranking gain does not land at that threshold. Its errors
+are unusually concentrated: 5 false-alarm host-hour cells vs baseline's 42 at identical
+window FPR, but its detections concentrate too (entity recall 0.079 vs 0.254).
+
+**Do not cherry-pick a member.** Selecting `lodo_f3` for its 0.271 recall would be
+choosing on the DAPT test set — the peeking this project refuses elsewhere. Defensible
+claims are (i) the population statement above, or (ii) the ensemble, which needs no
+selection. A specific member may only be promoted on a criterion computed WITHOUT DAPT.
+
+**No forecasting gain.** Deployed onset transfer k15 **0.705** beats the ensemble's
+0.686 and every member (best member k15 0.7046). Item (b) improves cross-dataset
+DETECTION only; cross-dataset forecasting is unchanged.
+
 **== NEXT SESSION — pick up here ==** (Tasks 4-Botnet and 7 done 2026-09-27)
 
 Pending Todo.md items, in priority order:
@@ -250,7 +296,7 @@ Pending Todo.md items, in priority order:
       per-time-bucket alert aggregation instead of per-window. Per-window FPR and
       per-host-per-hour alert rate are different numbers; the second is the operator's.
       No training required, ~1-2h.
-   b. **Ensemble the 7 LODO checkpoints** — `models/lodo_f0..f6_w30.pt` all exist and
+   b. [DONE 2026-09-27, see "Improvement item (b)" above] **Ensemble the 7 LODO checkpoints** — `models/lodo_f0..f6_w30.pt` all exist and
       each never saw one capture day. Average their onset probabilities and re-score.
       No training required, ~30 min. Most likely single lever to move cross-day onset
       k5 above 0.636.
