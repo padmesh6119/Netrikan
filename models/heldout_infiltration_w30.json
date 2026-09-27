@@ -1,0 +1,98 @@
+{
+  "holdout_class": 3,
+  "holdout_name": "Infiltration",
+  "checkpoint": "/Users/pranavmuthukumaran/Downloads/netrikan/models/heldout_infiltration_w30.pt",
+  "data": "/tmp/netrikan-cic-full-w30",
+  "note": "onset positives restricted to transitions INTO the held-out class; model never trained on it",
+  "horizons": {
+    "k1": {
+      "positive_count": 2827,
+      "n": 914791,
+      "positive_rate": 0.00309,
+      "roc_auc": 0.3694,
+      "pr_auc": 0.0022,
+      "no_skill_pr": 0.00309,
+      "recall_at_fpr": {
+        "0.001": {
+          "recall": 0.0,
+          "achieved_fpr": 0.001
+        },
+        "0.01": {
+          "recall": 0.0007,
+          "achieved_fpr": 0.01
+        },
+        "0.05": {
+          "recall": 0.006,
+          "achieved_fpr": 0.05
+        }
+      }
+    },
+    "k5": {
+      "positive_count": 6438,
+      "n": 888975,
+      "positive_rate": 0.00724,
+      "roc_auc": 0.3221,
+      "pr_auc": 0.0048,
+      "no_skill_pr": 0.00724,
+      "recall_at_fpr": {
+        "0.001": {
+          "recall": 0.0,
+          "achieved_fpr": 0.001
+        },
+        "0.01": {
+          "recall": 0.0002,
+          "achieved_fpr": 0.01
+        },
+        "0.05": {
+          "recall": 0.0047,
+          "achieved_fpr": 0.05
+        }
+      }
+    },
+    "k15": {
+      "positive_count": 8228,
+      "n": 858461,
+      "positive_rate": 0.00958,
+      "roc_auc": 0.2983,
+      "pr_auc": 0.0061,
+      "no_skill_pr": 0.00958,
+      "recall_at_fpr": {
+        "0.001": {
+          "recall": 0.0,
+          "achieved_fpr": 0.001
+        },
+        "0.01": {
+          "recall": 0.0007,
+          "achieved_fpr": 0.01
+        },
+        "0.05": {
+          "recall": 0.0046,
+          "achieved_fpr": 0.05
+        }
+      }
+    },
+    "k30": {
+      "positive_count": 9382,
+      "n": 845037,
+      "positive_rate": 0.0111,
+      "roc_auc": 0.2897,
+      "pr_auc": 0.007,
+      "no_skill_pr": 0.0111,
+      "recall_at_fpr": {
+        "0.001": {
+          "recall": 0.0,
+          "achieved_fpr": 0.001
+        },
+        "0.01": {
+          "recall": 0.0012,
+          "achieved_fpr": 0.01
+        },
+        "0.05": {
+          "recall": 0.0062,
+          "achieved_fpr": 0.05
+        }
+      }
+    }
+  },
+  "finding": "Held-out Infiltration forecast with up to 9382 val positives. Positive volume adequate for a real estimate."
+}

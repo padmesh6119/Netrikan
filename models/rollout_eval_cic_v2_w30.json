@@ -1,0 +1,82 @@
+{
+  "model": "models/cic_v2_w30.pt",
+  "data": "/tmp/netrikan-cic-full-w30",
+  "n_windows": 20000,
+  "window": 30,
+  "features": 24,
+  "one_step": {
+    "model_mse": 0.6117,
+    "persistence_mse": 0.7817,
+    "window_mean_mse": 0.64912,
+    "skill_vs_persistence": 0.2175,
+    "skill_vs_window_mean": 0.0577,
+    "beats_persistence": true,
+    "beats_window_mean": true,
+    "verdict": "PASS: beats both persistence and the window mean -- the state head learned genuine dynamics"
+  },
+  "k_step_drift": [
+    {
+      "step": 1,
+      "model_mse": 0.6117,
+      "persistence_mse": 0.7817,
+      "skill": 0.2175
+    },
+    {
+      "step": 2,
+      "model_mse": 0.42484,
+      "persistence_mse": 1.12145,
+      "skill": 0.6212
+    },
+    {
+      "step": 3,
+      "model_mse": 0.43952,
+      "persistence_mse": 1.20568,
+      "skill": 0.6355
+    },
+    {
+      "step": 4,
+      "model_mse": 0.47519,
+      "persistence_mse": 1.20839,
+      "skill": 0.6068
+    },
+    {
+      "step": 5,
+      "model_mse": 0.42824,
+      "persistence_mse": 1.20959,
+      "skill": 0.646
+    },
+    {
+      "step": 6,
+      "model_mse": 0.442,
+      "persistence_mse": 1.2091,
+      "skill": 0.6344
+    },
+    {
+      "step": 7,
+      "model_mse": 0.4487,
+      "persistence_mse": 1.24145,
+      "skill": 0.6386
+    },
+    {
+      "step": 8,
+      "model_mse": 0.45213,
+      "persistence_mse": 1.23651,
+      "skill": 0.6344
+    },
+    {
+      "step": 9,
+      "model_mse": 0.43887,
+      "persistence_mse": 1.23873,
+      "skill": 0.6457
+    },
+    {
+      "step": 10,
+      "model_mse": 0.45469,
+      "persistence_mse": 1.24694,
+      "skill": 0.6354
+    }
+  ],
+  "steps_beating_persistence": 10,
+  "rollout_stage_volatility": 0.0141,
+  "note": "skill = 1 - MSE_model/MSE_persistence. Positive means the state head predicts the next flow better than copying the last observed flow, which is the only baseline that matters here: consecutive flows are highly correlated, so a low raw MSE alone does not show that any dynamics were learned."
+}

@@ -1,0 +1,88 @@
+{
+  "tag": "dapt_cic_full_w30",
+  "model": "models/cic_full_w30.pt",
+  "data": "/tmp/netrikan-cic-full-w30",
+  "has_onset_head": true,
+  "onset_auc_dapt": {
+    "k1": {
+      "auc": 0.6210582088068368,
+      "onset_rate": 0.030006598673319364,
+      "gap_over_persistence": 0.1211
+    },
+    "k5": {
+      "auc": 0.6386252676507493,
+      "onset_rate": 0.0481115576609027,
+      "gap_over_persistence": 0.1386
+    },
+    "k15": {
+      "auc": 0.6314027335821094,
+      "onset_rate": 0.06558365510604006,
+      "gap_over_persistence": 0.1314
+    },
+    "k30": {
+      "auc": 0.6205528052961959,
+      "onset_rate": 0.0630960262977547,
+      "gap_over_persistence": 0.1206
+    }
+  },
+  "persistence_onset_auc": 0.5,
+  "persistence_onset_recall": 0.0,
+  "window": 30,
+  "features": 24,
+  "n_windows": 86391,
+  "roc_auc": 0.6205528052961959,
+  "pr_auc": 0.36269680049830555,
+  "tp": 6771,
+  "fp": 16654,
+  "fn": 16208,
+  "tn": 46758,
+  "binary_report": {
+    "Benign": {
+      "precision": 0.7425912397166725,
+      "recall": 0.7373683214533526,
+      "f1-score": 0.7399705644969853,
+      "support": 63412.0
+    },
+    "Attack": {
+      "precision": 0.28905016008537887,
+      "recall": 0.29466034205143826,
+      "f1-score": 0.29182829066459787,
+      "support": 22979.0
+    },
+    "accuracy": 0.6196131541480016,
+    "macro avg": {
+      "precision": 0.5158206999010257,
+      "recall": 0.5160143317523954,
+      "f1-score": 0.5158994275807915,
+      "support": 86391.0
+    },
+    "weighted avg": {
+      "precision": 0.62195459389885,
+      "recall": 0.6196131541480016,
+      "f1-score": 0.6207699381540278,
+      "support": 86391.0
+    }
+  },
+  "per_phase": {
+    "Benign": {
+      "n": 63412,
+      "rate": 0.7373683214533526
+    },
+    "Reconnaissance": {
+      "n": 11909,
+      "rate": 0.4077588378537241
+    },
+    "Establish Foothold": {
+      "n": 8604,
+      "rate": 0.014760576476057647
+    },
+    "Lateral Movement": {
+      "n": 2451,
+      "rate": 0.7274581803345573
+    },
+    "Data Exfiltration": {
+      "n": 15,
+      "rate": 0.3333333333333333
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "tag": "baseline_cic_full_w30",
+  "data": "/tmp/netrikan-cic-full-w30",
+  "window": 30,
+  "results": {
+    "last": {
+      "macro_f1": 0.42037060706990703,
+      "per_class": {
+        "Benign": 0.5712465046980802,
+        "InitialAccess": 0.6076187011950789,
+        "DoS": 0.3933948352974152,
+        "Infiltration": 0.10131275946634752,
+        "Botnet": 0.4282802346926135
+      },
+      "n_features": 24
+    },
+    "flat": {
+      "macro_f1": 0.6916369108682298,
+      "per_class": {
+        "Benign": 0.8273842072156794,
+        "InitialAccess": 0.8360503518934718,
+        "DoS": 0.8679956962677805,
+        "Infiltration": 0.2296844551550144,
+        "Botnet": 0.697069843809203
+      },
+      "n_features": 720
+    }
+  },
+  "minutes": 1.4
+}
