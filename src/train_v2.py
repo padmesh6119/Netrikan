@@ -102,6 +102,12 @@ def main():
     ap.add_argument('--batch', type=int, default=None)
     ap.add_argument('--lr', type=float, default=None,
                     help='Adam learning rate (default 1e-3, or `lr` in the config)')
+    ap.add_argument('--balance-power', type=float, default=None,
+                    help='sampler rebalance exponent p in w = 1/count**p. '
+                         '0.0 = natural class frequencies, 0.5 = sqrt-inverse '
+                         '(the default, a partial correction), 1.0 = full inverse '
+                         'frequency. Raise it to push rare classes (Infiltration '
+                         'is 1.67%% of CIC) at the cost of benign precision.')
     ap.add_argument('--samples', type=int, default=None)
     ap.add_argument('--state-weight', type=float, default=None,
                     help='weight on the next-state prediction (world-model) loss')
@@ -147,6 +153,7 @@ def main():
     args.horizon      = _get('horizon', 0)
     args.batch        = _get('batch', 1024)
     args.lr           = _get('lr', 1e-3)
+    args.balance_power = _get('balance_power', 0.5)
     args.samples      = _get('samples', 1_200_000)
     args.state_weight = _get('state_weight', 0.3)
     args.onset_weight = _get('onset_weight', 2.0)
@@ -246,8 +253,14 @@ def main():
     print(f"train {len(tr_idx):,}  val {len(va_idx):,}", flush=True)
 
     counts = np.bincount(y[tr_idx], minlength=len(STAGES))
-    w = 1.0 / np.sqrt(np.maximum(counts, 1))
+    # w = 1/count**p. p=0.5 (sqrt-inverse) is the long-standing default: it
+    # corrects class imbalance only partially, which protects benign precision
+    # but leaves the rarest class underweighted. p is now explicit so the
+    # trade-off can be measured instead of assumed.
+    w = 1.0 / np.power(np.maximum(counts, 1), args.balance_power)
     w /= w.sum()
+    print(f"class counts {counts.tolist()}  balance_power={args.balance_power}  "
+          f"sample weights {np.round(w / w.min(), 2).tolist()} (relative)", flush=True)
     sampler = WeightedRandomSampler(torch.as_tensor(w[y[tr_idx]], dtype=torch.double),
                                     num_samples=min(args.samples, len(tr_idx)),
                                     replacement=True)

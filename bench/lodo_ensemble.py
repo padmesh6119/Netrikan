@@ -166,6 +166,27 @@ def main():
     out['ensemble'] = evaluate('ensemble', b_ens, o_ens, truth, y, cap, host, ts,
                                args.persist, args.bucket)
 
+    # Rank averaging, motivated a priori rather than chosen after seeing results.
+    # Averaging seven sigmoid outputs compresses the dynamic range toward the
+    # middle: members disagree on scale even when they agree on order, so a
+    # probability mean can rank well globally (AUC) while placing no useful
+    # decision boundary at a fixed FPR -- exactly the pathology
+    # models/lodo_ensemble_dapt.json showed (+0.118 AUC, no gain at FPR 5%).
+    # Averaging within-model percentile ranks is scale-free and keeps the
+    # boundary usable. Both variants are reported; neither selects over members,
+    # and choosing between them on DAPT would itself be test-set selection, so
+    # the JSON keeps both and the decision is deferred to a CIC-only criterion.
+    print("\nensemble (mean rank):")
+    def _rank(v):
+        r = np.empty(len(v), dtype=np.float64)
+        r[np.argsort(v, kind='mergesort')] = np.arange(len(v))
+        return r / max(len(v) - 1, 1)
+    b_rank = np.mean([_rank(b) for b in bs], axis=0)
+    o_rank = np.stack([np.mean([_rank(o[:, ki]) for o in os_], axis=0)
+                       for ki in range(os_[0].shape[1])], axis=1)
+    out['ensemble_rank'] = evaluate('ensemble_rank', b_rank, o_rank, truth, y,
+                                    cap, host, ts, args.persist, args.bucket)
+
     mem_auc = [v['breach_roc_auc'] for v in out['per_member'].values()]
     out['summary'] = {
         "baseline_breach_auc": out['baseline']['breach_roc_auc'],
@@ -176,6 +197,12 @@ def main():
             out['ensemble']['breach_roc_auc'] - out['baseline']['breach_roc_auc'], 4),
         "ensemble_gain_over_best_member": round(
             out['ensemble']['breach_roc_auc'] - max(mem_auc), 4),
+        "ensemble_rank_breach_auc": out['ensemble_rank']['breach_roc_auc'],
+        "ensemble_rank_gain_over_baseline": round(
+            out['ensemble_rank']['breach_roc_auc']
+            - out['baseline']['breach_roc_auc'], 4),
+        "ensemble_rank_gain_over_best_member": round(
+            out['ensemble_rank']['breach_roc_auc'] - max(mem_auc), 4),
     }
     print("\nsummary:", json.dumps(out['summary'], indent=1), flush=True)
     with open(args.out, 'w') as f:

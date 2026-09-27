@@ -295,12 +295,46 @@
       "false_alarm_rate_per_benign_cell": 0.0022
     }
   },
+  "ensemble_rank": {
+    "breach_roc_auc": 0.7997,
+    "breach_pr_auc": 0.4744,
+    "onset_auc": {
+      "k1": 0.6228,
+      "k5": 0.6425,
+      "k15": 0.6735,
+      "k30": 0.6369
+    },
+    "at_fpr05_persist3": {
+      "threshold": 0.91133,
+      "window_level": {
+        "tp": 1256,
+        "fp": 3173,
+        "fn": 21723,
+        "tn": 60239,
+        "recall": 0.0547,
+        "fpr": 0.05,
+        "precision": 0.2836,
+        "f1": 0.0917,
+        "sedi": 0.0155
+      },
+      "bucket": "1h",
+      "attack_cells": 63,
+      "benign_cells": 2273,
+      "attack_cells_detected": 7,
+      "entity_recall": 0.1111,
+      "false_alarm_cells": 7,
+      "false_alarm_rate_per_benign_cell": 0.0031
+    }
+  },
   "summary": {
     "baseline_breach_auc": 0.6936,
     "member_breach_auc_mean": 0.7491,
     "member_breach_auc_best": 0.8245,
     "ensemble_breach_auc": 0.8118,
     "ensemble_gain_over_baseline": 0.1182,
-    "ensemble_gain_over_best_member": -0.0127
+    "ensemble_gain_over_best_member": -0.0127,
+    "ensemble_rank_breach_auc": 0.7997,
+    "ensemble_rank_gain_over_baseline": 0.1061,
+    "ensemble_rank_gain_over_best_member": -0.0248
   }
 }

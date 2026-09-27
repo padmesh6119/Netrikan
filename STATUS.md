@@ -282,6 +282,28 @@ selection. A specific member may only be promoted on a criterion computed WITHOU
 0.686 and every member (best member k15 0.7046). Item (b) improves cross-dataset
 DETECTION only; cross-dataset forecasting is unchanged.
 
+**Rank averaging was tried and FAILED — ensembling is closed as a lever.** The
+hypothesis was that averaging seven sigmoid outputs compresses the dynamic range, so
+the ensemble could rank well globally (AUC) while placing no useful boundary at a fixed
+FPR. Scale-free rank averaging should have fixed that. It did not:
+
+| combiner | breach AUC | PR-AUC | recall@FPR5% | SEDI | entity recall | FA/benign cell |
+|---|---|---|---|---|---|---|
+| baseline cic_v2 | 0.694 | 0.370 | **0.070** | 0.062 | **0.254** | 1.85% |
+| mean probability | **0.812** | 0.500 | 0.061 | 0.034 | 0.079 | 0.22% |
+| mean rank | 0.800 | 0.474 | 0.055 | 0.016 | 0.111 | 0.31% |
+
+Rank averaging is *worse* than probability averaging on every axis, and both are worse
+than the plain baseline at the deployable 5% FPR operating point. So the failure is not
+a scaling artifact: the ensemble's AUC gain lives in a region of the ROC curve that no
+operating point uses, and averaging dilutes the members that are confidently right at
+low FPR. **Neither combiner converts the +0.118 AUC into deployable accuracy.**
+
+The accuracy that IS available cross-dataset is the individual day-held-out models
+(lodo_f3: recall **0.271** at FPR 5%, SEDI 0.419, i.e. 3.9x the deployed model's 0.070).
+Realising it requires a selection criterion that never touches DAPT, which does not yet
+exist — see the open question below.
+
 **== NEXT SESSION — pick up here ==** (Tasks 4-Botnet and 7 done 2026-09-27)
 
 Pending Todo.md items, in priority order:
