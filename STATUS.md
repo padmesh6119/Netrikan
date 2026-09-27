@@ -185,13 +185,64 @@ neither has been tried, so no improvement is claimed here.
 **Added `--lr` to `src/train_v2.py`** (default 1e-3, unchanged; also readable from the
 config as `lr`). It was hardcoded at the optimizer.
 
+**Improvement item (a) — DAPT operating-point curve**
+(`models/operating_points_dapt_cic_v2_w30.json`, `bench/operating_points.py`, 2026-09-27).
+
+First, a code fact: `eval_dapt.py:100` decides attack with `stage_logits.argmax() > 0`.
+There is **no threshold** in the shipped cross-dataset path, so "FPR 40.4%" was never a
+tuned operating point. `breach_head` is already sigmoid (`model.py:79`) and sweepable.
+
+**NEGATIVE result: thresholding does not fix the FPR.** The curve is weak in shape, not
+merely badly placed:
+
+| operating point | recall | precision | FPR | SEDI |
+|---|---|---|---|---|
+| shipped argmax | 0.678 | 0.378 | 0.404 | 0.385 |
+| breach @ FPR 10% | 0.100 | 0.266 | 0.100 | -0.000 |
+| breach @ FPR 5% | **0.063** | 0.313 | 0.050 | 0.042 |
+| breach @ FPR 1% | 0.035 | 0.561 | 0.010 | 0.161 |
+| breach @ FPR 0.1% | 0.001 | 0.233 | 0.001 | -0.013 |
+
+At 5% FPR the detector finds 6.3% of attacks. Tightening the threshold discards true
+positives almost as fast as false ones — this is what ROC-AUC 0.679 means in practice.
+
+**The argmax is not better ranked, just looser.** Matched to the argmax's own FPR
+(0.4041), breach scores recall **0.681** vs argmax **0.678** (SEDI 0.389 vs 0.385) and
+stage-attack mass scores 0.678. All three are the same point on one weak curve; there is
+no hidden information in the argmax and no better threshold to find.
+
+**`min_persist` pays off only at strict FPR**, where suppressing single-window flicker
+frees budget for a lower threshold: at FPR 0.1%, persist=5 gives recall **2.5% at
+precision 90%** (SEDI 0.306) against 0.09% recall at persist=1. Low recall, but a usable
+high-confidence alert that did not exist before.
+
+**The real win is the entity roll-up.** Windows grouped into (capture, Src IP, 1h) cells;
+a cell alerts if any window in it is flagged:
+
+| configuration | attack host-hours caught | false alarms / benign host-hour |
+|---|---|---|
+| **shipped argmax** | 0.698 | **0.4985** (1,133 of 2,273) |
+| breach, persist=1 | 0.302 | 0.0629 (143) |
+| **breach, persist=3** | 0.254 | **0.0185** (42 of 2,273) |
+| breach, persist=5 | 0.206 | 0.0150 (34) |
+
+What ships false-alarms on **half of all benign host-hours**. persist=3 cuts that **27x**
+to 1.85% while keeping 25% entity-level detection. Per-window FPR and per-host-hour alert
+rate are different quantities and must never be quoted interchangeably; the second is the
+operator-facing one. This is the defensible operating point the project previously lacked.
+
+**What this does NOT fix.** Cross-dataset detection is still weak in absolute terms — 25%
+of attack host-hours at a 1.85% false-alarm rate, or 70% at an unusable 50%. The roll-up
+improves how the result is *reported and deployed*, not the underlying discrimination.
+Raising ROC-AUC 0.679 needs a better model, not a better threshold.
+
 **== NEXT SESSION — pick up here ==** (Tasks 4-Botnet and 7 done 2026-09-27)
 
 Pending Todo.md items, in priority order:
 
 0. **AGREED NEXT ACTION (2026-09-27, user: start only when I say so).** Improvement
    work, in this order:
-   a. **DAPT operating-point curve** — the worst number in the project is cross-dataset
+   a. [DONE 2026-09-27, see "Improvement item (a)" above] **DAPT operating-point curve** — the worst number in the project is cross-dataset
       FPR **40.4%** (25,625 FP / 63,412 benign, precision 37.8%), reported at a single
       implicit threshold. Sweep the threshold and report precision/recall at fixed FPR
       (0.001 / 0.01 / 0.05); then add the two suppressors already built: `min_persist`
