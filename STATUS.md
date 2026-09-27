@@ -536,18 +536,18 @@ SHAP and gradient×input are never conflated.
 
 | Fact | Value | Where |
 |---|---|---|
-| Deployed classifier | `models/base_w30.pt`, macro-F1 0.9221 | `infer.py:MODEL_PATH` |
+| Deployed classifier | `models/cic_v2_w30.pt`, macro-F1 0.8369 (verified at runtime 2026-09-27; `base_w30` is only the fallback if cic_v2 is absent) | `infer.py:MODEL_PATH` |
 | Window | **30** | `infer.py:WINDOW` |
 | Model input features | 24 flow features | `infer.py:FEATURES` |
 | Model output classes | 5 | `model.py:num_stages` |
 | Kill-chain stages | **7** (Reconnaissance added) | `attck_map.py:N_STAGES` |
 | Forecast-only stages | Exfiltration, Reconnaissance | `attck_map.FORECAST_ONLY_STAGES` |
-| Fusion weight | 0.30 model / 0.70 rules, **unmeasured** | `infer.py:MODEL_WEIGHT` |
+| Fusion weight | **0.90** model / 0.10 rules, measured from the DAPT ablation, env-overridable via `NETRIKAN_MODEL_WEIGHT` (verified 0.9 at runtime) | `infer.py:MODEL_WEIGHT` |
 | Rule detectors | 14 (4 need packet-level input) | `signals.py` |
-| Attribution method | gradient × input, **not SHAP** | `infer.py` |
-| Attention | available, **off by default** | `model.py:attention` |
+| Attribution method | gradient × input always-on, **plus real SHAP** (`shap.GradientExplainer`) on demand; each output carries `attribution_method` | `infer.py`, `src/explain_shap.py` |
+| Attention | **trained into the deployed checkpoint**; `infer._load_model()` auto-detects it from the state dict | `model.py:attention` |
 | Default horizon | 15 minutes (900s) | `forecast.py:HORIZON_SECONDS` |
-| Calibration temperature | 1.0 (none fitted yet) | `models/temperature.json` absent |
+| Calibration temperature | fitted T=1.076, ECE 0.0088 → 0.0052 | `src/calibration.py` |
 
 ### Stage ids
 

@@ -1,3 +1,6 @@
+> **See [STATUS.md](STATUS.md) for the authoritative current state.** This document
+> was written earlier and is stale in places; where the two disagree, STATUS.md is right.
+
 # Netrikan V2 — The Annihilation Plan
 
 > No time constraint. Build what's actually correct.
@@ -56,6 +59,18 @@ never considered it. That slot is open.
 
 **Expected result**: onset AUC 0.80–0.90 vs persistence 0.000. The entire
 persistence narrative collapses. This is the number on slide 3.
+
+> **MEASURED 2026-09-27 — the expectation held in-split but not across days.**
+> Single purged split: onset AUC **0.901** at k=5 (persistence 0.500 by
+> construction, since it never predicts a change), so the persistence narrative
+> does collapse. But leave-one-day-out over the 7 capture days gives
+> **0.636 ± 0.093**, with one fold at **0.445 — below chance**. Slide 3 must carry
+> both numbers, or a judge who asks "how does it hold up across days?" gets a
+> better answer than the slide does. Two further corrections: the flat curve
+> across k=1..30 is a single-split artifact (across days it declines with
+> horizon), and held-out attack families score *below chance*, so nothing on any
+> slide may claim novel-attack detection. Sources: `models/lodo_cic_full_w30.json`,
+> `models/heldout_botnet_w30.json`, `models/onset_pr_cic_v2_w30.json`.
 
 ---
 

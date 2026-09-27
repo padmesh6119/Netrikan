@@ -102,6 +102,11 @@ def main():
     ap.add_argument('--batch', type=int, default=None)
     ap.add_argument('--lr', type=float, default=None,
                     help='Adam learning rate (default 1e-3, or `lr` in the config)')
+    ap.add_argument('--save-epochs', action='store_true',
+                    help='also save models/<tag>_ep<N>.pt every epoch. Needed to '
+                         'measure how a property evolves with fitting (e.g. '
+                         'cross-dataset transfer vs epoch); the normal run keeps '
+                         'only the best checkpoint, which hides the trajectory.')
     ap.add_argument('--balance-power', type=float, default=None,
                     help='sampler rebalance exponent p in w = 1/count**p. '
                          '0.0 = natural class frequencies, 0.5 = sqrt-inverse '
@@ -396,6 +401,9 @@ def main():
                      "onset_auc": {f'k{kk}': v for kk, v in onset_aucs.items()},
                      "per_class": {s: float(v) for s, v in zip(STAGES, per)}})
 
+        if args.save_epochs:
+            torch.save(model.state_dict(),
+                       os.path.join(MODEL_DIR, f'{args.tag}_ep{ep}.pt'))
         if score == score and score > best:   # score == score rejects NaN
             best, bad = score, 0
             torch.save(model.state_dict(), ckpt)

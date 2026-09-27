@@ -1,3 +1,31 @@
+> **See [STATUS.md](STATUS.md) for the authoritative current state.** This document
+> was written earlier and is stale in places; where the two disagree, STATUS.md is right.
+
+> ### Corrections as of 2026-09-27 — five claims below are falsified by later measurement
+>
+> 1. **Fusion is 0.90 model / 0.10 rules**, not 0.30/0.70. Measured from the DAPT
+>    ablation (pure rules SEDI -0.256, pure model +0.416) and env-overridable via
+>    `NETRIKAN_MODEL_WEIGHT`. Every "0.30 x model + 0.70 x rules" line below is stale.
+> 2. **The deployed checkpoint is `cic_v2_w30.pt`** (macro-F1 0.837), not
+>    `lstm_world_model.pt` (0.885, retired) or `base_w30.pt` (0.9221, fallback only).
+>    Those three numbers are not comparable — different label setups, and the 0.9221
+>    predates the `pipeline_v2` timestamp-sort bug fix.
+> 3. **The neural rollout claim is now true but must stay conditioned.** `cic_v2_w30`
+>    carries a trained state head and `analyze()` reports `rollout_source`. State it as
+>    a neural rollout only when that field reads `"learned"`. A dedicated `world_w30.pt`
+>    was never trained and is not required.
+> 4. **There is no zero-shot generalization to unseen attack families.** Held out
+>    entirely, Infiltration scores ROC-AUC 0.29-0.37 and Botnet **0.198-0.332** —
+>    *below chance* on 8k-40k positives. Do not claim novel-attack detection anywhere.
+> 5. **The 41.6% FPR figure is superseded.** The deployed checkpoint's per-window
+>    cross-dataset FPR is **40.4%**, and thresholding cannot fix it (6.3% recall at 5%
+>    FPR). The defensible number is the entity roll-up: **25.4% of attack host-hours at
+>    a 1.85% false-alarm rate per benign host-hour**, vs 49.9% for the shipped
+>    per-window decision. Lead with that, not with a raw per-window FPR.
+>
+> Also: the single-split onset AUC of 0.902 is **0.636 +/- 0.093** across capture days,
+> and flat-across-horizons is a single-split artifact. See `STATUS.md`.
+
 # NETRIKAN — Complete Project Record
 
 **நெற்றிக்கண் · The Third Eye**
@@ -106,12 +134,18 @@ ROLLOUT  (model.py:rollout)
   Returns: stage distribution at each future step
 
 FUSION LAYER  (infer.py:_fuse)
-  fused = 0.30 × model_probs + 0.70 × rule_evidence
+  fused = 0.90 × model_probs + 0.10 × rule_evidence   [CORRECTED 2026-09-27;
+  was 0.30/0.70. The rules encode CIC's port layout and hurt cross-dataset
+  transfer: pure rules SEDI -0.256 vs pure model +0.416. Override with
+  NETRIKAN_MODEL_WEIGHT.]
   14 rule detectors in signals.py fire on the raw (unscaled) window
   and produce a stage hint + confidence score
 
 NEURAL ROLLOUT  (forecast.py + model.py:rollout)
-  world_w30.pt runs K-step free-running simulation: predict next state →
+  [CORRECTED 2026-09-27: the deployed cic_v2_w30.pt carries the trained state
+  head; world_w30.pt was never trained and is not needed. Claim a neural rollout
+  only when analyze() reports rollout_source == "learned".]
+  the deployed checkpoint runs K-step free-running simulation: predict next state →
   append to window → drop oldest → repeat. Returns (steps, 5) stage probs.
   Mapped 5→6 class via MODEL_TO_CHAIN. Passed to forecast() as projections.
   Fallback: TRANSITION matrix (MEASURED_PERSISTENCE + DOCTRINE_SHAPE) when
@@ -362,7 +396,9 @@ False positives: 10,000 × 0.999 × 0.416 = 4,159.8
 PPV = 8.39 / (8.39 + 4159.8) = 0.2%  — 1 real alert in 496
 ```
 
-Our 41.6% FPR is not uniquely bad. It is normal for a cross-network generalization test. The published cross-dataset IDS literature routinely reports 20-60% FPR on unseen networks. What is unusual — and what we should say explicitly — is that we REPORT it. Most teams either don't run a cross-dataset test or don't publish the FPR.
+[CORRECTED 2026-09-27: the deployed checkpoint's per-window cross-dataset FPR is **40.4%**, and the honest headline is the entity roll-up — 25.4% of attack host-hours at a 1.85% false-alarm rate per benign host-hour, against 49.9% for the per-window decision. Thresholding does not help: 6.3% recall at 5% FPR. Use the host-hour number; the argument below still applies to the per-window one.]
+
+Our 40.4% per-window FPR is not uniquely bad. It is normal for a cross-network generalization test. The published cross-dataset IDS literature routinely reports 20-60% FPR on unseen networks. What is unusual — and what we should say explicitly — is that we REPORT it. Most teams either don't run a cross-dataset test or don't publish the FPR.
 
 ---
 
