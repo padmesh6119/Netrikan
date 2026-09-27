@@ -344,6 +344,58 @@ by-product finding — day-held-out models transfer better, 6 of 7, mean AUC 0.7
 **In-dataset accuracy appears to be at a local optimum under the current architecture
 and features; the remaining headroom is cross-dataset, not in-dataset.**
 
+**Improvement item (d) — cross-dataset transfer vs training epoch. THE BEST RESULT OF
+THIS PASS.** (`models/transfer_vs_epoch.json`, `bench/transfer_vs_epoch.py`, 2026-09-27.)
+Trained once on all 7 days with `--save-epochs` (15 epochs, early stopping disabled) and
+scored every epoch's checkpoint on DAPT, to separate two explanations for item (b)'s
+finding: does holding out a DAY help, or are the LODO members simply LESS FITTED?
+
+| epoch | CIC macro-F1 | CIC onset k5 | DAPT AUC | DAPT PR | recall@FPR5% | SEDI | entity recall | entity FA |
+|---|---|---|---|---|---|---|---|---|
+| 1 | 0.8114 | 0.8669 | **0.809** | 0.485 | 0.077 | 0.082 | 0.079 | 0.62% |
+| 2 | 0.8250 | 0.8821 | 0.728 | 0.540 | 0.296 | 0.450 | 0.143 | 0.70% |
+| **3** | **0.8305** | **0.8887** | 0.789 | **0.588** | **0.341** | **0.503** | 0.206 | **0.84%** |
+| 5 | **0.8371** | 0.8954 | 0.752 | 0.445 | 0.060 | 0.033 | 0.079 | 0.35% |
+| 7 | 0.8345 | — | 0.785 | 0.460 | 0.062 | 0.040 | 0.095 | 0.35% |
+| 10 | 0.8340 | — | 0.701 | 0.359 | 0.062 | 0.037 | 0.111 | 0.44% |
+| 15 | 0.8343 | — | 0.737 | 0.384 | 0.057 | 0.024 | 0.064 | 0.22% |
+| **deployed cic_v2** | 0.8369 | 0.9007 | **0.694** | 0.370 | **0.070** | 0.062 | 0.254 | 1.85% |
+
+**1. Epoch 3 is a far better cross-dataset model at negligible in-dataset cost.**
+Against the deployed checkpoint it gives **4.9x the window recall at the same 5% FPR**
+(0.341 vs 0.070), SEDI **0.503 vs 0.062**, PR-AUC 0.588 vs 0.370, and at entity level a
+comparable 0.206 recall at **less than half** the false-alarm rate (0.84% vs 1.85%). The
+price is 0.0064 macro-F1 and 0.012 onset AUC in-dataset. That is the best
+accuracy trade found anywhere in this project.
+
+**2. "Less fitting transfers better" is only WEAKLY supported.** The curve is noisy, not
+a clean decay: AUC runs 0.809, 0.728, 0.789, 0.748, 0.752, 0.735, 0.785, ... 0.737.
+Peak AUC is epoch 1 but the best *operating point* is epoch 3, and epoch 7 (0.785) nearly
+matches epoch 3 (0.789). What is robust is that the EARLY epochs (2-3) own the usable
+operating points, while epochs 8-15 are uniformly poor at FPR 5% (recall 0.027-0.077).
+
+**3. A caution that undercuts several single-seed claims, including some of ours.**
+**Every one of the 15 epochs beats the deployed `cic_v2_w30` on DAPT AUC** (0.701-0.809
+vs 0.694), even the most-fitted epoch 15. `xfer_w30` is nominally the same recipe on the
+same data. So **run-to-run variance in cross-dataset transfer is larger than most of the
+interventions measured in this pass** — bigger than the ensemble's +0.118 relative to
+baseline. Any cross-dataset comparison of two single runs, in this file or elsewhere, is
+therefore weak evidence. Task 8a (multi-seed) is no longer optional for the
+cross-dataset numbers; it is a precondition for believing them.
+
+**4. Naive in-dataset selection does NOT find the good epoch.** Best CIC macro-F1 is
+epoch 5, which scores recall 0.060 at FPR 5% — *worse* than the deployed model. So
+selecting on in-dataset performance actively misses the transfer sweet spot
+(`cic_criterion_would_pick_transfer_peak: false`).
+
+**A candidate rule, and why it is not yet trustworthy.** "Earliest epoch within 1% of
+peak in-dataset macro-F1" would pick epoch 3 (0.8305 vs peak 0.8371), using CIC only and
+never touching DAPT. It is principled — prefer less fitting when the in-dataset cost is
+negligible. **But it was formulated AFTER seeing the DAPT column, which makes it a
+post-hoc rule selected on the test set.** It must be validated on a transfer set that
+played no part in designing it before any checkpoint is promoted on its basis. Recorded
+as a hypothesis, not a decision.
+
 **== NEXT SESSION — pick up here ==** (Tasks 4-Botnet and 7 done 2026-09-27)
 
 Pending Todo.md items, in priority order:

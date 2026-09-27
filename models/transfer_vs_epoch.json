@@ -1,0 +1,278 @@
+{
+  "data": "/tmp/netrikan-cic-full-w30",
+  "tag": "xfer_w30",
+  "eval_set": "DAPT 2020 (never seen in training)",
+  "n_checkpoints": 15,
+  "per_epoch": [
+    {
+      "epoch": 1,
+      "dapt_breach_auc": 0.8086,
+      "dapt_breach_pr_auc": 0.4852,
+      "dapt_onset_auc": {
+        "k1": 0.5935,
+        "k5": 0.619,
+        "k15": 0.6734,
+        "k30": 0.6567
+      },
+      "cic_macro_f1": 0.8114,
+      "cic_onset_auc_k5": 0.8669,
+      "dapt_recall_at_fpr05": 0.0773,
+      "dapt_sedi_at_fpr05": 0.0816,
+      "dapt_entity_recall": 0.0794,
+      "dapt_entity_fa_rate": 0.0062
+    },
+    {
+      "epoch": 2,
+      "dapt_breach_auc": 0.7276,
+      "dapt_breach_pr_auc": 0.5399,
+      "dapt_onset_auc": {
+        "k1": 0.5979,
+        "k5": 0.6026,
+        "k15": 0.6438,
+        "k30": 0.6472
+      },
+      "cic_macro_f1": 0.825,
+      "cic_onset_auc_k5": 0.8821,
+      "dapt_recall_at_fpr05": 0.2958,
+      "dapt_sedi_at_fpr05": 0.4499,
+      "dapt_entity_recall": 0.1429,
+      "dapt_entity_fa_rate": 0.007
+    },
+    {
+      "epoch": 3,
+      "dapt_breach_auc": 0.7888,
+      "dapt_breach_pr_auc": 0.5884,
+      "dapt_onset_auc": {
+        "k1": 0.6074,
+        "k5": 0.6277,
+        "k15": 0.6784,
+        "k30": 0.6619
+      },
+      "cic_macro_f1": 0.8305,
+      "cic_onset_auc_k5": 0.8887,
+      "dapt_recall_at_fpr05": 0.3406,
+      "dapt_sedi_at_fpr05": 0.5029,
+      "dapt_entity_recall": 0.2063,
+      "dapt_entity_fa_rate": 0.0084
+    },
+    {
+      "epoch": 4,
+      "dapt_breach_auc": 0.7476,
+      "dapt_breach_pr_auc": 0.4623,
+      "dapt_onset_auc": {
+        "k1": 0.6191,
+        "k5": 0.6304,
+        "k15": 0.6926,
+        "k30": 0.6634
+      },
+      "cic_macro_f1": 0.8305,
+      "cic_onset_auc_k5": 0.8938,
+      "dapt_recall_at_fpr05": 0.0772,
+      "dapt_sedi_at_fpr05": 0.0813,
+      "dapt_entity_recall": 0.1111,
+      "dapt_entity_fa_rate": 0.0053
+    },
+    {
+      "epoch": 5,
+      "dapt_breach_auc": 0.7517,
+      "dapt_breach_pr_auc": 0.4448,
+      "dapt_onset_auc": {
+        "k1": 0.6401,
+        "k5": 0.6619,
+        "k15": 0.6896,
+        "k30": 0.6657
+      },
+      "cic_macro_f1": 0.8371,
+      "cic_onset_auc_k5": 0.8954,
+      "dapt_recall_at_fpr05": 0.0601,
+      "dapt_sedi_at_fpr05": 0.0327,
+      "dapt_entity_recall": 0.0794,
+      "dapt_entity_fa_rate": 0.0035
+    },
+    {
+      "epoch": 6,
+      "dapt_breach_auc": 0.7349,
+      "dapt_breach_pr_auc": 0.4332,
+      "dapt_onset_auc": {
+        "k1": 0.6462,
+        "k5": 0.6648,
+        "k15": 0.6857,
+        "k30": 0.6656
+      },
+      "cic_macro_f1": 0.8338,
+      "cic_onset_auc_k5": 0.898,
+      "dapt_recall_at_fpr05": 0.0716,
+      "dapt_sedi_at_fpr05": 0.0664,
+      "dapt_entity_recall": 0.0794,
+      "dapt_entity_fa_rate": 0.004
+    },
+    {
+      "epoch": 7,
+      "dapt_breach_auc": 0.7853,
+      "dapt_breach_pr_auc": 0.4603,
+      "dapt_onset_auc": {
+        "k1": 0.6369,
+        "k5": 0.6359,
+        "k15": 0.6458,
+        "k30": 0.6368
+      },
+      "cic_macro_f1": 0.8345,
+      "cic_onset_auc_k5": 0.8985,
+      "dapt_recall_at_fpr05": 0.0624,
+      "dapt_sedi_at_fpr05": 0.0399,
+      "dapt_entity_recall": 0.0952,
+      "dapt_entity_fa_rate": 0.0035
+    },
+    {
+      "epoch": 8,
+      "dapt_breach_auc": 0.7386,
+      "dapt_breach_pr_auc": 0.3958,
+      "dapt_onset_auc": {
+        "k1": 0.6523,
+        "k5": 0.6596,
+        "k15": 0.6581,
+        "k30": 0.6491
+      },
+      "cic_macro_f1": 0.8367,
+      "cic_onset_auc_k5": 0.9013,
+      "dapt_recall_at_fpr05": 0.0477,
+      "dapt_sedi_at_fpr05": -0.0082,
+      "dapt_entity_recall": 0.1111,
+      "dapt_entity_fa_rate": 0.0026
+    },
+    {
+      "epoch": 9,
+      "dapt_breach_auc": 0.7651,
+      "dapt_breach_pr_auc": 0.438,
+      "dapt_onset_auc": {
+        "k1": 0.6511,
+        "k5": 0.696,
+        "k15": 0.6768,
+        "k30": 0.641
+      },
+      "cic_macro_f1": 0.8362,
+      "cic_onset_auc_k5": 0.9001,
+      "dapt_recall_at_fpr05": 0.0691,
+      "dapt_sedi_at_fpr05": 0.0593,
+      "dapt_entity_recall": 0.127,
+      "dapt_entity_fa_rate": 0.0053
+    },
+    {
+      "epoch": 10,
+      "dapt_breach_auc": 0.7011,
+      "dapt_breach_pr_auc": 0.3594,
+      "dapt_onset_auc": {
+        "k1": 0.6524,
+        "k5": 0.6903,
+        "k15": 0.698,
+        "k30": 0.6721
+      },
+      "cic_macro_f1": 0.834,
+      "cic_onset_auc_k5": 0.8988,
+      "dapt_recall_at_fpr05": 0.0615,
+      "dapt_sedi_at_fpr05": 0.0371,
+      "dapt_entity_recall": 0.1111,
+      "dapt_entity_fa_rate": 0.0044
+    },
+    {
+      "epoch": 11,
+      "dapt_breach_auc": 0.7468,
+      "dapt_breach_pr_auc": 0.4302,
+      "dapt_onset_auc": {
+        "k1": 0.6352,
+        "k5": 0.6567,
+        "k15": 0.6464,
+        "k30": 0.6295
+      },
+      "cic_macro_f1": 0.8305,
+      "cic_onset_auc_k5": 0.8951,
+      "dapt_recall_at_fpr05": 0.0773,
+      "dapt_sedi_at_fpr05": 0.0817,
+      "dapt_entity_recall": 0.1429,
+      "dapt_entity_fa_rate": 0.0132
+    },
+    {
+      "epoch": 12,
+      "dapt_breach_auc": 0.7545,
+      "dapt_breach_pr_auc": 0.4059,
+      "dapt_onset_auc": {
+        "k1": 0.6323,
+        "k5": 0.6587,
+        "k15": 0.6371,
+        "k30": 0.6024
+      },
+      "cic_macro_f1": 0.8323,
+      "cic_onset_auc_k5": 0.8931,
+      "dapt_recall_at_fpr05": 0.0614,
+      "dapt_sedi_at_fpr05": 0.0369,
+      "dapt_entity_recall": 0.1111,
+      "dapt_entity_fa_rate": 0.0031
+    },
+    {
+      "epoch": 13,
+      "dapt_breach_auc": 0.7556,
+      "dapt_breach_pr_auc": 0.4039,
+      "dapt_onset_auc": {
+        "k1": 0.632,
+        "k5": 0.6509,
+        "k15": 0.6488,
+        "k30": 0.6145
+      },
+      "cic_macro_f1": 0.833,
+      "cic_onset_auc_k5": 0.8937,
+      "dapt_recall_at_fpr05": 0.0439,
+      "dapt_sedi_at_fpr05": -0.022,
+      "dapt_entity_recall": 0.0635,
+      "dapt_entity_fa_rate": 0.0022
+    },
+    {
+      "epoch": 14,
+      "dapt_breach_auc": 0.7276,
+      "dapt_breach_pr_auc": 0.369,
+      "dapt_onset_auc": {
+        "k1": 0.6266,
+        "k5": 0.6451,
+        "k15": 0.6369,
+        "k30": 0.6008
+      },
+      "cic_macro_f1": 0.8346,
+      "cic_onset_auc_k5": 0.8938,
+      "dapt_recall_at_fpr05": 0.0274,
+      "dapt_sedi_at_fpr05": -0.0939,
+      "dapt_entity_recall": 0.127,
+      "dapt_entity_fa_rate": 0.0075
+    },
+    {
+      "epoch": 15,
+      "dapt_breach_auc": 0.7369,
+      "dapt_breach_pr_auc": 0.3839,
+      "dapt_onset_auc": {
+        "k1": 0.628,
+        "k5": 0.6412,
+        "k15": 0.6403,
+        "k30": 0.6118
+      },
+      "cic_macro_f1": 0.8343,
+      "cic_onset_auc_k5": 0.8918,
+      "dapt_recall_at_fpr05": 0.0574,
+      "dapt_sedi_at_fpr05": 0.0244,
+      "dapt_entity_recall": 0.0635,
+      "dapt_entity_fa_rate": 0.0022
+    }
+  ],
+  "peak_transfer": {
+    "epoch": 1,
+    "dapt_breach_auc": 0.8086
+  },
+  "final_epoch": {
+    "epoch": 15,
+    "dapt_breach_auc": 0.7369
+  },
+  "decay_from_peak": 0.0717,
+  "best_cic_epoch": {
+    "epoch": 5,
+    "cic_macro_f1": 0.8371
+  },
+  "cic_criterion_would_pick_transfer_peak": false,
+  "honesty_note": "Reporting this curve is legitimate; choosing a deployment epoch by reading DAPT off it is test-set selection. Acting on a peak requires a CIC-only proxy that correlates with it -- cic_criterion_would_pick_transfer_peak reports whether the obvious proxy (best in-dataset macro-F1) does."
+}
