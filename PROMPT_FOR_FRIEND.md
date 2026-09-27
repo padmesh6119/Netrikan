@@ -1,3 +1,6 @@
+> **See [STATUS.md](STATUS.md) for the authoritative current state.** This document
+> was written earlier and is stale in places; where the two disagree, STATUS.md is right.
+
 You are helping with a competitive hackathon project called Netrikan — an AI-based
 network attack forecasting system. The deadline is 2026-09-25 (6 days away).
 Produce a single master document (markdown) called WINNING_PLAN.md.

@@ -1,3 +1,6 @@
+> **See [STATUS.md](STATUS.md) for the authoritative current state.** This document
+> was written earlier and is stale in places; where the two disagree, STATUS.md is right.
+
 # AI_HANDOFF.md — Netrikan
 
 Context transfer for an AI agent taking over this repository. Written to be

@@ -1,3 +1,6 @@
+> **See [STATUS.md](STATUS.md) for the authoritative current state.** This document
+> was written earlier and is stale in places; where the two disagree, STATUS.md is right.
+
 # Netrikan V2 — Full Implementation Guide
 
 > This is a developer handoff document. Every change is specified at the

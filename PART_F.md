@@ -1,3 +1,6 @@
+> **See [STATUS.md](STATUS.md) for the authoritative current state.** This document
+> was written earlier and is stale in places; where the two disagree, STATUS.md is right.
+
 # Part F — Demo Attack Replay Button
 
 **Goal**: Add a one-click "Replay real attack" path in `src/app.py` that loads

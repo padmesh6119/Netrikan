@@ -1,3 +1,6 @@
+> **See [STATUS.md](STATUS.md) for the authoritative current state.** This document
+> was written earlier and is stale in places; where the two disagree, STATUS.md is right.
+
 # ARSENAL.md — What the 2026 literature says you should build
 
 Researched 2026-09-19. Every citation checked. Every number computed from your own
