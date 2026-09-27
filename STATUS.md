@@ -304,6 +304,46 @@ The accuracy that IS available cross-dataset is the individual day-held-out mode
 Realising it requires a selection criterion that never touches DAPT, which does not yet
 exist — see the open question below.
 
+**Improvement item (c) — full inverse-frequency class balancing. NEGATIVE.**
+(`models/infil_bp1_w30_metrics.json`, 2026-09-27.) Infiltration F1 0.407 is the weakest
+in-dataset class and drags macro-F1, so the sampler's rebalance exponent was raised from
+the long-standing `p=0.5` (sqrt-inverse) to `p=1.0` (full inverse frequency), which
+lifts Infiltration's relative sample weight from ~5.5x to **29.8x** Benign.
+
+| metric | p=1.0 | p=0.5 (shipped) | delta |
+|---|---|---|---|
+| macro-F1 | 0.7984 | **0.8369** | -0.0384 |
+| **Infiltration** | 0.357 | **0.407** | **-0.050** |
+| Benign | 0.914 | 0.950 | -0.037 |
+| InitialAccess | 0.946 | 0.968 | -0.023 |
+| DoS | 0.971 | 0.979 | -0.008 |
+| Botnet | 0.805 | 0.879 | -0.075 |
+| onset k5 | 0.8856 | 0.9007 | -0.0150 |
+| accuracy | 0.8781 | 0.9266 | -0.0485 |
+
+**Worse on every axis, including the class it was meant to fix**, and it ran MORE epochs
+(18 vs 13) so it is not undertrained. Probable mechanism (hypothesis, not established):
+`WeightedRandomSampler` uses `replacement=True` with a capped `num_samples`, so a 29.8x
+weight redraws Infiltration's 125,090 windows repeatedly inside each epoch — the model
+memorises those windows instead of learning the class, while the other four classes are
+starved of draws.
+
+**Conclusion: `p=0.5` is a measured good default, not an arbitrary one.** Do not raise
+it. If Infiltration is to be improved, the lever is not sampling frequency — its traffic
+genuinely overlaps benign (the same property that makes held-out Infiltration score
+*below chance*, §Task 4a). Loss-side reweighting or a separability-oriented objective
+would be different experiments; oversampling is now ruled out with numbers.
+
+**Where three improvement attempts leave the project (2026-09-27).** (a) operating
+points: the only real win — the entity roll-up gives a defensible operating point
+(25.4% of attack host-hours at 1.85% false alarms/benign host-hour, vs 49.9% shipped),
+though thresholding cannot improve underlying discrimination. (b) ensembling: closed,
+both combiners fail to convert a +0.118 AUC into anything usable at a working FPR; its
+by-product finding — day-held-out models transfer better, 6 of 7, mean AUC 0.749 vs
+0.694 — is the most promising unexploited lead. (c) class balancing: strictly worse.
+**In-dataset accuracy appears to be at a local optimum under the current architecture
+and features; the remaining headroom is cross-dataset, not in-dataset.**
+
 **== NEXT SESSION — pick up here ==** (Tasks 4-Botnet and 7 done 2026-09-27)
 
 Pending Todo.md items, in priority order:
