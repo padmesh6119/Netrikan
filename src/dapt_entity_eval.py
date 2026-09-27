@@ -30,8 +30,8 @@ import dapt
 from model import WorldModel
 from pipeline_v2 import BASE_FEATURES, PORT_FEATURES, add_port_features
 
-MODEL_DIR = os.path.expanduser("~/netrikan/models")
-DATA_DIR  = os.path.expanduser("~/netrikan/data/processed")
+MODEL_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "models")
+DATA_DIR  = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "processed")
 DEVICE    = torch.device("cpu")
 
 CIC_STAGES  = ['Benign', 'InitialAccess', 'DoS', 'Infiltration', 'Botnet']

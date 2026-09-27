@@ -9,15 +9,18 @@ import plotly.graph_objects as go
 import streamlit as st
 
 sys.path.insert(0, os.path.dirname(__file__))
-from attck_map import get_stage, DOS
+from attck_map import get_stage, DOS, RECON, INITIAL_ACCESS, LATERAL, C2, EXFIL
 import forecast as fc
 import infer
 import demo_data
 import pcap_ingest
 import counterfactual
+import ledger
 
-MODEL_DIR = os.path.expanduser("~/netrikan/models")
-CHAIN = [1, 3, 4, 5]
+MODEL_DIR = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'models')
+# kill-chain display order; DoS is appended only when it is in play
+CHAIN = [RECON, INITIAL_ACCESS, LATERAL, C2, EXFIL]
 
 st.set_page_config(page_title="Netrikan", page_icon="👁", layout="wide")
 
@@ -371,9 +374,35 @@ with st.expander("Detail and model evidence"):
     top = np.argsort(np.abs(attr))[::-1][:4]
     feats = ", ".join(f"`{infer.FEATURES[j]}`" for j in top)
     st.markdown(f"**{sig['name']}** — {sig['evidence']}. "
-                f"Model attributes this window to {feats}.")
+                f"Model attributes this window to {feats} (gradient×input).")
     st.markdown(f"Window {i} of {n-1} · {infer.WINDOW} flows · "
                 f"{r['flow_interval']:.1f}s mean interval · {r['n_flows']:,} flows total")
+
+    # SHAP — on demand, because GradientExplainer runs many samples per window
+    st.markdown("**SHAP attribution** — exact per-feature contributions "
+                "(`shap.GradientExplainer`, expected gradients)")
+    tgt = st.selectbox("Explain which output", ["breach", "onset", "attack"],
+                       format_func={"breach": "why this is malicious",
+                                    "onset": "why it will escalate (onset k=5)",
+                                    "attack": "why not benign"}.get, key="shap_tgt")
+    if st.button(f"Compute SHAP for window {i}", key="shap_btn"):
+        with st.spinner("Running SHAP (expected gradients)…"):
+            try:
+                sh = infer.shap_for_windows(df, [i], target=tgt)
+            except Exception as e:
+                sh = []
+                st.warning(f"SHAP unavailable: {e}")
+        if sh:
+            s = sh[0]
+            e = infer.explain(w, shap_result=s)
+            st.markdown(f"Method: `{e['attribution_method']}` · "
+                        f"peak flow in window: **{s['peak_step']+1}/{infer.WINDOW}**")
+            fr = pd.DataFrame(s['top_features'])
+            fr['shap_value'] = fr['shap_value'].round(4)
+            st.dataframe(fr, use_container_width=True, hide_index=True)
+            st.caption("Positive = pushes the output up; magnitude = strength. "
+                       "Summed over the window's flows. Peak flow is where the "
+                       "model concentrated attention within the window.")
 
     pkt_cols = [c for c in pcap_ingest.PACKET_FEATURES if c in df.columns]
     if pkt_cols:
@@ -446,32 +475,40 @@ with st.expander("Run counterfactual interventions", expanded=(risk > 0.3)):
             st.divider()
 
 # ── SHA-256 tamper-evident alert ledger ────────────────────────────────────
-import hashlib
+# Built over every alerting window in the capture, in time order, so the chain is
+# a deterministic function of the evidence rather than of the operator's clicks.
+LEDGER_THRESHOLD = 0.30
+chain = ledger.build(r["windows"], threshold=LEDGER_THRESHOLD,
+                     source=source, model=os.path.basename(infer.MODEL_PATH))
 
-def _chain_alert(prev_hash: str, alert: dict) -> str:
-    payload = json.dumps(alert, sort_keys=True) + prev_hash
-    return hashlib.sha256(payload.encode()).hexdigest()
-
-if risk > 0.3:
+if chain:
     st.markdown('<div class="sec">Forensic audit ledger</div>', unsafe_allow_html=True)
-    with st.expander("SHA-256 hash-chained alert record"):
-        alert_record = {
-            "window_idx":   i,
-            "time_offset_s": float(w["time"]),
-            "stage":         stage["name"],
-            "risk":          round(risk, 4),
-            "signal":        sig["name"],
-            "evidence":      sig["evidence"],
-            "mitre_id":      stage.get("technique", ""),
-            "lead_s":        r["lead_seconds"],
-        }
-        genesis = "0" * 64
-        chain_hash = _chain_alert(genesis, alert_record)
-        alert_record["sha256"] = chain_hash
-        alert_record["prev_hash"] = genesis
+    ok, bad = ledger.verify(chain)
+    with st.expander(f"SHA-256 hash-chained alert record — {len(chain)} blocks"):
+        st.markdown(
+            f"**Chain head** `{ledger.head(chain)}`  \n"
+            f"Committing to this one hash fixes all {len(chain)} blocks: each "
+            f"block's digest includes the previous block's hash, so altering any "
+            f"field changes every hash after it."
+        )
+        if ok:
+            st.success(f"Chain verified — {len(chain)} blocks recomputed, all intact.")
+        else:
+            st.error(f"Chain broken at block {bad}.")
 
-        st.json(alert_record)
-        st.caption(f"Hash: `{chain_hash}`  \n"
-                   "Each alert's SHA-256 includes the previous block's hash. "
-                   "Modifying any field changes all subsequent hashes — "
-                   "tamper-evident by construction.")
+        blocks = [b for b in chain if b["record"]["window_idx"] == i] or chain
+        label = ("block for the window currently in view"
+                 if blocks is not chain else "first block")
+        st.caption(f"Showing the {label}. Threshold: risk > {LEDGER_THRESHOLD:.0%}.")
+        st.json(blocks[0])
+
+        st.download_button(
+            "Download full chain (JSON)",
+            data=json.dumps(chain, indent=2),
+            file_name="netrikan_alert_ledger.json",
+            mime="application/json",
+        )
+        st.caption("Verify independently: "
+                   "`python3 -c \"import sys,json;sys.path.insert(0,'src');"
+                   "import ledger;print(ledger.verify(json.load(open("
+                   "'netrikan_alert_ledger.json'))))\"`")

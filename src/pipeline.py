@@ -4,8 +4,8 @@ import pandas as pd
 from sklearn.preprocessing import StandardScaler
 import pickle
 
-DATA_DIR = os.path.expanduser("~/netrikan/data/cic-ids2018")
-OUT_DIR = os.path.expanduser("~/netrikan/data/processed")
+DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "cic-ids2018")
+OUT_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "processed")
 os.makedirs(OUT_DIR, exist_ok=True)
 
 FEATURES = [

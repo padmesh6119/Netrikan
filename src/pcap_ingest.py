@@ -1,6 +1,7 @@
 import os
 import shutil
 import subprocess
+import sys
 import numpy as np
 import pandas as pd
 
@@ -68,8 +69,15 @@ def _load_via_nfstream(path: str, min_packets: int) -> pd.DataFrame:
     out['Active Mean']      = 0.0
     out['Idle Mean']        = 0.0
 
+    # nfstream's flow records carry no TTL, TCP window, fragment or
+    # retransmission data, so these stay zero on this path and the four
+    # packet-level rules in signals.py cannot fire. Warned, not silent.
     for col in PACKET_FEATURES:
         out[col] = 0.0
+    print("WARNING: nfstream ingest provides no packet-level features "
+          f"({', '.join(PACKET_FEATURES)}); they are zero-filled and the "
+          "packet-level detectors will not fire. Install tshark for full "
+          "feature extraction.", file=sys.stderr)
 
     out['Dst Port']   = raw['dst_port']
     out['Protocol']   = raw['protocol']
@@ -226,9 +234,15 @@ def _load_via_tshark(path: str, min_packets: int) -> pd.DataFrame:
 
 
 def load_pcap(path: str, min_packets: int = 2) -> pd.DataFrame:
+    """tshark is preferred because it is the only path that populates
+    PACKET_FEATURES. nfstream is faster but flow-level only, which silently
+    disables every packet-level detector."""
+    if shutil.which('tshark'):
+        return _load_via_tshark(path, min_packets)
     if _nfstream_available():
         return _load_via_nfstream(path, min_packets)
-    return _load_via_tshark(path, min_packets)
+    raise RuntimeError("no PCAP backend available: install tshark (preferred, "
+                       "provides packet-level features) or nfstream")
 
 
 if __name__ == '__main__':

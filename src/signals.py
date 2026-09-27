@@ -1,5 +1,5 @@
 import numpy as np
-from attck_map import INITIAL_ACCESS, DOS, LATERAL, C2, EXFIL, BENIGN
+from attck_map import INITIAL_ACCESS, DOS, LATERAL, C2, EXFIL, BENIGN, RECON
 
 PORT_NAMES = {
     21: "FTP", 22: "SSH", 23: "Telnet", 25: "SMTP", 53: "DNS",
@@ -66,14 +66,16 @@ def detect(raw_window: np.ndarray, ports: np.ndarray = None,
     cands = []
 
     # ---- reconnaissance / scanning ----
+    # These hint RECON, not INITIAL_ACCESS: scanning precedes access rather than
+    # achieving it, and ATT&CK separates them (TA0043 vs TA0001).
     if n_uniq_ports >= 3 and dur < 50000 and syn >= 3:
         breadth = min(n_uniq_ports / 10.0, 1.0)
         name = f"{svc} port scan" if svc and n_uniq_ports < 8 else "Port sweep"
-        cands.append((name, 0.55 + 0.35 * breadth, INITIAL_ACCESS,
+        cands.append((name, 0.55 + 0.35 * breadth, RECON,
                       f"{n_uniq_ports} distinct ports, {syn:.0f} SYN/flow, {dur/1000:.0f}ms flows"))
 
     if top_port in (445, 139) and dur < 200000 and syn >= 3:
-        cands.append(("SMB port scan", 0.88, INITIAL_ACCESS,
+        cands.append(("SMB port scan", 0.88, RECON,
                       f"port 445 probing, {syn:.0f} SYN/flow, {rst:.0f} RST"))
 
     # ---- brute force ----
@@ -140,7 +142,7 @@ def detect(raw_window: np.ndarray, ports: np.ndarray = None,
         # packets claiming one conversation but arriving with very different hop
         # counts -- classic spoofing / injected-traffic indicator
         if ttl_std > 25 and ttl_mean > 0:
-            cands.append(("TTL anomaly — possible spoofing", 0.74, INITIAL_ACCESS,
+            cands.append(("TTL anomaly — possible spoofing", 0.74, RECON,
                           f"TTL varies by {ttl_std:.0f} within one flow "
                           f"(mean {ttl_mean:.0f}) — inconsistent hop counts"))
 
@@ -158,7 +160,7 @@ def detect(raw_window: np.ndarray, ports: np.ndarray = None,
 
         # fragmenting traffic is a long-standing way to slip past signature IDS
         if frag >= 2:
-            cands.append(("IP fragmentation evasion", 0.72, INITIAL_ACCESS,
+            cands.append(("IP fragmentation evasion", 0.72, RECON,
                           f"{frag:.0f} fragmented packets — signature evasion"))
 
     if not cands:

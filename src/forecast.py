@@ -1,6 +1,6 @@
 import numpy as np
 from attck_map import (
-    BENIGN, INITIAL_ACCESS, DOS, LATERAL, C2, EXFIL,
+    BENIGN, INITIAL_ACCESS, DOS, LATERAL, C2, EXFIL, RECON,
     N_STAGES, DAMAGE_STAGES, short,
 )
 
@@ -11,25 +11,37 @@ from attck_map import (
 # forecast escalate far too eagerly.
 MEASURED_PERSISTENCE = {
     BENIGN: 0.980,          # DAPT Benign
-    INITIAL_ACCESS: 0.929,  # DAPT Reconnaissance
+    RECON: 0.929,           # DAPT Reconnaissance
+    INITIAL_ACCESS: 0.929,  # shares DAPT Reconnaissance -- see note below
     LATERAL: 0.931,         # DAPT Lateral Movement
     C2: 0.968,              # DAPT Establish Foothold
     DOS: 0.900,             # not present in DAPT -- volumetric floods sustain
     EXFIL: 0.930,           # DAPT Exfiltration had only 15 flows; use Lateral
 }
 
+# NOTE on provenance: before RECON existed, INITIAL_ACCESS carried DAPT's
+# Reconnaissance figure (0.929) because scanning and first access were one stage
+# here, while DAPT's "Establish Foothold" (0.968) was mapped to C2. Now that
+# RECON is separate, INITIAL_ACCESS arguably belongs on Establish Foothold and
+# C2 has no direct DAPT equivalent. That re-derivation is deliberately NOT
+# applied here: it would change the forecast dynamics and every published
+# number, so it needs a measurement run against DAPT, not a judgement call.
+# Until then both RECON and INITIAL_ACCESS share 0.929 and this is stated
+# rather than hidden.
+
 # Relative weights for where a stage goes WHEN it moves. DAPT contains a single
 # campaign (7 stage changes total), too few to estimate these, so the ordering
 # stays ATT&CK doctrine: foothold -> lateral -> C2 -> exfil. Each row is scaled
 # to fill exactly (1 - persistence), so the measured dwell is preserved.
 DOCTRINE_SHAPE = np.array([
-    # Ben   IA    DoS   Lat   C2    Exf
-    [0.00, 0.55, 0.25, 0.12, 0.05, 0.03],  # from Benign
-    [0.21, 0.00, 0.09, 0.54, 0.14, 0.02],  # from Initial Access
-    [0.78, 0.11, 0.00, 0.07, 0.03, 0.01],  # from DoS
-    [0.12, 0.09, 0.04, 0.00, 0.61, 0.14],  # from Lateral
-    [0.09, 0.04, 0.03, 0.24, 0.00, 0.60],  # from C2
-    [0.17, 0.03, 0.03, 0.11, 0.66, 0.00],  # from Exfil
+    # Ben   IA    DoS   Lat   C2    Exf   Recon
+    [0.00, 0.18, 0.20, 0.05, 0.02, 0.01, 0.54],  # from Benign -> mostly recon
+    [0.18, 0.00, 0.08, 0.52, 0.13, 0.02, 0.07],  # from Initial Access
+    [0.76, 0.10, 0.00, 0.06, 0.03, 0.01, 0.04],  # from DoS
+    [0.11, 0.08, 0.04, 0.00, 0.59, 0.14, 0.04],  # from Lateral
+    [0.08, 0.04, 0.03, 0.23, 0.00, 0.58, 0.04],  # from C2
+    [0.16, 0.03, 0.03, 0.10, 0.64, 0.00, 0.04],  # from Exfil
+    [0.20, 0.58, 0.06, 0.11, 0.03, 0.01, 0.00],  # from Recon -> initial access
 ])
 
 
@@ -49,7 +61,8 @@ def _build_transition():
 TRANSITION = _build_transition()
 
 # position along the kill chain; DoS is an off-chain impact branch
-CHAIN_POS = {BENIGN: 0, INITIAL_ACCESS: 1, LATERAL: 2, C2: 3, EXFIL: 4, DOS: 99}
+CHAIN_POS = {BENIGN: 0, RECON: 1, INITIAL_ACCESS: 2, LATERAL: 3, C2: 4,
+             EXFIL: 5, DOS: 99}
 
 DEFAULT_FLOW_INTERVAL = 1.2   # seconds per flow when timestamps absent
 HORIZON_SECONDS = 900
