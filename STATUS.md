@@ -396,6 +396,58 @@ post-hoc rule selected on the test set.** It must be validated on a transfer set
 played no part in designing it before any checkpoint is promoted on its basis. Recorded
 as a hypothesis, not a decision.
 
+**Improvement item (e) — item (d) RE-TESTED ACROSS 4 SEEDS. (d)'s epoch claim is
+REFUTED; a bigger finding replaces it.** (`models/transfer_vs_epoch_s43/44/45.json`,
+2026-09-27.) Seeds 43/44/45 retrained (5 epochs each, `--save-epochs`) and every
+checkpoint scored on DAPT. Compared on epochs 1-5 only, since seed 42 ran 15.
+
+DAPT breach AUC:
+
+| epoch | s42 | s43 | s44 | s45 | **mean ± std** |
+|---|---|---|---|---|---|
+| 1 | 0.809 | 0.789 | 0.707 | 0.715 | 0.755 ± 0.045 |
+| 2 | 0.728 | 0.795 | 0.793 | 0.781 | 0.774 ± 0.027 |
+| 3 | 0.789 | 0.847 | 0.841 | 0.787 | **0.816 ± 0.028** |
+| 4 | 0.748 | 0.860 | 0.864 | 0.784 | 0.814 ± 0.050 |
+| 5 | 0.752 | 0.818 | 0.847 | 0.799 | 0.804 ± 0.035 |
+
+recall @ FPR 5%: ep1 0.073 ± 0.023 · ep2 0.121 ± 0.104 · ep3 0.205 ± 0.083 ·
+**ep4 0.268 ± 0.127** · ep5 0.244 ± 0.110.
+In-dataset macro-F1: ep3 0.8284 ± 0.0053 · ep4 0.8302 ± 0.0079 · ep5 0.8311 ± 0.0093.
+
+**RETRACTED from item (d):**
+1. **"Epoch 3 is the sweet spot" was a single-seed artifact.** Across seeds recall@5%
+   peaks at **epoch 4**, and the peak AUC epoch moved 1 → 4 → 4 → 5 by seed.
+2. **"Less fitting transfers better" is refuted in the 1-5 range.** Epochs 3-5 transfer
+   BETTER than 1-2 (mean AUC 0.816/0.814/0.804 vs 0.755/0.774). Seed 42's epoch-1 peak
+   was noise.
+3. **Seed 42 was a below-average transfer draw.** Its epoch-4 recall@5% was 0.077 where
+   seeds 43/44 reached 0.336/0.418.
+
+**THE ROBUST FINDING: the deployed checkpoint is the outlier.** All **20 of 20**
+(seed, epoch) checkpoints beat `cic_v2_w30`'s DAPT breach AUC of **0.694** — range
+0.707-0.864, mean **0.792**. Even epoch 13 of the 15-epoch seed-42 run scores 0.756. The
+in-dataset cost of a fresh epoch-4/5 checkpoint is ~0.006 macro-F1 (0.830 vs 0.8369).
+**`models/cic_v2_w30.pt` should be replaced for any cross-dataset use.**
+
+**This is a RECIPE, not a selection, so it is legitimate.** "Retrain on all 7 days and
+stop at epoch 4-5" never consults DAPT; 20/20 says almost any such checkpoint beats the
+deployed one. Picking the single best of the twenty *by its DAPT score* would be test-set
+selection and is still not done.
+
+**Unexplained and worth knowing.** Why `cic_v2_w30` transfers worse than every fresh run
+of nominally the same recipe is not established. It is not simply over-training (epoch 13
+of a fresh run still beats it) and not seed luck alone (all four seeds beat it at every
+epoch). Candidates: a different `samples`/config at the time it was trained, or a
+different dataset build. Until this is understood, treat the deployed checkpoint's
+cross-dataset numbers throughout this file as a pessimistic outlier rather than typical.
+
+**Variance caution stands and is quantified.** recall@FPR5% at epoch 4 ranges 0.077 to
+0.418 across seeds (std 0.127 on mean 0.268) — a relative spread of ~47%. In-dataset
+macro-F1 over the same runs varies by only ±0.009. Cross-dataset metrics are an order of
+magnitude noisier than in-dataset ones, so **no single-run cross-dataset comparison in
+this project should be trusted without seeds**, including comparisons recorded above.
+
 **== NEXT SESSION — pick up here ==** (Tasks 4-Botnet and 7 done 2026-09-27)
 
 Pending Todo.md items, in priority order:
