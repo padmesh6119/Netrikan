@@ -1,0 +1,85 @@
+{
+  "checkpoint": "models/cic_v2_w30.pt (DEPLOYED \u2014 infer.py loads this)",
+  "what_it_is": "Consolidated model: 7 time-sorted CIC-IDS-2018 days, all 5 classes, all heads trained (stage/breach/state/onset) + temporal attention, selected on combined onset+macro-F1. Trained on Apple MPS, 30.7 min.",
+  "in_dataset": {
+    "onset_auc": {
+      "k1": 0.8891,
+      "k5": 0.9007,
+      "k15": 0.9019,
+      "k30": 0.893
+    },
+    "persistence_onset_auc": 0.5,
+    "macro_f1": 0.8369,
+    "accuracy": 0.9266,
+    "per_class_f1": {
+      "Benign": 0.95,
+      "InitialAccess": 0.968,
+      "DoS": 0.979,
+      "Infiltration": 0.407,
+      "Botnet": 0.879
+    }
+  },
+  "mandatory_baseline": {
+    "logreg_single": 0.4204,
+    "logreg_flat": 0.6916,
+    "lstm": 0.8369,
+    "lstm_gain_over_flat": 0.1452
+  },
+  "transition_only": {
+    "model_f1": 0.3425,
+    "persistence_f1": 0.0,
+    "brier_skill": 0.4882
+  },
+  "calibration": {
+    "T": 1.0761524231260249,
+    "ece_before": 0.0088,
+    "ece_after": 0.0052
+  },
+  "world_model_rollout": {
+    "verdict": "PASS: beats both persistence and the window mean -- the state head learned genuine dynamics",
+    "skill_vs_persistence": 0.2175,
+    "skill_vs_window_mean": 0.0577,
+    "steps_beating_persistence": 10
+  },
+  "cross_dataset_dapt": {
+    "attack_recall": 0.6779,
+    "attack_precision": 0.3781,
+    "breach_roc_auc": 0.6935683780314125,
+    "per_phase": {
+      "Benign": 0.596,
+      "Reconnaissance": 0.773,
+      "Establish Foothold": 0.495,
+      "Lateral Movement": 0.86,
+      "Data Exfiltration": 0.733
+    },
+    "onset_transfer_auc": {
+      "k1": 0.6286,
+      "k5": 0.6664,
+      "k15": 0.7047,
+      "k30": 0.6792
+    },
+    "breach_roc_auc_note": "CORRECTED 2026-09-27. Was 0.6791673686497901, which was actually the k=30 ONSET AUC: eval_dapt.py reused `auc` as the onset loop variable, overwriting the breach ROC-AUC before it was written to JSON. Fixed at src/eval_dapt.py."
+  },
+  "fusion_ablation_pure_model": {
+    "recall": 0.6972,
+    "fpr": 0.3997,
+    "binary_f1": 0.4979407879400109,
+    "sedi": 0.4159,
+    "note": "best SEDI at weight=1.0; rules hurt cross-dataset. Consider raising MODEL_WEIGHT."
+  },
+  "explainability": {
+    "methods": [
+      "shap.GradientExplainer (on-demand, breach/onset/attack targets)",
+      "temporal attention (per-timestep, trained into the model)",
+      "gradient x input (always-on per-window)",
+      "14 named rule detectors with evidence strings"
+    ]
+  },
+  "improvement_over_onset_only_checkpoint": {
+    "cross_dataset_recall": "0.295 -> 0.678",
+    "establish_foothold_detect": "0.015 -> 0.495",
+    "onset_auc_k5": "0.902 -> 0.901 (held)",
+    "macro_f1": "0.836 -> 0.837 (held)",
+    "added": "temporal attention + real SHAP; rollout still PASS"
+  }
+}

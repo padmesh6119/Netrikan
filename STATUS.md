@@ -204,7 +204,9 @@ merely badly placed:
 | breach @ FPR 0.1% | 0.001 | 0.233 | 0.001 | -0.013 |
 
 At 5% FPR the detector finds 6.3% of attacks. Tightening the threshold discards true
-positives almost as fast as false ones — this is what ROC-AUC 0.679 means in practice.
+positives almost as fast as false ones — this is what breach ROC-AUC 0.694 means in
+practice. (0.679 appeared here before 2026-09-27; that figure was the k=30 onset AUC,
+misreported as the breach AUC by a variable-shadowing bug in `eval_dapt.py`.)
 
 **The argmax is not better ranked, just looser.** Matched to the argmax's own FPR
 (0.4041), breach scores recall **0.681** vs argmax **0.678** (SEDI 0.389 vs 0.385) and
@@ -234,7 +236,7 @@ operator-facing one. This is the defensible operating point the project previous
 **What this does NOT fix.** Cross-dataset detection is still weak in absolute terms — 25%
 of attack host-hours at a 1.85% false-alarm rate, or 70% at an unusable 50%. The roll-up
 improves how the result is *reported and deployed*, not the underlying discrimination.
-Raising ROC-AUC 0.679 needs a better model, not a better threshold.
+Raising breach ROC-AUC 0.694 needs a better model, not a better threshold.
 
 **Improvement item (b) — LODO ensemble on DAPT**
 (`models/lodo_ensemble_dapt.json`, `bench/lodo_ensemble.py`, 2026-09-27).
@@ -447,6 +449,55 @@ cross-dataset numbers throughout this file as a pessimistic outlier rather than 
 macro-F1 over the same runs varies by only ±0.009. Cross-dataset metrics are an order of
 magnitude noisier than in-dataset ones, so **no single-run cross-dataset comparison in
 this project should be trusted without seeds**, including comparisons recorded above.
+
+**Item (f) — the (e) mystery RESOLVED, and a reporting bug found and fixed (2026-09-27).**
+
+**BUG: `eval_dapt.py` saved the wrong number as `roc_auc`.** The onset loop reused `auc`
+as its loop variable, overwriting the breach head's ROC-AUC before the JSON was written.
+Every committed `dapt_*.json` for a checkpoint WITH an onset head therefore reported the
+**k=30 onset AUC** in the `roc_auc` field. Verified: `dapt_cic_v2_w30.json` had
+`roc_auc == onset k30 == 0.6791673686497901` exactly; `dapt_cic_full_w30.json` likewise.
+`dapt_base_w30.json` was unaffected only because `base_w30` has no onset head.
+
+Fixed at `src/eval_dapt.py` (`breach_auc` / `o_auc`, and the JSON now carries an explicit
+`breach_roc_auc`). Regenerated: the deployed checkpoint's true cross-dataset breach
+ROC-AUC is **0.6936**, not 0.679 — independently confirmed by `bench/lodo_ensemble.py`,
+which computed 0.6936 from its own code path. `cic_v2_run_summary.json` corrected, and
+the 0.679 references in this file corrected. The error was small in magnitude but it
+misreported one metric as another, which is exactly the class of mistake this project
+exists to avoid.
+
+**RESOLVED: why the deployed checkpoint transfers worse than every fresh run.** It is not
+a defect in the checkpoint, and not config drift. Scoring each run's best-combined
+checkpoint:
+
+| checkpoint | selected epoch | in-dataset macro-F1 | DAPT breach AUC |
+|---|---|---|---|
+| **`cic_v2_w30` (deployed)** | 8 | 0.8369 | **0.6936** |
+| `xfer_w30` | 8 | 0.8367 | 0.7386 |
+| `xfer_s43` | 4 | 0.8377 | **0.8595** |
+| `xfer_s44` | 5 | 0.8394 | 0.8469 |
+| `xfer_s45` | 3 | 0.8211 | 0.7868 |
+
+`cic_v2_w30` and `xfer_w30` are the SAME recipe, data, seed (42) and selected epoch (8),
+and are indistinguishable in-dataset (0.8369 vs 0.8367) — yet their transfer differs by
+**0.045**. Training on MPS is not bit-deterministic, so two nominally identical runs
+diverge slightly, and cross-dataset transfer amplifies that divergence while in-dataset
+performance absorbs it. Across the five checkpoints in-dataset macro-F1 spans **0.018**
+while DAPT AUC spans **0.166** — 9x wider.
+
+**Consequences.**
+1. **In-dataset checkpoint selection is close to uninformative about transfer.** The
+   `combined` criterion is right for in-dataset quality and near-random for cross-domain
+   quality. Any deployment targeting an unseen network needs a different criterion, and
+   no such criterion has been validated here.
+2. **The deployed checkpoint is the low tail of a wide distribution, not a broken model.**
+   Item (e)'s "20/20 beat it" stands, but the honest framing is "it drew badly," not
+   "fresh training is systematically better." Expected gain from retraining is real but
+   should be quoted with the spread, not as a fixed +0.10.
+3. **Every cross-dataset number in this file that came from one run carries roughly
+   +/-0.08 of run-to-run noise.** That includes the headline 67.8% attack recall and the
+   40.4% FPR. They are not wrong, but they are one draw.
 
 **== NEXT SESSION — pick up here ==** (Tasks 4-Botnet and 7 done 2026-09-27)
 
