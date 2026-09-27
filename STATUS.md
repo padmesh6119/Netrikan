@@ -499,6 +499,40 @@ while DAPT AUC spans **0.166** — 9x wider.
    +/-0.08 of run-to-run noise.** That includes the headline 67.8% attack recall and the
    40.4% FPR. They are not wrong, but they are one draw.
 
+**Task 8a (partial) — seed variance, and `scripts/reproduce.sh`**
+(`models/seed_variance_cic_full_w30.json`, 2026-09-27.)
+
+Four runs exist (seeds 42/43/44/45), so the headline metrics finally have error bars.
+**Caveat, stated in the JSON too: this is not a clean 5-seed replication.** Seed 42 ran
+15 epochs and seeds 43/44/45 ran 5; all four select on the same `combined` criterion, so
+each is a valid run of the recipe, but the training budget is not held constant and a 5th
+seed is missing. Transition-window macro-F1 and per-seed onset PR-AUC are left blank
+rather than guessed — each needs its own eval pass.
+
+| metric | mean ± std (n=4) | min–max |
+|---|---|---|
+| in-dataset macro-F1 | **0.8337 ± 0.0085** | 0.8211–0.8394 |
+| onset AUC k5 | **0.8968 ± 0.0068** | 0.8867–0.9013 |
+| onset AUC k15 | 0.8985 ± 0.0097 | 0.8852–0.9085 |
+| Infiltration F1 | 0.4153 ± 0.0267 | 0.385–0.444 |
+| **DAPT breach ROC-AUC** | **0.808 ± 0.0561** | 0.7386–0.8595 |
+
+**The cross-dataset standard deviation is 8.2x the onset AUC's.** In-dataset headline
+numbers are safe to quote as point values; no single-run cross-dataset number is.
+
+**Where this puts the deployed checkpoint, precisely.** `cic_v2_w30`'s in-dataset
+macro-F1 (0.8369) and onset k5 (0.9007) are **within one standard deviation** of these
+means — an ordinary draw. Its DAPT breach AUC of 0.6936 is **2.0 sigma below** the
+cross-dataset mean of 0.808. That is the honest version of item (e)'s "20/20 beat it":
+the checkpoint is normal in-dataset and a low outlier cross-dataset.
+
+**`scripts/reproduce.sh`** now runs the whole chain in dependency order, 29 stages, with
+`STAGES=` to run a subset and `DRY=1` to print the plan. Every flag was verified against
+the actual scripts (`bench/dapt_persistence.py` takes none and writes its own path;
+`export` deliberately precedes `evals` because `bench/latency.py` benchmarks the ONNX
+file). It sets `NETRIKAN_WORKERS=0`, records why, and skips the Suricata stage with a
+notice when `suricata` is absent rather than failing.
+
 **== NEXT SESSION — pick up here ==** (Tasks 4-Botnet and 7 done 2026-09-27)
 
 Pending Todo.md items, in priority order:
