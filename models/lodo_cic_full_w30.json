@@ -1,0 +1,252 @@
+{
+  "data": "/tmp/netrikan-cic-full-w30",
+  "n_folds": 7,
+  "epochs_per_fold": 12,
+  "aggregate": {
+    "onset_auc_k5": {
+      "mean": 0.6358,
+      "std": 0.0926
+    },
+    "supported_class_f1": {
+      "mean": 0.5383,
+      "std": 0.1778
+    },
+    "stage_macro_f1_DO_NOT_REPORT": {
+      "mean": 0.2279,
+      "std": 0.0974
+    }
+  },
+  "worst_fold": {
+    "fold": 5,
+    "stage_macro_f1": 0.1366,
+    "held_out_support": {
+      "Benign": 538636,
+      "InitialAccess": 0,
+      "DoS": 0,
+      "Infiltration": 68236,
+      "Botnet": 0
+    }
+  },
+  "folds": [
+    {
+      "fold": 0,
+      "val_file": 0,
+      "onset_auc": {
+        "k1": 0.6652,
+        "k5": 0.6649,
+        "k15": 0.6642,
+        "k30": 0.6724
+      },
+      "stage_macro_f1": 0.1654,
+      "supported_class_f1": 0.4134,
+      "per_class_f1": {
+        "Benign": 0.827,
+        "InitialAccess": 0.0,
+        "DoS": 0.0,
+        "Infiltration": 0.0,
+        "Botnet": 0.0
+      },
+      "held_out_support": {
+        "Benign": 758322,
+        "InitialAccess": 0,
+        "DoS": 0,
+        "Infiltration": 0,
+        "Botnet": 286173
+      },
+      "train_support_of_present_classes": {
+        "Benign": 3915195,
+        "Botnet": 0
+      },
+      "family_holdout_classes": [
+        "Botnet"
+      ]
+    },
+    {
+      "fold": 1,
+      "val_file": 1,
+      "onset_auc": {
+        "k1": 0.4247,
+        "k5": 0.445,
+        "k15": 0.4604,
+        "k30": 0.487
+      },
+      "stage_macro_f1": 0.4413,
+      "supported_class_f1": 0.8825,
+      "per_class_f1": {
+        "Benign": 0.947,
+        "InitialAccess": 0.0,
+        "DoS": 0.818,
+        "Infiltration": 0.0,
+        "Botnet": 0.0
+      },
+      "held_out_support": {
+        "Benign": 446742,
+        "InitialAccess": 0,
+        "DoS": 601802,
+        "Infiltration": 0,
+        "Botnet": 0
+      },
+      "train_support_of_present_classes": {
+        "Benign": 4226775,
+        "DoS": 52498
+      },
+      "family_holdout_classes": []
+    },
+    {
+      "fold": 2,
+      "val_file": 2,
+      "onset_auc": {
+        "k1": 0.631,
+        "k5": 0.5992,
+        "k15": 0.5528,
+        "k30": 0.5138
+      },
+      "stage_macro_f1": 0.1983,
+      "supported_class_f1": 0.4958,
+      "per_class_f1": {
+        "Benign": 0.992,
+        "InitialAccess": 0.0,
+        "DoS": 0.0,
+        "Infiltration": 0.0,
+        "Botnet": 0.0
+      },
+      "held_out_support": {
+        "Benign": 1042271,
+        "InitialAccess": 566,
+        "DoS": 0,
+        "Infiltration": 0,
+        "Botnet": 0
+      },
+      "train_support_of_present_classes": {
+        "Benign": 3631246,
+        "InitialAccess": 380943
+      },
+      "family_holdout_classes": []
+    },
+    {
+      "fold": 3,
+      "val_file": 3,
+      "onset_auc": {
+        "k1": 0.7839,
+        "k5": 0.7711,
+        "k15": 0.7395,
+        "k30": 0.7112
+      },
+      "stage_macro_f1": 0.22,
+      "supported_class_f1": 0.5501,
+      "per_class_f1": {
+        "Benign": 0.67,
+        "InitialAccess": 0.0,
+        "DoS": 0.0,
+        "Infiltration": 0.43,
+        "Botnet": 0.0
+      },
+      "held_out_support": {
+        "Benign": 235748,
+        "InitialAccess": 0,
+        "DoS": 0,
+        "Infiltration": 92403,
+        "Botnet": 0
+      },
+      "train_support_of_present_classes": {
+        "Benign": 4437769,
+        "Infiltration": 68236
+      },
+      "family_holdout_classes": []
+    },
+    {
+      "fold": 4,
+      "val_file": 4,
+      "onset_auc": {
+        "k1": 0.7148,
+        "k5": 0.6303,
+        "k15": 0.5008,
+        "k30": 0.425
+      },
+      "stage_macro_f1": 0.2779,
+      "supported_class_f1": 0.6948,
+      "per_class_f1": {
+        "Benign": 0.969,
+        "InitialAccess": 0.0,
+        "DoS": 0.421,
+        "Infiltration": 0.0,
+        "Botnet": 0.0
+      },
+      "held_out_support": {
+        "Benign": 988020,
+        "InitialAccess": 0,
+        "DoS": 52498,
+        "Infiltration": 0,
+        "Botnet": 0
+      },
+      "train_support_of_present_classes": {
+        "Benign": 3685497,
+        "DoS": 601802
+      },
+      "family_holdout_classes": []
+    },
+    {
+      "fold": 5,
+      "val_file": 5,
+      "onset_auc": {
+        "k1": 0.7152,
+        "k5": 0.6892,
+        "k15": 0.6156,
+        "k30": 0.5723
+      },
+      "stage_macro_f1": 0.1366,
+      "supported_class_f1": 0.3415,
+      "per_class_f1": {
+        "Benign": 0.481,
+        "InitialAccess": 0.0,
+        "DoS": 0.0,
+        "Infiltration": 0.202,
+        "Botnet": 0.0
+      },
+      "held_out_support": {
+        "Benign": 538636,
+        "InitialAccess": 0,
+        "DoS": 0,
+        "Infiltration": 68236,
+        "Botnet": 0
+      },
+      "train_support_of_present_classes": {
+        "Benign": 4134881,
+        "Infiltration": 92403
+      },
+      "family_holdout_classes": []
+    },
+    {
+      "fold": 6,
+      "val_file": 6,
+      "onset_auc": {
+        "k1": 0.6444,
+        "k5": 0.6509,
+        "k15": 0.636,
+        "k30": 0.6895
+      },
+      "stage_macro_f1": 0.1559,
+      "supported_class_f1": 0.3897,
+      "per_class_f1": {
+        "Benign": 0.779,
+        "InitialAccess": 0.0,
+        "DoS": 0.0,
+        "Infiltration": 0.0,
+        "Botnet": 0.0
+      },
+      "held_out_support": {
+        "Benign": 663778,
+        "InitialAccess": 380943,
+        "DoS": 0,
+        "Infiltration": 0,
+        "Botnet": 0
+      },
+      "train_support_of_present_classes": {
+        "Benign": 4009739,
+        "InitialAccess": 566
+      },
+      "family_holdout_classes": []
+    }
+  ],
+  "note": "Days with one attack family produce zero-support classes in some folds; those are reported per fold, not averaged into a class mean. stage_macro_f1 averages over all 5 classes including ones with zero val support, so it is depressed by absence rather than by error and must NOT be quoted -- use supported_class_f1 and the per-class table. Folds listing family_holdout_classes are held-out-family tests, not domain-shift tests: that class occurs on no other capture day."
+}
