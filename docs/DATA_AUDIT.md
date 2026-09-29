@@ -1,6 +1,6 @@
 # Data audit (Phase 0)
 
-Every number below comes from `make audit` → `results/audit/audit_raw.txt` (script: `scripts/audit_data.py`).
+Sections 1-7 were produced on 2026-09-29 (commit c060258) from the full ZeekData22 and ZeekDataFall22 downloads; **that data has since been removed from `data/`**, so those numbers are historical and `make audit` no longer reproduces them (the raw output is in git history). Section 8 covers the current data (2026-09-30) and is reproducible with `make audit` → `results/audit/audit_raw.txt` (script: `scripts/audit_data.py`).
 Nothing here is a modelling result. Environment: 11 GB free disk (not 25), Python 3.12 venv in `.venv/`.
 
 ## 0. Problem statement, quoted back
@@ -100,3 +100,30 @@ Source of truth: `problem-statement.md`.
 3. **DAPT role:** treat as the only corpus with true benign→recon→foothold→lateral→exfil chains on the same actor (recommended: evaluation of forecasting on `206.207.50.50`, plus LODO), even though it is small.
 4. **CIC-2018:** confirm it is excluded from the forecasting task, with only an optional detection-pretraining role.
 5. **The brief asks for a logistic-regression baseline with F1/precision/recall/FPR;** your rules ask for lead-time, recall at a fixed alarms/host-hour budget, and calibration. I plan to include LR as a fifth baseline row and report F1/P/R/FPR as secondary metrics, keeping your protocol primary. OK?
+
+## 8. Addendum 2026-09-30: current data (`data/UWF_Datasets/`)
+
+**What is on disk now:** DAPT2020 (unchanged); ZeekData24 (7 weekly parquet parts, 1.92M rows, about 140 MB, plus 4 metrics files); ZeekData22 trimmed to weeks 2021-12-12 and 2021-12-19 plus the 63-row 2022-02-13 part and 3 small CSVs; CIC-2018 stripped parquet (unchanged). ZeekDataFall22 is gone. `CSECICIDS2018_improved.zip` (9.7 GB, the IP-carrying CIC files) sits in the repo root, unextracted.
+
+### ZeekData24 (new)
+- **Columns:** same 23-column Zeek conn schema as Z22 plus `label_technique` and `label_binary`. `ts` and `datetime` agree exactly (offset 0 h), unlike Z22.
+- **Rows:** 1,916,757, no exact duplicates (the 1.02 rows per `uid` are multi-tactic labels on the same flow, 6,050 uids). Not affected by Z22's 2x and 256x duplication.
+- **Two disjoint kinds of week:**
+  - Attack weeks 2024-02-28 → 2024-03-27 (5 files): 958,648 rows, **0 benign rows**, 15 source hosts, 105 destinations.
+  - Benign weeks 2024-10-31 → 2024-11-05 (2 files): 958,109 rows, **0 attack rows**, 95 source hosts, about 340 destinations.
+  - So the attack captures are attack-only extracts. Benign background that these hosts certainly generated during those weeks is not in the data.
+- **Hosts overlap (unlike Z22):** all 15 attack sources appear as benign sources in the benign weeks, and 104 of 105 attack destinations appear as benign destinations. Host identity alone no longer separates the classes; calendar period still does (Feb-Mar vs Oct-Nov).
+- **Labels (deduplicated attack rows):** technique T1110 Credential Access 871,188; T1595 Reconnaissance 58,095; T1190 Initial Access 4,614; T1078 valid accounts 6,048, labelled as Defense Evasion, Persistence and Privilege Escalation simultaneously (and Initial Access in `Duplicate` rows); T1048 Exfiltration 559. Credential Access is 91% of attack rows.
+- **Attackers:** 15 internal hosts. 13 of them carry 5-6 tactics; none is a clean kill chain.
+- **Techniques are concurrent, not sequential.** For attacker 143.88.7.11 every technique starts within the first hour of the capture and continues for days (recon, exploit, valid-account and brute-force flows interleaved). Per (attacker, victim, week) pair, the most common pattern is a single technique (T1595 alone in 390 pairs); "recon then access then credential access" orderings are rare and interleaved. Exfiltration comes from one host (143.88.1.18) to one victim (143.88.2.20), in all 5 weeks (23-268 flows).
+- **Weeks are repeats of one campaign:** the tactic proportions are nearly identical across the 5 attack weeks. Leave-one-week-out therefore tests replay of the same playbook, not unseen attack patterns.
+
+### ZeekData22 (trimmed)
+Only benign weeks (2021-12-17 → 2021-12-26, 20 hosts, 1,133,691 unique flows) and the 63-row 2022-02-13 attack part (7 attack hosts, 0 shared with benign) remain. It is now useful only as extra benign background of the same lab.
+
+### What this changes
+1. **ZeekData24 still cannot support "benign → attack onset on the same host" forecasting.** No week contains both. Any host-minute grid built from an attack week has empty minutes that were filtered out, not quiet; empty grids versus busy benign grids is a recording artifact a model would learn.
+2. **It does support two other honest tasks:** (a) behaviour → ATT&CK technique recognition (scan, brute force, exploit, valid account, exfil versus benign), evaluated leave-one-week-out; (b) campaign-dynamics forecasting on attack weeks only: given an attacker's recent activity, which techniques will be active in the next K minutes. The second is dominated by persistence (bursty, concurrent scripts), so it needs the persistence baselines to be beaten to count.
+3. **DAPT2020 remains the only corpus with benign and attack traffic in the same time window**, so it stays the forecasting evaluation set.
+4. **Fall22 is gone,** so there is no independent test corpus. Leave-one-week-out on ZeekData24 replaces it as a secondary check, with the replay caveat above.
+5. **The zip can be read without extracting:** its CSVs can be streamed member by member and reduced to per-host-minute aggregates, so the 9.7 GB never needs to exist unpacked. Not attempted.

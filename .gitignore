@@ -9,3 +9,6 @@ processed/
 checkpoints/
 results/*.parquet
 results/tmp/
+models/
+CSECICIDS2018_improved*
+*.zip

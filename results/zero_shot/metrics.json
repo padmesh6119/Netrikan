@@ -1,0 +1,495 @@
+{
+ "protocol": "leave-one-corpus-out; features = 22 common host-minute features; positives = host-minutes containing the family, negatives = benign host-minutes of the held-out corpus",
+ "corpora": {
+  "dapt": {
+   "label": "DAPT2020 (CICFlowMeter, 2019)",
+   "host_minutes": 10408,
+   "attack_host_minutes": 319
+  },
+  "z24": {
+   "label": "UWF-ZeekData24 (Zeek, 2024)",
+   "host_minutes": 283802,
+   "attack_host_minutes": 74737
+  },
+  "cic17": {
+   "label": "CIC-IDS2017 slices (CICFlowMeter/NTLFlowLyzer, 2017)",
+   "host_minutes": 2592,
+   "attack_host_minutes": 49
+  },
+  "ctu13": {
+   "label": "CTU-13 scenario 4 (Argus, 2011)",
+   "host_minutes": 14115,
+   "attack_host_minutes": 71
+  }
+ },
+ "features": [
+  "in_n_flows",
+  "in_n_peers",
+  "in_n_ports",
+  "in_bytes_fwd",
+  "in_bytes_bwd",
+  "in_dur_mean",
+  "in_f_web",
+  "in_f_ssh",
+  "in_f_db",
+  "in_f_low",
+  "in_f_eph",
+  "out_n_flows",
+  "out_n_peers",
+  "out_n_ports",
+  "out_bytes_fwd",
+  "out_bytes_bwd",
+  "out_dur_mean",
+  "out_f_web",
+  "out_f_ssh",
+  "out_f_db",
+  "out_f_low",
+  "out_f_eph"
+ ],
+ "results": {
+  "dapt": {
+   "trained_on": [
+    "z24",
+    "cic17",
+    "ctu13"
+   ],
+   "n_benign_host_minutes": 10089,
+   "families": {
+    "fam_recon": {
+     "name": "Reconnaissance",
+     "n_pos": 70,
+     "base_rate": 0.0068904419726351016,
+     "gbdt": {
+      "roc_auc": 0.7492714837942314,
+      "pr_auc": 0.22933148226220332,
+      "roc_auc_ci90": [
+       0.6640549112895233,
+       0.8045849085991816
+      ],
+      "recall_at_0.5": 0.2714285714285714,
+      "benign_alarm_rate_at_0.5": 0.0036673604916245416
+     },
+     "iforest": {
+      "roc_auc": 0.9673732353482576,
+      "pr_auc": 0.27754886434319664
+     },
+     "surprise": {
+      "roc_auc": 0.4613511179077638,
+      "pr_auc": 0.006481692695219042
+     },
+     "volume": {
+      "roc_auc": 0.975181598062954,
+      "pr_auc": 0.39145599681601806
+     },
+     "fanout": {
+      "roc_auc": 0.9689470852271924,
+      "pr_auc": 0.18219994461358413
+     }
+    },
+    "fam_foothold": {
+     "name": "Initial Access (foothold)",
+     "n_pos": 93,
+     "base_rate": 0.009133765468473777,
+     "gbdt": {
+      "roc_auc": 0.41595765429611936,
+      "pr_auc": 0.052467520926310934,
+      "roc_auc_ci90": [
+       0.3560101920861324,
+       0.47534280921305755
+      ],
+      "recall_at_0.5": 0.08602150537634409,
+      "benign_alarm_rate_at_0.5": 0.0036673604916245416
+     },
+     "iforest": {
+      "roc_auc": 0.9268979203369581,
+      "pr_auc": 0.09902068675689299
+     },
+     "surprise": {
+      "roc_auc": 0.4950947321526586,
+      "pr_auc": 0.009809603716331093
+     },
+     "volume": {
+      "roc_auc": 0.9174012578375043,
+      "pr_auc": 0.09613801434174886
+     },
+     "fanout": {
+      "roc_auc": 0.9412641469416815,
+      "pr_auc": 0.08470293156855313
+     }
+    },
+    "fam_lateral": {
+     "name": "Lateral Movement",
+     "n_pos": 144,
+     "base_rate": 0.014072119613016711,
+     "gbdt": {
+      "roc_auc": 0.43760152696556204,
+      "pr_auc": 0.0326749844689043,
+      "roc_auc_ci90": [
+       0.393064813438178,
+       0.47409135086617993
+      ],
+      "recall_at_0.5": 0.04861111111111111,
+      "benign_alarm_rate_at_0.5": 0.0036673604916245416
+     },
+     "iforest": {
+      "roc_auc": 0.6601393431790399,
+      "pr_auc": 0.04078962146341122
+     },
+     "surprise": {
+      "roc_auc": 0.602295128908272,
+      "pr_auc": 0.07743569982907011
+     },
+     "volume": {
+      "roc_auc": 0.6995293967026794,
+      "pr_auc": 0.07251964244661517
+     },
+     "fanout": {
+      "roc_auc": 0.7513546106320415,
+      "pr_auc": 0.05966088367951001
+     }
+    },
+    "fam_exfil": {
+     "name": "Exfiltration",
+     "n_pos": 12,
+     "base_rate": 0.001188001188001188,
+     "gbdt": {
+      "roc_auc": 0.46492880034360856,
+      "pr_auc": 0.00267555444014127,
+      "roc_auc_ci90": [
+       0.30506120527306974,
+       0.592683863613837
+      ],
+      "recall_at_0.5": 0.0,
+      "benign_alarm_rate_at_0.5": 0.0036673604916245416
+     },
+     "iforest": {
+      "roc_auc": 0.7386344864043347,
+      "pr_auc": 0.004356838268158079
+     },
+     "surprise": {
+      "roc_auc": 0.8014917236594311,
+      "pr_auc": 0.006217217990467046
+     },
+     "volume": {
+      "roc_auc": 0.8533344897082631,
+      "pr_auc": 0.004352665294178011
+     },
+     "fanout": {
+      "roc_auc": 0.9150188323917137,
+      "pr_auc": 0.007502747708557073
+     }
+    }
+   }
+  },
+  "z24": {
+   "trained_on": [
+    "dapt",
+    "cic17",
+    "ctu13"
+   ],
+   "n_benign_host_minutes": 209065,
+   "families": {
+    "fam_scan": {
+     "name": "Active Scanning",
+     "n_pos": 43030,
+     "base_rate": 0.1706896209762193,
+     "gbdt": {
+      "roc_auc": 0.735475160564473,
+      "pr_auc": 0.30590484913681193,
+      "roc_auc_ci90": [
+       0.7319816420811063,
+       0.7403866494887288
+      ],
+      "recall_at_0.5": 0.01138740413664885,
+      "benign_alarm_rate_at_0.5": 0.06473106450147083
+     },
+     "iforest": {
+      "roc_auc": 0.8099275694029824,
+      "pr_auc": 0.46508990753857604
+     },
+     "surprise": {
+      "roc_auc": 0.9630225807178993,
+      "pr_auc": 0.8245757877266803
+     },
+     "volume": {
+      "roc_auc": 0.358283680236506,
+      "pr_auc": 0.15335120731950458
+     },
+     "fanout": {
+      "roc_auc": 0.5231342308985373,
+      "pr_auc": 0.20713428930531072
+     }
+    },
+    "fam_exploit": {
+     "name": "Exploit Public-Facing App",
+     "n_pos": 9178,
+     "base_rate": 0.04205404067942614,
+     "gbdt": {
+      "roc_auc": 0.04871917092370983,
+      "pr_auc": 0.02931151985025039,
+      "roc_auc_ci90": [
+       0.046808860862933115,
+       0.05089505720200478
+      ],
+      "recall_at_0.5": 0.0,
+      "benign_alarm_rate_at_0.5": 0.06473106450147083
+     },
+     "iforest": {
+      "roc_auc": 0.7933763565917188,
+      "pr_auc": 0.11859282535214694
+     },
+     "surprise": {
+      "roc_auc": 0.989718676671726,
+      "pr_auc": 0.7740262541476698
+     },
+     "volume": {
+      "roc_auc": 0.18582825788743415,
+      "pr_auc": 0.047923431099903734
+     },
+     "fanout": {
+      "roc_auc": 0.46909899510713104,
+      "pr_auc": 0.041739138033383506
+     }
+    },
+    "fam_validacct": {
+     "name": "Valid Accounts",
+     "n_pos": 11996,
+     "base_rate": 0.05426556470838366,
+     "gbdt": {
+      "roc_auc": 0.7407917725060292,
+      "pr_auc": 0.1633408196770324,
+      "roc_auc_ci90": [
+       0.7366922896173724,
+       0.7459751372332444
+      ],
+      "recall_at_0.5": 0.0056685561853951315,
+      "benign_alarm_rate_at_0.5": 0.06473106450147083
+     },
+     "iforest": {
+      "roc_auc": 0.6177913785657727,
+      "pr_auc": 0.09133924565319258
+     },
+     "surprise": {
+      "roc_auc": 0.8760510225799563,
+      "pr_auc": 0.23800721551566983
+     },
+     "volume": {
+      "roc_auc": 0.19630161440543317,
+      "pr_auc": 0.06623274235521352
+     },
+     "fanout": {
+      "roc_auc": 0.4745720302720986,
+      "pr_auc": 0.053496748692899665
+     }
+    },
+    "fam_brute": {
+     "name": "Brute Force",
+     "n_pos": 11912,
+     "base_rate": 0.053906062621901826,
+     "gbdt": {
+      "roc_auc": 0.46156865403009534,
+      "pr_auc": 0.06712149576431126,
+      "roc_auc_ci90": [
+       0.4551215130750504,
+       0.46807658117864337
+      ],
+      "recall_at_0.5": 0.0031900604432505038,
+      "benign_alarm_rate_at_0.5": 0.06473106450147083
+     },
+     "iforest": {
+      "roc_auc": 0.9206752948788248,
+      "pr_auc": 0.3054515647977216
+     },
+     "surprise": {
+      "roc_auc": 0.9579931252562559,
+      "pr_auc": 0.8457886282072148
+     },
+     "volume": {
+      "roc_auc": 0.981033757395672,
+      "pr_auc": 0.9214204402438695
+     },
+     "fanout": {
+      "roc_auc": 0.4692232043588103,
+      "pr_auc": 0.05292298059715368
+     }
+    },
+    "fam_exfil": {
+     "name": "Exfil Over Alt. Protocol",
+     "n_pos": 1084,
+     "base_rate": 0.005158244864358146,
+     "gbdt": {
+      "roc_auc": 0.43778523919934154,
+      "pr_auc": 0.004758737133181727,
+      "roc_auc_ci90": [
+       0.4252709720940959,
+       0.4548889137453874
+      ],
+      "recall_at_0.5": 0.0036900369003690036,
+      "benign_alarm_rate_at_0.5": 0.06473106450147083
+     },
+     "iforest": {
+      "roc_auc": 0.4958653151092772,
+      "pr_auc": 0.005862986483153161
+     },
+     "surprise": {
+      "roc_auc": 0.9361659953564118,
+      "pr_auc": 0.0676345349191163
+     },
+     "volume": {
+      "roc_auc": 0.24850962460429377,
+      "pr_auc": 0.019651729582675685
+     },
+     "fanout": {
+      "roc_auc": 0.5207151164078545,
+      "pr_auc": 0.0059678694658963196
+     }
+    }
+   }
+  },
+  "cic17": {
+   "trained_on": [
+    "dapt",
+    "z24",
+    "ctu13"
+   ],
+   "n_benign_host_minutes": 2543,
+   "families": {
+    "fam_portscan": {
+     "name": "Port scan",
+     "n_pos": 17,
+     "base_rate": 0.006640625,
+     "gbdt": {
+      "roc_auc": 0.9252157016955426,
+      "pr_auc": 0.30148018279659416,
+      "roc_auc_ci90": [
+       0.8950405958687053,
+       0.9527214267539497
+      ],
+      "recall_at_0.5": 0.9411764705882353,
+      "benign_alarm_rate_at_0.5": 0.18167518678725914
+     },
+     "iforest": {
+      "roc_auc": 0.9732830607665794,
+      "pr_auc": 0.5909007601811195
+     },
+     "surprise": {
+      "roc_auc": 0.6130091832250006,
+      "pr_auc": 0.01013146925424254
+     },
+     "volume": {
+      "roc_auc": 0.8441280562559275,
+      "pr_auc": 0.5977389719985796
+     },
+     "fanout": {
+      "roc_auc": 0.9225787050958802,
+      "pr_auc": 0.6561138269683783
+     }
+    },
+    "fam_ddos": {
+     "name": "DDoS",
+     "n_pos": 21,
+     "base_rate": 0.008190327613104524,
+     "gbdt": {
+      "roc_auc": 0.8823099825852481,
+      "pr_auc": 0.03340943618508485,
+      "roc_auc_ci90": [
+       0.8706233732187331,
+       0.8933749040316088
+      ],
+      "recall_at_0.5": 1.0,
+      "benign_alarm_rate_at_0.5": 0.18167518678725914
+     },
+     "iforest": {
+      "roc_auc": 1.0,
+      "pr_auc": 1.0
+     },
+     "surprise": {
+      "roc_auc": 0.46173435949291236,
+      "pr_auc": 0.007590150350806631
+     },
+     "volume": {
+      "roc_auc": 0.9995318615059079,
+      "pr_auc": 0.9650912996777661
+     },
+     "fanout": {
+      "roc_auc": 0.9276913282025354,
+      "pr_auc": 0.051869977447771595
+     }
+    },
+    "fam_heartbleed": {
+     "name": "Heartbleed",
+     "n_pos": 11,
+     "base_rate": 0.004306969459671104,
+     "gbdt": {
+      "roc_auc": 0.5687269867372109,
+      "pr_auc": 0.006500979381043471,
+      "roc_auc_ci90": [
+       0.5263593465127087,
+       0.6100203767919063
+      ],
+      "recall_at_0.5": 0.0,
+      "benign_alarm_rate_at_0.5": 0.18167518678725914
+     },
+     "iforest": {
+      "roc_auc": 0.8027026060844387,
+      "pr_auc": 0.019474544044699317
+     },
+     "surprise": {
+      "roc_auc": 0.8555035212526365,
+      "pr_auc": 0.014916410817500367
+     },
+     "volume": {
+      "roc_auc": 0.2749973188431702,
+      "pr_auc": 0.004244692873530551
+     },
+     "fanout": {
+      "roc_auc": 0.35981124655918206,
+      "pr_auc": 0.004675086294692505
+     }
+    }
+   }
+  },
+  "ctu13": {
+   "trained_on": [
+    "dapt",
+    "z24",
+    "cic17"
+   ],
+   "n_benign_host_minutes": 14044,
+   "families": {
+    "fam_botnet": {
+     "name": "Botnet (spam / ICMP / C&C)",
+     "n_pos": 71,
+     "base_rate": 0.005030109812256465,
+     "gbdt": {
+      "roc_auc": 0.34315641785775897,
+      "pr_auc": 0.003535294094884264,
+      "roc_auc_ci90": [
+       0.30398363192541755,
+       0.39167365342725674
+      ],
+      "recall_at_0.5": 0.04225352112676056,
+      "benign_alarm_rate_at_0.5": 0.208914839077186
+     },
+     "iforest": {
+      "roc_auc": 0.5765782390154084,
+      "pr_auc": 0.005439466669579684
+     },
+     "surprise": {
+      "roc_auc": 0.18440785699672257,
+      "pr_auc": 0.00286033733295502
+     },
+     "volume": {
+      "roc_auc": 0.9002641597233643,
+      "pr_auc": 0.09004896879749384
+     },
+     "fanout": {
+      "roc_auc": 0.8519547217798388,
+      "pr_auc": 0.03785159492386371
+     }
+    }
+   }
+  }
+ },
+ "note": "Exploratory dev run. Positive counts are small (tens of host-minutes) and host-minutes within a corpus are not independent, so intervals understate uncertainty."
+}

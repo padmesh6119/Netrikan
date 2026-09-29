@@ -1,19 +1,40 @@
 # netrikan-draft
 
-Network-attack forecasting / multi-stage intrusion detection from host-centric traffic telemetry.
-Problem statement: `problem-statement.md`. Working rules and gates: see phase status below.
+Network-attack forecasting from host-centric traffic telemetry (SIH problem statement: `problem-statement.md`).
 
 ## Status
 - [x] Phase 0: data audit (`docs/DATA_AUDIT.md`), awaiting approval
-- [ ] Phase 1: eval protocol + per-host bucketed datasets + leakage tests
-- [ ] Phase 2: baseline ladder
-- [ ] Phase 3: sequence model (only if Phase 2 leaves headroom)
-- [ ] Phase 4: demo app
+- [x] Demo prototype on DAPT2020 (built ahead of the gates for presentation; see below)
+- [ ] Phase 1-3: locked eval protocol, full processed datasets, baseline ladder, sequence-model decision
 
 ## Setup
 ```
-make setup   # python3.12 venv + pinned requirements
-make audit   # regenerates results/audit/audit_raw.txt
-make test
+make setup        # python3.12 venv, pinned requirements, macOS LightGBM libomp fix
+make test         # leakage tests
+make demo-train   # DAPT2020: leave-one-day-out training + evaluation (~2 min) -> models/demo, results/demo/metrics.json
+make z24-train    # ZeekData24: recognizer + attacker forecaster (~8 min) -> models/z24, results/z24/metrics.json
+make demo         # Streamlit app (offline): DAPT2020 page + "ZeekData24 campaign" page
+make infer CSV=flows.csv   # CLI: per-host-minute risk, stage, top drivers
 ```
-Raw data lives in `data/` (gitignored, not redistributed here).
+Raw data lives in `data/` (gitignored).
+
+## Demo prototype
+`src/netrikan/`: `dapt.py` (ingest) → `features.py` (per-host 60 s buckets, signed log1p) → `models.py` (LR, LightGBM, LightGBM + lags, GRU world model with K-step rollout, stage model) → `metrics.py` → `infer.py`.
+The app runs the same code as training and shows only numbers computed live or read from `results/demo/metrics.json`.
+
+**Task:** for each monitored host that is benign *right now*, P(attack traffic in the next 5 minutes), then the stage of that attack, with TreeSHAP drivers and the simulated-vs-observed future state.
+**Evaluation (exploratory, not the locked protocol):** leave-one-day-out over 5 DAPT days is primary; a within-day blocked split is secondary. Every experiment is in `results/registry.csv` with its hypothesis and prediction written before the run.
+
+**What the results say (read `results/demo/metrics.json` or the app's Benchmark tab):**
+- Ranking works: pooled PR-AUC ~0.12 vs 0.045 base rate; within a held-out day ROC-AUC is 0.74-0.95.
+- Pooled alarm-budget recall is low; score scales do not transfer between days with different attack types.
+- The GRU world model does not beat LightGBM with lags, and **shuffling the history does not hurt either model**: on this data the forecast comes from the current state, not from learned dynamics.
+- Stage forecasting is at chance across days (each day has a different stage) and only marginally above majority within a day.
+- Data is tiny: 9 monitored hosts, 3 ever attacked, 319 attack minutes. More/richer data (e.g. UWF-ZeekData24) is needed for the forecasting claim.
+
+## ZeekData24 page (attacker campaign)
+`src/netrikan/zeek.py` (loader) and `campaign.py` (models), trained by `scripts/train_z24.py`, shown on the app's second page.
+- **Task A, recognizer:** which of 5 ATT&CK techniques (T1595 scan, T1190 exploit, T1078 valid accounts, T1110 brute force, T1048 exfil) a host-minute contains, from that minute's behaviour only.
+- **Task B, forecaster:** for each attacker, P(technique T fires in the next 5 minutes) from its recent technique history; ladder = renewal hazard, current-behaviour-only, own-technique history, all-technique history, GRU world model; shuffle controls; a clearly-labelled wall-clock ablation.
+- **Evaluation:** leave-one-attack-week-out. The 5 attack weeks replay one scripted campaign, so this measures repeatability, not generalisation.
+- **Findings** (see `results/z24/metrics.json` or the app): recognition is near-perfect on this stereotyped, pure-bucket data (treat with suspicion); burst timing is forecastable about 3x better than chance and shuffling history order hurts (the model uses temporal order); the GRU world model matches but does not beat hand-built history features; techniques run as roughly-hourly jittered schedules with only weak cross-technique coupling, so there is no kill-chain progression in this corpus.
