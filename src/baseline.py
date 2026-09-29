@@ -47,12 +47,74 @@ def evaluate(clf, X, va_idx, y, mode, chunk=100_000):
     return np.concatenate(P), y[order]
 
 
+def horizon_baselines(args):
+    """Per-horizon logistic-regression floor (TRAINER_BACKLOG C5).
+
+    For each k: fit on window i -> y[i+k] and score on the same fixed-split val
+    indices eval_transition.py uses for the htz_k<k> LSTMs (blocks drawn from the
+    UNSHIFTED labels), so every horizon claim in transition_f1.json has a naive
+    per-k floor next to it. Writes models/baseline_k<k>.json.
+    """
+    X = np.load(os.path.join(args.data, 'X.npy'), mmap_mode='r')
+    y_full = np.load(os.path.join(args.data, 'y.npy'))
+    W = X.shape[1]
+    tf_path = os.path.join(MODEL_DIR, 'transition_f1.json')
+    lstm = {}
+    if os.path.exists(tf_path):
+        for r in json.load(open(tf_path)).get('horizons', []):
+            lstm[r['k']] = r
+    for k in args.horizons:
+        t = time.time()
+        n = min(len(X), len(y_full)) - k
+        tr_idx, va_idx = blocked_split(y_full[:n], purge=W - 1, n_blocks=500,
+                                       val_frac=0.2, seed=42)
+        tr_idx = tr_idx[tr_idx < n]
+        va_idx = va_idx[(va_idx < n) & (va_idx > 0)]
+        yk = y_full[k:n + k]                       # label for window i is y_full[i+k]
+        sub = np.sort(subsample(tr_idx, yk, args.per_class))
+        res = {'k': k, 'n_train_subsample': int(len(sub)), 'n_val': int(len(va_idx))}
+        y_true = y_full[va_idx + k]
+        y_persist = y_full[va_idx - 1]
+        is_trans = y_true != y_persist
+        is_onset = is_trans & (y_persist == 0) & (y_true != 0)
+        res['n_transitions'] = int(is_trans.sum())
+        for mode in ('last', 'flat'):
+            Xtr = gather(X, sub, mode)
+            clf = LogisticRegression(max_iter=300, n_jobs=-1)
+            clf.fit(Xtr, yk[sub])
+            del Xtr
+            P, _ = evaluate(clf, X, va_idx, y_full, mode)   # sorted va order
+            order = np.sort(va_idx)
+            assert (order == va_idx).all()
+            res[mode] = {
+                'all_macro_f1': round(float(f1_score(y_true, P, average='macro',
+                                                     zero_division=0)), 4),
+                'transition_f1': round(float(f1_score(y_true[is_trans], P[is_trans],
+                                                      average='macro', zero_division=0)), 4),
+                'onset_recall': (round(float((P[is_onset] != 0).mean()), 4)
+                                 if is_onset.any() else None),
+            }
+        if k in lstm:
+            res['lstm_transition_f1'] = lstm[k].get('lstm_transition_f1')
+            res['lstm_minus_logreg_flat'] = round(res['lstm_transition_f1'] -
+                                                 res['flat']['transition_f1'], 4)
+        res['minutes'] = round((time.time() - t) / 60, 1)
+        with open(os.path.join(MODEL_DIR, f'baseline_k{k}.json'), 'w') as f:
+            json.dump(res, f, indent=2)
+        print(f"k={k}: logreg last {res['last']}  flat {res['flat']}  "
+              f"LSTM transition-F1 {res.get('lstm_transition_f1')}", flush=True)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--data', required=True)
     ap.add_argument('--tag', default='baseline')
     ap.add_argument('--per-class', type=int, default=60_000)
+    ap.add_argument('--horizons', type=int, nargs='*', default=None,
+                    help='per-horizon mode: fit one logreg per k, write baseline_k<k>.json')
     args = ap.parse_args()
+    if args.horizons:
+        return horizon_baselines(args)
 
     t0 = time.time()
     X = np.load(os.path.join(args.data, 'X.npy'), mmap_mode='r')

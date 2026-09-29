@@ -81,8 +81,9 @@ def main():
         print(f"  fold {f}: macro-F1 {folds[-1]['stage_macro_f1']}  "
               f"onset {folds[-1]['onset_auc']}  support {support}", flush=True)
 
-    def agg(getter):
-        vals = [getter(fo) for fo in folds if getter(fo) == getter(fo)]
+    def agg(getter, pool=None):
+        vals = [getter(fo) for fo in (folds if pool is None else pool)
+                if getter(fo) == getter(fo)]
         return {"mean": round(float(np.mean(vals)), 4),
                 "std": round(float(np.std(vals)), 4)} if vals else None
 
@@ -90,11 +91,29 @@ def main():
     macro = agg(lambda fo: fo['stage_macro_f1'])
     sup_macro = agg(lambda fo: fo['supported_class_f1'])
     worst = min(folds, key=lambda fo: fo['supported_class_f1'])
+
+    # Folds with a family_holdout_class test zero-shot family transfer, not day
+    # shift (fold 0: Botnet exists on no other day). Report the domain-shift
+    # aggregate without them, next to the all-fold one.
+    shift = [fo for fo in folds if not fo['family_holdout_classes']]
+    excl = {
+        "folds": [fo['fold'] for fo in shift],
+        "excluded_folds": [fo['fold'] for fo in folds if fo['family_holdout_classes']],
+        "supported_class_f1": agg(lambda fo: fo['supported_class_f1'], shift),
+        **{f"onset_auc_{k}": agg(lambda fo, k=k: fo['onset_auc'].get(k, float('nan')),
+                                 shift)
+           for k in ('k1', 'k5', 'k15', 'k30')},
+        "note": "family_holdout_classes is a zero-training-support test, so it does "
+                "not catch fold 6 (InitialAccess: 566 training windows). That fold "
+                "is a near-family-holdout and stays in this aggregate; see "
+                "train_support_of_present_classes.",
+    }
     out = {
         "data": args.data, "n_folds": len(folds), "epochs_per_fold": args.epochs,
         "aggregate": {"onset_auc_k5": onset_k5,
                       "supported_class_f1": sup_macro,
                       "stage_macro_f1_DO_NOT_REPORT": macro},
+        "aggregate_excl_family_holdout": excl,
         "worst_fold": {"fold": worst['fold'], "stage_macro_f1": worst['stage_macro_f1'],
                        "held_out_support": worst['held_out_support']},
         "folds": folds,
@@ -110,6 +129,8 @@ def main():
         json.dump(out, f, indent=2)
     print(f"\nonset AUC k5 across folds: {onset_k5}")
     print(f"supported-class F1 across folds: {sup_macro}")
+    print(f"excluding family-holdout folds {excl['excluded_folds']}: onset k5 "
+          f"{excl['onset_auc_k5']}  supported-class F1 {excl['supported_class_f1']}")
     print(f"(5-class macro-F1 {macro} -- depressed by zero-support classes, do not quote)")
     print(f"worst fold: {worst['fold']} (supported-class F1 {worst['supported_class_f1']}, "
           f"family holdouts {worst['family_holdout_classes']})")

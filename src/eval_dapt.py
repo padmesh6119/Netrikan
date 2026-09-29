@@ -44,6 +44,32 @@ def build_windows(df, features, window):
             np.asarray(caps, np.int64))
 
 
+OP_TARGET_FPRS = [0.05, 0.10, 0.20]
+
+
+def operating_points(score, truth, targets=OP_TARGET_FPRS):
+    """Recall/precision at fixed benign-window FPR targets. The threshold is the
+    lowest one whose ACHIEVED FPR is <= target (ties at the threshold count as
+    flagged), and the achieved FPR is reported next to the target."""
+    score = np.asarray(score, np.float64)
+    truth = np.asarray(truth).astype(bool)
+    ben = np.sort(score[~truth])[::-1]            # benign scores, descending
+    out = []
+    for t in targets:
+        n_fp = int(np.floor(t * len(ben)))
+        # flag score > ben[n_fp] so at most n_fp benign windows are flagged
+        thr = float(np.nextafter(ben[n_fp], np.inf)) if n_fp < len(ben) else float(ben[-1])
+        pred = score >= thr
+        tp = int((pred & truth).sum()); fp = int((pred & ~truth).sum())
+        fn = int((~pred & truth).sum()); tn = int((~pred & ~truth).sum())
+        out.append({'target_fpr': t, 'threshold': thr,
+                    'achieved_fpr': round(fp / max(fp + tn, 1), 4),
+                    'recall': round(tp / max(tp + fn, 1), 4),
+                    'precision': round(tp / max(tp + fp, 1), 4),
+                    'tp': tp, 'fp': fp, 'fn': fn, 'tn': tn})
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--data', default=os.path.join(
@@ -51,6 +77,8 @@ def main():
         'data', 'processed'))
     ap.add_argument('--model', default=os.path.join(MODEL_DIR, 'cic_v2_w30.pt'))
     ap.add_argument('--tag', default='dapt_crossdataset')
+    ap.add_argument('--scaler', default=None,
+                    help='scaler pickle; defaults to <data>/scaler.pkl')
     args = ap.parse_args()
 
     features = load_feature_list(args.data)
@@ -70,7 +98,7 @@ def main():
     X_raw, y_dapt, cap_id = build_windows(df, features, window)
     print(f"windows: {len(X_raw):,}", flush=True)
 
-    with open(os.path.join(args.data, 'scaler.pkl'), 'rb') as f:
+    with open(args.scaler or os.path.join(args.data, 'scaler.pkl'), 'rb') as f:
         scaler = pickle.load(f)
 
     # only the continuous base features were scaled at training time
@@ -87,14 +115,16 @@ def main():
     model.eval()
     has_onset = 'onset_head.weight' in sd
 
-    preds, breach, onset = [], [], []
+    preds, breach, onset, stage_att = [], [], [], []
     with torch.no_grad():
         for i in range(0, len(X), 8192):
             logits, b, _, o = model(torch.from_numpy(X[i:i + 8192]))
             preds.append(logits.argmax(1).numpy())
             breach.append(b.numpy())
             onset.append(torch.sigmoid(o).numpy())
+            stage_att.append(1.0 - torch.softmax(logits, 1)[:, 0].numpy())
     preds, breach = np.concatenate(preds), np.concatenate(breach)
+    stage_att = np.concatenate(stage_att)
     onset = np.concatenate(onset)
 
     true_attack = (y_dapt > 0).astype(int)
@@ -118,6 +148,26 @@ def main():
     tn, fp, fn, tp = confusion_matrix(true_attack, pred_attack).ravel()
     print(f"breach head ROC-AUC {breach_auc:.4f}  PR-AUC {ap_:.4f}")
     print(f"TP {tp:,}  FP {fp:,}  FN {fn:,}  TN {tn:,}\n")
+
+    # ---- fixed-FPR operating points -----------------------------------------
+    # The argmax decision above is one untuned point. A SOC picks a threshold
+    # for an alert budget, so report recall/precision at fixed FPR for both
+    # scores the model emits.
+    ops = {'breach': operating_points(breach, true_attack),
+           'stage_attack_mass': operating_points(stage_att, true_attack)}
+    stage_auc = roc_auc_score(true_attack, stage_att)
+    print("operating points (benign-window FPR target -> recall / precision)")
+    for sc, rows_ in ops.items():
+        for r in rows_:
+            print(f"  {sc:<18} FPR<={r['target_fpr']:.2f} (got {r['achieved_fpr']:.4f})  "
+                  f"recall {r['recall']:.3f}  precision {r['precision']:.3f}  "
+                  f"thr {r['threshold']:.4f}")
+    best = max(ops, key=lambda k: next(r['recall'] for r in ops[k]
+                                       if r['target_fpr'] == 0.10))
+    at10 = next(r for r in ops[best] if r['target_fpr'] == 0.10)
+    headline = (f"recall {at10['recall']:.1%} at {at10['achieved_fpr']:.1%} FPR "
+                f"({best} score, precision {at10['precision']:.1%})")
+    print(f"  headline: {headline}\n")
 
     rows = {}
     for sid, name in enumerate(dapt.DAPT_STAGES):
@@ -172,6 +222,16 @@ def main():
             true_attack, pred_attack, target_names=['Benign', 'Attack'],
             output_dict=True, zero_division=0),
         "per_phase": rows,
+        "stage_attack_mass_roc_auc": float(stage_auc),
+        "operating_points": {
+            "scores": {
+                "breach": "sigmoid(breach_head)",
+                "stage_attack_mass": "1 - softmax(stage_logits)[Benign]",
+            },
+            "fpr_definition": "false positives / benign windows",
+            "curves": ops,
+            "headline_at_10pct_fpr": headline,
+        },
     }
     with open(os.path.join(MODEL_DIR, f'{args.tag}.json'), 'w') as f:
         json.dump(out, f, indent=2)

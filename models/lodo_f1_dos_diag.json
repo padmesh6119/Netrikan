@@ -1,0 +1,236 @@
+{
+  "fold": 1,
+  "hypothesis": "DoS class-prior inversion (1% of training, 57% of held-out day) causes the below-chance onset AUC on fold 1",
+  "verdict_rule": "confirmed if class-weighted onset AUC k1 >= 0.5 and >= +0.05 over the sweep; killed if < +0.05; else partial",
+  "verdict": "confirmed",
+  "class_prior": {
+    "train_dos_windows": 52498,
+    "train_windows": 5107594,
+    "heldout_dos_windows": 601802,
+    "heldout_windows": 1048514,
+    "train_dos_share": 0.0103,
+    "heldout_dos_share": 0.574
+  },
+  "runs": {
+    "sweep": {
+      "checkpoint": "models/lodo_f1_w30.pt",
+      "stage": {
+        "macro_f1_supported": 0.8825,
+        "dos_f1": 0.8183,
+        "dos_recall": 0.7061,
+        "benign_f1": 0.9467
+      },
+      "onset": {
+        "k1": {
+          "all": 0.4247,
+          "n_onsets": 21894,
+          "into_dos": 0.4255,
+          "n_into_dos": 10947,
+          "out_of_dos": 0.4239,
+          "n_out_of_dos": 10947,
+          "other": null,
+          "n_other": 0,
+          "within_current_dos": 0.1986,
+          "within_current_benign": 0.732,
+          "mean_score_onset": 0.0156,
+          "mean_score_steady": 0.0295
+        },
+        "k5": {
+          "all": 0.445,
+          "n_onsets": 25396,
+          "into_dos": 0.4461,
+          "n_into_dos": 12698,
+          "out_of_dos": 0.444,
+          "n_out_of_dos": 12698,
+          "other": null,
+          "n_other": 0,
+          "within_current_dos": 0.2135,
+          "within_current_benign": 0.754,
+          "mean_score_onset": 0.0539,
+          "mean_score_steady": 0.0814
+        },
+        "k15": {
+          "all": 0.4604,
+          "n_onsets": 31015,
+          "into_dos": 0.4519,
+          "n_into_dos": 15506,
+          "out_of_dos": 0.4689,
+          "n_out_of_dos": 15509,
+          "other": null,
+          "n_other": 0,
+          "within_current_dos": 0.2244,
+          "within_current_benign": 0.7826,
+          "mean_score_onset": 0.0947,
+          "mean_score_steady": 0.142
+        },
+        "k30": {
+          "all": 0.487,
+          "n_onsets": 37678,
+          "into_dos": 0.4653,
+          "n_into_dos": 18830,
+          "out_of_dos": 0.5086,
+          "n_out_of_dos": 18848,
+          "other": null,
+          "n_other": 0,
+          "within_current_dos": 0.2617,
+          "within_current_benign": 0.7976,
+          "mean_score_onset": 0.1264,
+          "mean_score_steady": 0.1378
+        }
+      },
+      "train_metrics_onset_auc": {
+        "k1": 0.4247,
+        "k5": 0.445,
+        "k15": 0.4604,
+        "k30": 0.487
+      }
+    },
+    "long_low_lr": {
+      "checkpoint": "models/lodo_f1_diag.pt",
+      "stage": {
+        "macro_f1_supported": 0.883,
+        "dos_f1": 0.8185,
+        "dos_recall": 0.7053,
+        "benign_f1": 0.9474
+      },
+      "onset": {
+        "k1": {
+          "all": 0.484,
+          "n_onsets": 21894,
+          "into_dos": 0.4834,
+          "n_into_dos": 10947,
+          "out_of_dos": 0.4846,
+          "n_out_of_dos": 10947,
+          "other": null,
+          "n_other": 0,
+          "within_current_dos": 0.2756,
+          "within_current_benign": 0.7668,
+          "mean_score_onset": 0.019,
+          "mean_score_steady": 0.0216
+        },
+        "k5": {
+          "all": 0.5139,
+          "n_onsets": 25396,
+          "into_dos": 0.5057,
+          "n_into_dos": 12698,
+          "out_of_dos": 0.522,
+          "n_out_of_dos": 12698,
+          "other": null,
+          "n_other": 0,
+          "within_current_dos": 0.3186,
+          "within_current_benign": 0.7776,
+          "mean_score_onset": 0.0688,
+          "mean_score_steady": 0.0665
+        },
+        "k15": {
+          "all": 0.5129,
+          "n_onsets": 31015,
+          "into_dos": 0.4788,
+          "n_into_dos": 15506,
+          "out_of_dos": 0.547,
+          "n_out_of_dos": 15509,
+          "other": null,
+          "n_other": 0,
+          "within_current_dos": 0.3294,
+          "within_current_benign": 0.773,
+          "mean_score_onset": 0.1129,
+          "mean_score_steady": 0.1142
+        },
+        "k30": {
+          "all": 0.5276,
+          "n_onsets": 37678,
+          "into_dos": 0.4636,
+          "n_into_dos": 18830,
+          "out_of_dos": 0.5916,
+          "n_out_of_dos": 18848,
+          "other": null,
+          "n_other": 0,
+          "within_current_dos": 0.383,
+          "within_current_benign": 0.7515,
+          "mean_score_onset": 0.1277,
+          "mean_score_steady": 0.1221
+        }
+      },
+      "train_metrics_onset_auc": {
+        "k1": 0.484,
+        "k5": 0.5139,
+        "k15": 0.5129,
+        "k30": 0.5276
+      }
+    },
+    "class_weighted": {
+      "checkpoint": "models/lodo_f1_cw.pt",
+      "stage": {
+        "macro_f1_supported": 0.9052,
+        "dos_f1": 0.8412,
+        "dos_recall": 0.7368,
+        "benign_f1": 0.9692
+      },
+      "onset": {
+        "k1": {
+          "all": 0.6141,
+          "n_onsets": 21894,
+          "into_dos": 0.6127,
+          "n_into_dos": 10947,
+          "out_of_dos": 0.6156,
+          "n_out_of_dos": 10947,
+          "other": null,
+          "n_other": 0,
+          "within_current_dos": 0.5359,
+          "within_current_benign": 0.7203,
+          "mean_score_onset": 0.0227,
+          "mean_score_steady": 0.019
+        },
+        "k5": {
+          "all": 0.6097,
+          "n_onsets": 25396,
+          "into_dos": 0.6065,
+          "n_into_dos": 12698,
+          "out_of_dos": 0.613,
+          "n_out_of_dos": 12698,
+          "other": null,
+          "n_other": 0,
+          "within_current_dos": 0.525,
+          "within_current_benign": 0.7225,
+          "mean_score_onset": 0.0839,
+          "mean_score_steady": 0.0714
+        },
+        "k15": {
+          "all": 0.5416,
+          "n_onsets": 31015,
+          "into_dos": 0.5101,
+          "n_into_dos": 15506,
+          "out_of_dos": 0.573,
+          "n_out_of_dos": 15509,
+          "other": null,
+          "n_other": 0,
+          "within_current_dos": 0.3953,
+          "within_current_benign": 0.7532,
+          "mean_score_onset": 0.1366,
+          "mean_score_steady": 0.1394
+        },
+        "k30": {
+          "all": 0.5149,
+          "n_onsets": 37678,
+          "into_dos": 0.4575,
+          "n_into_dos": 18830,
+          "out_of_dos": 0.5722,
+          "n_out_of_dos": 18848,
+          "other": null,
+          "n_other": 0,
+          "within_current_dos": 0.3648,
+          "within_current_benign": 0.7484,
+          "mean_score_onset": 0.1818,
+          "mean_score_steady": 0.1826
+        }
+      },
+      "train_metrics_onset_auc": {
+        "k1": 0.6141,
+        "k5": 0.6097,
+        "k15": 0.5416,
+        "k30": 0.5149
+      }
+    }
+  },
+  "note": "into_dos / out_of_dos / other AUCs score that onset type against the day's non-onset windows. within_current_* hold the current label fixed. class_weighted = train_v2 --balance-power 1.0, otherwise the LODO sweep recipe (12 ep, patience 4, attention, select-on combined)."
+}

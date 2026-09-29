@@ -16,6 +16,40 @@
       "std": 0.0974
     }
   },
+  "aggregate_excl_family_holdout": {
+    "folds": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "excluded_folds": [
+      0
+    ],
+    "supported_class_f1": {
+      "mean": 0.5591,
+      "std": 0.184
+    },
+    "onset_auc_k1": {
+      "mean": 0.6523,
+      "std": 0.1137
+    },
+    "onset_auc_k5": {
+      "mean": 0.631,
+      "std": 0.0992
+    },
+    "onset_auc_k15": {
+      "mean": 0.5842,
+      "std": 0.0922
+    },
+    "onset_auc_k30": {
+      "mean": 0.5665,
+      "std": 0.1043
+    },
+    "note": "family_holdout_classes is a zero-training-support test, so it does not catch fold 6 (InitialAccess: 566 training windows). That fold is a near-family-holdout and stays in this aggregate; see train_support_of_present_classes."
+  },
   "worst_fold": {
     "fold": 5,
     "stage_macro_f1": 0.1366,

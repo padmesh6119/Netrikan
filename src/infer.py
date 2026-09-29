@@ -79,8 +79,11 @@ _world = None
 _scaler = None
 _device = torch.device('cpu')
 
-# Calibration temperature from models/temperature.json, fitted by
-# src/calibration.py. 1.0 means uncalibrated — the raw softmax is used.
+# Calibration temperature. Preferred: the held-out sidecar models/<ckpt>_calib.json
+# from `calibration.py --heldout`, which carries a ship gate -- when "deploy" is
+# false its temperature is 1.0 and the raw softmax is used. Fallback for
+# checkpoints without a sidecar: models/temperature.json (val-only fit).
+CALIB_PATH = os.path.splitext(MODEL_PATH)[0] + '_calib.json'
 TEMPERATURE_PATH = os.path.join(_ROOT, 'models', 'temperature.json')
 _T = 1.0
 
@@ -103,7 +106,10 @@ def _load_model():
         m.load_state_dict(sd, strict=False)
         m.eval()
         _model = m
-        if os.path.exists(TEMPERATURE_PATH):
+        if os.path.exists(CALIB_PATH):
+            with open(CALIB_PATH) as f:
+                _T = float(json.load(f)['temperature'])
+        elif os.path.exists(TEMPERATURE_PATH):
             with open(TEMPERATURE_PATH) as f:
                 _T = float(json.load(f)['T'])
     return _model

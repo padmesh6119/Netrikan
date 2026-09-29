@@ -19,6 +19,24 @@ Usage:
     python3 src/calibration.py --data /storage/netrikan-base-w30 \\
         --model models/base_w30.pt
     # writes models/temperature.json, which infer.py loads automatically
+
+Held-out mode (TRAINER_BACKLOG §2 / R2):
+    python3 src/calibration.py --heldout --data /tmp/netrikan-cic-full-w30 \\
+        --model models/cic_v2_w30.pt
+    # writes models/<tag>_calib.json
+
+The default mode splits val rows at random, and neighbouring windows share W-1
+rows, so its "score" half is not really held out. --heldout splits val by whole
+blocked_split blocks instead: blocks are purged at both edges, so a fit window
+and a test window never share a source row. Two splits are reported:
+
+  block_interleaved  val blocks in time order, alternating fit / test. Same
+                     class mix on both sides; this is the ship gate.
+  chronological      first half of val blocks fit, second half test. Harder:
+                     the attack mix differs across capture days. Reported only.
+
+Ship gate: ece_test_post < ece_test_pre AND brier_test_post <= brier_test_pre on
+the gating split. If it fails, "deploy" is false and infer.py uses T = 1.
 """
 
 import argparse
@@ -80,6 +98,131 @@ def compute_ece(probs, labels, n_bins=10, equal_mass=True) -> float:
                      for c, a, w in reliability(probs, labels, n_bins, equal_mass)))
 
 
+def ece_equal_width(probs, labels, n_bins=15):
+    """Standard ECE: equal-width confidence bins. Returns (ece, bins)."""
+    conf = probs.max(axis=1)
+    correct = (probs.argmax(axis=1) == labels).astype(np.float64)
+    edges = np.linspace(0.0, 1.0, n_bins + 1)
+    b = np.clip(np.digitize(conf, edges[1:-1]), 0, n_bins - 1)
+    ece, bins = 0.0, []
+    for i in range(n_bins):
+        m = b == i
+        if not m.any():
+            continue
+        c, a, w = float(conf[m].mean()), float(correct[m].mean()), float(m.mean())
+        ece += w * abs(c - a)
+        bins.append({'lo': round(float(edges[i]), 4), 'hi': round(float(edges[i + 1]), 4),
+                     'confidence': round(c, 4), 'accuracy': round(a, 4),
+                     'weight': round(w, 5), 'n': int(m.sum())})
+    return float(ece), bins
+
+
+def brier(probs, labels):
+    onehot = np.zeros_like(probs, dtype=np.float64)
+    onehot[np.arange(len(labels)), labels] = 1.0
+    return float(np.mean(np.sum((probs - onehot) ** 2, axis=1)))
+
+
+def _softmax(z, t=1.0):
+    z = z / t
+    z = z - z.max(axis=1, keepdims=True)
+    e = np.exp(z)
+    return e / e.sum(axis=1, keepdims=True)
+
+
+def heldout_main(args):
+    X = np.load(os.path.join(args.data, 'X.npy'), mmap_mode='r')
+    n_all, W, F = X.shape
+    y = np.load(os.path.join(args.data, 'y.npy'))
+    n = min(n_all, len(y))
+    _, va_idx = blocked_split(y[:n], purge=W - 1)
+    va_idx = va_idx[va_idx < n]
+
+    # recover each val window's block (blocked_split's default n_blocks=500)
+    edges = np.linspace(0, n, 501).astype(np.int64)
+    blk = np.searchsorted(edges, va_idx, side='right') - 1
+    vblocks = np.unique(blk)                          # time order
+    splits = {
+        'block_interleaved': (vblocks[0::2], vblocks[1::2]),
+        'chronological': (vblocks[:len(vblocks) // 2], vblocks[len(vblocks) // 2:]),
+    }
+
+    sd = torch.load(args.model, map_location='cpu', weights_only=True)
+    model = WorldModel(input_size=F, attention='attn.weight' in sd)
+    model.load_state_dict(sd, strict=False)
+    model.eval()
+    logits = np.zeros((len(va_idx), len(STAGES)), dtype=np.float32)
+    with torch.no_grad():
+        for i in range(0, len(va_idx), args.batch):
+            sl = va_idx[i:i + args.batch]
+            xb = torch.from_numpy(np.asarray(X[sl], dtype=np.float32))
+            logits[i:i + len(sl)] = model(xb)[0].numpy()
+            if (i // args.batch) % 50 == 0:
+                print(f"  logits {i + len(sl):,}/{len(va_idx):,}", flush=True)
+    yv = y[va_idx]
+
+    results = {}
+    for name, (fb, tb) in splits.items():
+        fm, tm = np.isin(blk, fb), np.isin(blk, tb)
+        T = fit_temperature(logits[fm], yv[fm])
+        r = {'n_fit': int(fm.sum()), 'n_test': int(tm.sum()),
+             'n_fit_blocks': int(len(fb)), 'n_test_blocks': int(len(tb)),
+             'temperature': round(T, 4)}
+        for part, m in (('val', fm), ('test', tm)):
+            pre, post = _softmax(logits[m], 1.0), _softmax(logits[m], T)
+            r[f'ece_{part}_pre'], bins_pre = ece_equal_width(pre, yv[m], args.ece_bins)
+            r[f'ece_{part}_post'], bins_post = ece_equal_width(post, yv[m], args.ece_bins)
+            r[f'brier_{part}_pre'] = brier(pre, yv[m])
+            r[f'brier_{part}_post'] = brier(post, yv[m])
+            r[f'nll_{part}_pre'] = float(torch.nn.functional.cross_entropy(
+                torch.from_numpy(logits[m]), torch.from_numpy(yv[m].astype(np.int64))))
+            r[f'nll_{part}_post'] = float(torch.nn.functional.cross_entropy(
+                torch.from_numpy(logits[m] / T), torch.from_numpy(yv[m].astype(np.int64))))
+            if part == 'test':
+                r['bins_test_pre'], r['bins_test_post'] = bins_pre, bins_post
+        for k in list(r):
+            if isinstance(r[k], float):
+                r[k] = round(r[k], 5)
+        r['test_improves'] = bool(r['ece_test_post'] < r['ece_test_pre'] and
+                                  r['brier_test_post'] <= r['brier_test_pre'])
+        results[name] = r
+        print(f"\n[{name}] T={T:.4f}  fit={r['n_fit']:,} test={r['n_test']:,}")
+        print(f"  ECE-{args.ece_bins}  val  {r['ece_val_pre']:.5f} -> {r['ece_val_post']:.5f}"
+              f"   test {r['ece_test_pre']:.5f} -> {r['ece_test_post']:.5f}")
+        print(f"  Brier   val  {r['brier_val_pre']:.5f} -> {r['brier_val_post']:.5f}"
+              f"   test {r['brier_test_pre']:.5f} -> {r['brier_test_post']:.5f}")
+        print(f"  test improves: {r['test_improves']}")
+
+    gate = results['block_interleaved']
+    tag = args.tag or os.path.splitext(os.path.basename(args.model))[0]
+    out = args.out if args.out != _DEFAULT_OUT else os.path.join(ROOT, 'models',
+                                                                f'{tag}_calib.json')
+    payload = {
+        'deploy': gate['test_improves'],
+        'temperature': gate['temperature'] if gate['test_improves'] else 1.0,
+        'temperature_fitted': gate['temperature'],
+        'gating_split': 'block_interleaved',
+        'ece_val_pre': gate['ece_val_pre'], 'ece_val_post': gate['ece_val_post'],
+        'ece_test_pre': gate['ece_test_pre'], 'ece_test_post': gate['ece_test_post'],
+        'brier_test_pre': gate['brier_test_pre'], 'brier_test_post': gate['brier_test_post'],
+        'bins': gate['bins_test_post'],
+        'ece_definition': f'{args.ece_bins} equal-width confidence bins',
+        'model': args.model, 'data': args.data, 'splits': results,
+        'note': ('val = the rows T was fitted on; test = disjoint blocked_split '
+                 'blocks never seen by the fit (blocks are purged at their edges, '
+                 'so no window shares a source row across the split). The model '
+                 'itself never trained on any of these rows. deploy is true only '
+                 'if ECE falls AND Brier does not rise on test; otherwise '
+                 'temperature is 1.0 and infer.py uses the raw softmax.'),
+    }
+    with open(out, 'w') as f:
+        json.dump(payload, f, indent=2)
+    print(f"\ndeploy={payload['deploy']}  saved -> {out}")
+
+
+_DEFAULT_OUT = os.path.join(ROOT, 'models', 'temperature.json')
+
+
 def save_reliability_plot(before, after, path):
     """Reliability diagram. Returns False if matplotlib is unavailable."""
     try:
@@ -110,13 +253,21 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--data', required=True)
     ap.add_argument('--model', default=os.path.join(ROOT, 'models', 'base_w30.pt'))
-    ap.add_argument('--out', default=os.path.join(ROOT, 'models', 'temperature.json'))
+    ap.add_argument('--out', default=_DEFAULT_OUT)
+    ap.add_argument('--heldout', action='store_true',
+                    help='block-level fit/test split with a ship gate; writes '
+                         'models/<tag>_calib.json')
+    ap.add_argument('--tag', default=None, help='--heldout sidecar name; defaults '
+                                                'to the checkpoint stem')
+    ap.add_argument('--ece-bins', type=int, default=15)
     ap.add_argument('--plot', default=os.path.join(ROOT, 'models', 'reliability.png'))
     ap.add_argument('--cal-frac', type=float, default=0.5,
                     help='share of the val split used to FIT T; the rest scores it')
     ap.add_argument('--bins', type=int, default=10)
     ap.add_argument('--batch', type=int, default=8192)
     args = ap.parse_args()
+    if args.heldout:
+        return heldout_main(args)
 
     X = np.load(os.path.join(args.data, 'X.npy'), mmap_mode='r')
     n_all, W, F = X.shape

@@ -1,1 +1,41 @@
-ports_w30 macroF1=0.9249 infiltration=0.755
+DEPLOYED: models/cic_v2_w30.pt   (decided 2026-09-29, TRAINER_BACKLOG R6 / §4)
+scaler:  models/scaler_cic_full.pkl
+calib:   models/cic_v2_w30_calib.json   (T=1.0944, deploy=true; infer.py reads it)
+retired: models/lstm_world_model.pt     (old 24-feat train.py model; no state/onset heads)
+
+Why cic_v2_w30: it is the only checkpoint with every head trained (stage, breach,
+state/rollout, onset) plus temporal attention, trained on all 7 CIC-IDS-2018 days.
+It is what src/infer.py loads. Every number below is from this checkpoint unless
+marked otherwise.
+
+In-dataset (CIC-IDS-2018, purged blocked split, 1.23M val windows)
+  stage macro-F1            0.837   (Infiltration 0.407 is the weak class)
+  onset AUC k1/k5/k15/k30   0.889 / 0.901 / 0.902 / 0.893   (persistence 0.500)
+  transition-window F1      0.343 vs persistence 0.000   (n=31,781)   transition_eval_cic_v2_w30.json
+  calibration (held-out)    test ECE-15 0.0074 -> 0.0073, Brier 0.0959 -> 0.0958   cic_v2_w30_calib.json
+
+Day shift (LODO, 7 folds, same recipe)                    lodo_cic_full_w30.json
+  onset AUC k5              0.636 +/- 0.093 (all folds); 0.631 +/- 0.099 (folds 1-6)
+  supported-class F1        0.538 +/- 0.178; 0.559 +/- 0.184 (folds 1-6)
+  -> the single-split onset 0.90 must always be quoted next to the LODO 0.63.
+
+World-model rollout                                       rollout_eval_cic_v2_w30_k30.json
+  state space               beats persistence 30/30 steps (1-step skill +0.22)
+  stage level               beats held classifier on transitions at steps 2-24,
+                            loses at 25-30 -> for the 15-min (30-step) horizon,
+                            "the classifier forecasts; the rollout illustrates".
+
+Cross-dataset (DAPT 2020, 86,391 windows)                 dapt_cic_v2_w30.json
+  breach ROC-AUC            0.694
+  argmax operating point    recall 0.678, FPR 0.404
+  at fixed FPR              recall 0.063 @ 5%, 0.107 @ 10%, 0.317 @ 20%
+  -> transfer is weak at SOC-usable FPRs. Do not quote the argmax point alone.
+
+Who owns which claim
+  ports_w30     in-dist benchmark ONLY: macro-F1 0.9249, Infiltration 0.755.
+                Port features wreck transfer (DAPT macro 0.471 vs base 0.589,
+                RESUME.md). Checkpoint is not on this machine; number is historical.
+  base_w30      cross-dataset comparison point: DAPT ROC-AUC 0.697, but recall
+                0.055 @ 10% FPR (worse than cic_v2 at every fixed FPR <= 10%).
+  htz_k*        experiment-only (transition_f1.json horizon sweep). Not deployable.
+  cic_v2_w30    everything the app shows.

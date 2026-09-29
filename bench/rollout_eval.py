@@ -21,6 +21,26 @@ input and the rollout is theatre. Skill is reported as
 K-step drift is also reported. Free-running rollout feeds predictions back in, so
 errors compound; the curve shows how far ahead the simulation stays usable.
 
+Stage level (TRAINER_BACKLOG R1). State-space MSE says nothing about whether the
+rollout forecasts the *stage*, which is what the app shows. At each step k the
+argmax of the rolled-out stage distribution is scored against the true stage of
+the flow it predicts (y[j+k-1]; step 1 is the ordinary one-step prediction),
+against three baselines:
+
+  persistence   the last observed label y[j-1], held
+  classifier    the model's own step-1 prediction, held (no rollout at all)
+  markov        the step-1 distribution projected k-1 steps through
+                forecast.TRANSITION, the app's fallback when there is no state head
+
+Macro-F1 is reported on all windows and on transition windows only
+(y[j+k-1] != y[j-1]). Persistence is 0 on transitions by construction. The
+comparison that decides the pitch is rollout vs classifier: if holding the
+step-1 prediction does as well, the classifier forecasts and the rollout only
+illustrates. Transition windows are rare, so a second sample is drawn from
+windows whose label changes somewhere in the horizon; it is used only for the
+transition rows, where it is an unbiased draw. Windows whose horizon crosses a
+capture-file boundary are dropped.
+
 Usage:
     python3 bench/rollout_eval.py --data /tmp/netrikan-ctu13-w30 \\
         --model models/ctu13_w30.pt
@@ -37,8 +57,94 @@ import torch
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, 'src'))
 
+from sklearn.metrics import f1_score     # noqa: E402
+
 from model import WorldModel              # noqa: E402
-from train_v2 import blocked_split        # noqa: E402
+from train_v2 import blocked_split, STAGES  # noqa: E402
+from forecast import TRANSITION           # noqa: E402
+
+N_MODEL = len(STAGES)
+# forecast.TRANSITION is over the 7 kill-chain stages; the model's 5 classes map
+# onto chain ids 0-4 one to one (attck_map.MODEL_TO_CHAIN), so project in chain
+# space and read back the first 5.
+
+
+def markov_project(p5, steps):
+    """(n, 5) -> (n, steps, 5): step 1 is p5 itself, step k is k-1 hops of
+    forecast.TRANSITION, argmax restricted to the model's 5 classes."""
+    n = len(p5)
+    p = np.zeros((n, TRANSITION.shape[0]))
+    p[:, :N_MODEL] = p5
+    out = np.zeros((n, steps, N_MODEL))
+    for k in range(steps):
+        if k:
+            p = p @ TRANSITION
+        out[:, k] = p[:, :N_MODEL]
+    return out
+
+
+def macro(t, p):
+    return round(float(f1_score(t, p, labels=list(range(N_MODEL)), average='macro',
+                                zero_division=0)), 4)
+
+
+def stage_eval(idx, n_random, stages, y, steps):
+    """Stage-level scoring of the rollout at every step, vs persistence, the held
+    step-1 classifier prediction, and the Markov projection."""
+    roll = stages.argmax(2)                         # (n, steps)
+    clf = roll[:, 0]
+    mk = markov_project(stages[:, 0, :], steps).argmax(2)
+    persist = y[idx - 1]
+    rows = []
+    print("\nstage-level macro-F1 (all windows | transition windows only)")
+    print(f"  {'step':>4}  {'n_tr':>6}  {'rollout':>15}  {'classifier':>15}  "
+          f"{'markov':>15}  {'persist':>15}")
+    for k in range(steps):
+        true = y[idx + k]
+        rnd = np.zeros(len(idx), bool)
+        rnd[:n_random] = True
+        tr = true != persist                        # transitions from both samples
+        row = {'step': k + 1, 'n_all': int(rnd.sum()), 'n_transitions': int(tr.sum()),
+               'n_transitions_in_random_sample': int((tr & rnd).sum())}
+        for name, pred in (('rollout', roll[:, k]), ('classifier_held', clf),
+                           ('markov', mk[:, k]), ('persistence', persist)):
+            row[f'{name}_all_f1'] = macro(true[rnd], pred[rnd])
+            row[f'{name}_transition_f1'] = macro(true[tr], pred[tr]) if tr.any() else None
+        rows.append(row)
+        print(f"  {k+1:>4}  {tr.sum():>6}  "
+              f"{row['rollout_all_f1']:.4f} | {row['rollout_transition_f1']:.4f}  "
+              f"{row['classifier_held_all_f1']:.4f} | {row['classifier_held_transition_f1']:.4f}  "
+              f"{row['markov_all_f1']:.4f} | {row['markov_transition_f1']:.4f}  "
+              f"{row['persistence_all_f1']:.4f} | {row['persistence_transition_f1']:.4f}")
+
+    last = rows[-1]
+    beats_clf = [r['step'] for r in rows
+                 if r['rollout_transition_f1'] > r['classifier_held_transition_f1']]
+    beats_mk = [r['step'] for r in rows
+                if r['rollout_transition_f1'] > r['markov_transition_f1']]
+    if last['rollout_transition_f1'] > max(last['classifier_held_transition_f1'],
+                                           last['markov_transition_f1']):
+        verdict = ("world_model_forecasts: at the final step the rolled-out stage "
+                   "beats both the held classifier prediction and the Markov "
+                   "projection on transition windows")
+    else:
+        verdict = ("classifier_forecasts_rollout_illustrates: at the final step the "
+                   "rollout does not beat the held step-1 prediction and/or the "
+                   "Markov projection on transition windows")
+    print(f"  -> {verdict}")
+    return {
+        'target': 'step k predicts y[j+k-1] (step 1 = ordinary one-step prediction)',
+        'transition_definition': 'y[j+k-1] != y[j-1] (last observed label)',
+        'baselines': {
+            'persistence': 'y[j-1] held; 0 on transitions by construction',
+            'classifier_held': "model's step-1 argmax held for all k (no rollout)",
+            'markov': 'step-1 softmax projected k-1 hops through forecast.TRANSITION',
+        },
+        'per_step': rows,
+        'steps_rollout_beats_classifier_on_transitions': beats_clf,
+        'steps_rollout_beats_markov_on_transitions': beats_mk,
+        'verdict': verdict,
+    }
 
 
 def main():
@@ -48,6 +154,10 @@ def main():
     ap.add_argument('--steps', type=int, default=10)
     ap.add_argument('--limit', type=int, default=20000,
                     help='cap validation windows evaluated, for speed')
+    ap.add_argument('--transition-limit', type=int, default=20000,
+                    help='extra windows drawn from those whose label changes '
+                         'within the horizon, for the stage-level transition rows')
+    ap.add_argument('--batch', type=int, default=4096)
     ap.add_argument('--out', default=os.path.join(ROOT, 'models', 'rollout_eval.json'))
     args = ap.parse_args()
 
@@ -57,10 +167,24 @@ def main():
     n = min(n_all, len(y))
 
     _, va = blocked_split(y[:n], purge=W - 1)
-    va = va[va < n - args.steps - 1]      # need ground truth for every step ahead
+    va = va[(va > 0) & (va < n - args.steps - 1)]   # need y[j-1] and every step ahead
+    fid_path = os.path.join(args.data, 'file_id.npy')
+    if os.path.exists(fid_path):
+        fid = np.load(fid_path)
+        va = va[fid[va - 1] == fid[va + args.steps]]   # horizon stays in one capture day
+    # does the label change anywhere in the horizon?  y[j-1] vs y[j..j+steps-1]
+    changes = np.zeros(len(va), bool)
+    for k in range(args.steps):
+        changes |= y[va + k] != y[va - 1]
+    rng = np.random.default_rng(0)
+    pool = va
     if len(va) > args.limit:
-        va = np.sort(np.random.default_rng(0).choice(va, args.limit, replace=False))
-    print(f"evaluating {len(va):,} windows, window={W} features={F}", flush=True)
+        va = np.sort(rng.choice(va, args.limit, replace=False))
+    tpool = np.setdiff1d(pool[changes], va)
+    if len(tpool) > args.transition_limit:
+        tpool = np.sort(rng.choice(tpool, args.transition_limit, replace=False))
+    print(f"evaluating {len(va):,} windows (+{len(tpool):,} transition-enriched), "
+          f"window={W} features={F}", flush=True)
 
     sd = torch.load(args.model, map_location='cpu', weights_only=True)
     if 'state_head.weight' not in sd:
@@ -111,10 +235,18 @@ def main():
 
     # ---- K-step free-running drift ----
     print(f"\nK-step free-running drift ({args.steps} steps)")
+    allidx = np.concatenate([va, tpool])
+    states_all = np.zeros((len(allidx), args.steps, F), np.float32)
+    stages_all = np.zeros((len(allidx), args.steps, N_MODEL), np.float32)
     with torch.no_grad():
-        states, stages = model.rollout(torch.from_numpy(cur), steps=args.steps)
-    states = states.numpy()      # (n, steps, F)
-    stages = stages.numpy()      # (n, steps, 5)
+        for i in range(0, len(allidx), args.batch):
+            sl = allidx[i:i + args.batch]
+            xb = torch.from_numpy(np.asarray(X[sl], dtype=np.float32))
+            st, sg = model.rollout(xb, steps=args.steps)
+            states_all[i:i + len(sl)] = st.numpy()
+            stages_all[i:i + len(sl)] = sg.numpy()
+    states = states_all[:len(va)]      # (n, steps, F)
+    stages = stages_all[:len(va)]      # (n, steps, 5)
 
     drift = []
     for k in range(args.steps):
@@ -141,6 +273,8 @@ def main():
     flips = float(np.mean(stages.argmax(2)[:, 1:] != stages.argmax(2)[:, :-1]))
     print(f"predicted-stage volatility across rollout steps: {flips:.4f}")
 
+    stage_level = stage_eval(allidx, len(va), stages_all, y, args.steps)
+
     payload = {
         'model': args.model, 'data': args.data,
         'n_windows': int(len(va)), 'window': int(W), 'features': int(F),
@@ -157,6 +291,7 @@ def main():
         'k_step_drift': drift,
         'steps_beating_persistence': usable,
         'rollout_stage_volatility': round(flips, 4),
+        'stage_level': stage_level,
         'note': ('skill = 1 - MSE_model/MSE_persistence. Positive means the state '
                  'head predicts the next flow better than copying the last '
                  'observed flow, which is the only baseline that matters here: '

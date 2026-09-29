@@ -1,0 +1,19 @@
+{
+  "k": 30,
+  "n_train_subsample": 300000,
+  "n_val": 1225425,
+  "n_transitions": 187573,
+  "last": {
+    "all_macro_f1": 0.2462,
+    "transition_f1": 0.1559,
+    "onset_recall": 0.862
+  },
+  "flat": {
+    "all_macro_f1": 0.5799,
+    "transition_f1": 0.3746,
+    "onset_recall": 0.7902
+  },
+  "lstm_transition_f1": 0.4588,
+  "lstm_minus_logreg_flat": 0.0842,
+  "minutes": 1.5
+}

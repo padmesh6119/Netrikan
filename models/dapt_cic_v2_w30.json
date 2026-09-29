@@ -1,6 +1,6 @@
 {
   "tag": "dapt_cic_v2_w30",
-  "model": "models/cic_v2_w30.pt",
+  "model": "../models/cic_v2_w30.pt",
   "data": "/tmp/netrikan-cic-full-w30",
   "has_onset_head": true,
   "onset_auc_dapt": {
@@ -85,5 +85,86 @@
       "n": 15,
       "rate": 0.7333333333333333
     }
+  },
+  "stage_attack_mass_roc_auc": 0.6871980252844518,
+  "operating_points": {
+    "scores": {
+      "breach": "sigmoid(breach_head)",
+      "stage_attack_mass": "1 - softmax(stage_logits)[Benign]"
+    },
+    "fpr_definition": "false positives / benign windows",
+    "curves": {
+      "breach": [
+        {
+          "target_fpr": 0.05,
+          "threshold": 0.8862628340721131,
+          "achieved_fpr": 0.05,
+          "recall": 0.063,
+          "precision": 0.3136,
+          "tp": 1448,
+          "fp": 3170,
+          "fn": 21531,
+          "tn": 60242
+        },
+        {
+          "target_fpr": 0.1,
+          "threshold": 0.8362582921981813,
+          "achieved_fpr": 0.1,
+          "recall": 0.0998,
+          "precision": 0.2657,
+          "tp": 2294,
+          "fp": 6341,
+          "fn": 20685,
+          "tn": 57071
+        },
+        {
+          "target_fpr": 0.2,
+          "threshold": 0.7941284179687501,
+          "achieved_fpr": 0.2,
+          "recall": 0.3057,
+          "precision": 0.3564,
+          "tp": 7024,
+          "fp": 12682,
+          "fn": 15955,
+          "tn": 50730
+        }
+      ],
+      "stage_attack_mass": [
+        {
+          "target_fpr": 0.05,
+          "threshold": 0.8728816509246827,
+          "achieved_fpr": 0.05,
+          "recall": 0.0613,
+          "precision": 0.3076,
+          "tp": 1408,
+          "fp": 3170,
+          "fn": 21571,
+          "tn": 60242
+        },
+        {
+          "target_fpr": 0.1,
+          "threshold": 0.8279482126235963,
+          "achieved_fpr": 0.1,
+          "recall": 0.1072,
+          "precision": 0.2798,
+          "tp": 2463,
+          "fp": 6341,
+          "fn": 20516,
+          "tn": 57071
+        },
+        {
+          "target_fpr": 0.2,
+          "threshold": 0.7911963462829591,
+          "achieved_fpr": 0.2,
+          "recall": 0.3165,
+          "precision": 0.3644,
+          "tp": 7272,
+          "fp": 12682,
+          "fn": 15707,
+          "tn": 50730
+        }
+      ]
+    },
+    "headline_at_10pct_fpr": "recall 10.7% at 10.0% FPR (stage_attack_mass score, precision 28.0%)"
   }
 }

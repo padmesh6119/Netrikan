@@ -89,6 +89,88 @@ horizon sweep so every horizon claim has a per-k naive floor, not just persisten
 
 ---
 
+## Round 2 — 2026-09-29 (after LODO + transition eval merged)
+
+Done since the list below was written: §1 transition F1 (`transition_f1.json`,
+LSTM wins 5/5 horizons), LODO (`lodo_cic_full_w30.json`, see `LODO_ANALYSIS.md`),
+B8 claims rewritten to "5/5 transition windows", rollout state-space eval
+(`rollout_eval_cic_v2_w30.json`: PASS, 1-step skill +0.22 vs persistence).
+
+App side, done on main: rollout now always uses `cic_v2_w30.pt`'s state head
+(`analyze()` reports `rollout_checkpoint`); a stale local `world_w30.pt` can no
+longer shadow it. Upload lag fixed (uploads cached by file id, counterfactuals
+behind a button and reusing the base analysis).
+
+Open, in order:
+
+> **Status 2026-09-29 (later):** R1, R2, R3, R5, R6 done; R4 result below.
+> - **R1** `rollout_eval_cic_v2_w30_k30.json`: state space still beats persistence
+>   30/30 steps. At the **stage** level the rollout beats the held step-1
+>   classifier prediction on transition windows for steps 2–24 (e.g. step 10:
+>   0.308 vs 0.195) but **loses at 25–30** (step 30: 0.152 vs 0.181). Markov
+>   projection is worst from step 10 on. Verdict for the 15-min horizon:
+>   **"the classifier forecasts; the rollout illustrates"**. Windows whose horizon
+>   crosses a capture day are now dropped.
+> - **R2** `cic_v2_w30_calib.json` (`calibration.py --heldout`): block-level
+>   fit/test split. Test ECE-15 0.00737 → 0.00728, Brier 0.09586 → 0.09577
+>   (T=1.094), so the ship gate passes, and it also passes on a harder chronological
+>   split (ECE 0.0180 → 0.0165). The gain is tiny because the model was already
+>   calibrated. `infer.py` now reads the sidecar (T=1 if `deploy` is false).
+> - **R3** `dapt_{cic_v2,cic_full,base}_w30.json` now carry `operating_points`.
+>   **Bad news, stated plainly:** cic_v2 recall is **10.7% at 10% FPR** (6.3% at
+>   5%, 31.7% at 20%). cic_full 14.7%, base_w30 5.5%. ROC-AUC ~0.69 comes from
+>   the high-FPR end of the curve. Do not put "recall X% at 10% FPR" on a slide
+>   as a strength. `dapt_crossdataset.json` and the ports variants were not
+>   regenerated: they record no model path, and the ports checkpoints are not on
+>   this machine.
+> - **R4** `lodo_f1_dos_diag.json` (`bench/lodo_f1_dos_diag.py`): **hypothesis
+>   confirmed at short horizons.** The below-chance AUC is concentrated in windows
+>   whose *current* label is DoS (sweep AUC 0.20 there vs Benign 0.73). Class-weighted
+>   rerun (`--balance-power 1.0`, `lodo_f1_cw.pt`): onset k1 0.425 → **0.614**, k5
+>   0.445 → 0.610, within-DoS k1 0.20 → 0.54, DoS F1 0.818 → 0.841. Caveats: k15/k30
+>   barely move (0.46 → 0.54, 0.49 → 0.51); training past epoch 3 collapses Benign
+>   F1 to ~0.05, so the gain depends on checkpoint selection. It is not a free win
+>   to apply to every fold.
+> - **C5** `baseline_k{0,30,90,180,360}.json` (`baseline.py --horizons`): per-k
+>   logreg on the same fixed split as `htz_k*`. LSTM transition-F1 beats the flat
+>   logreg at every k, by +0.05 / +0.08 / +0.09 / +0.06 / **+0.02** (k=360).
+>   The margin over a linear model is modest and shrinks at long horizons.
+> - **R5** `lodo_cic_full_w30.json` → `aggregate_excl_family_holdout` (folds 1–6):
+>   onset k5 0.631 ± 0.099, supported-class F1 0.559 ± 0.184.
+> - **R6** `models/BEST.txt` → `cic_v2_w30.pt`, with the per-claim ownership table.
+
+### R1. Rollout eval at the horizons the app actually uses
+`rollout_eval.py` defaults to `--steps 10`. The 15-min horizon runs **30** steps
+(`fc._steps_for_horizon`). Re-run with `--steps 30` on `cic_v2_w30.pt`, and add a
+**stage-level** column: argmax of the rolled-out stage distribution at step k vs
+the true stage at t+k, macro-F1 on transition windows only, against persistence
+and the Markov `TRANSITION` matrix. Output `rollout_eval_cic_v2_w30_k30.json`.
+Decides whether the pitch says "the world model forecasts" or "the classifier
+forecasts; the rollout illustrates".
+
+### R2. Calibration on a real held-out partition → §2 below
+`calibrate.py` currently fits and scores T within val. Split val into fit/test
+by time (not random — windows overlap), report ECE before/after on test only.
+
+### R3. DAPT recall at fixed FPR → §3 below
+`operating_points` at FPR ∈ {0.05, 0.10, 0.20}. Slide line: "recall X% at 10% FPR".
+
+### R4. LODO fold 1 DoS diagnostic
+Fold 1 onset_auc_k1 = 0.425 (only fold < 0.5). Hypothesis: DoS volume inversion
+(52,498 train vs 601,802 held-out). Produce a DoS-only onset curve and a
+class-weighted rerun of fold 1. Output `lodo_f1_dos_diag.json`. Confirms or kills
+the Q&A answer.
+
+### R5. LODO fold 0 reported separately
+Fold 0 is a zero-shot Botnet holdout, not domain shift. Add
+`aggregate_excl_family_holdout` to `lodo_cic_full_w30.json` (folds 1–6 only).
+
+### R6. Promote the deployed model
+Write `models/BEST.txt` → `cic_v2_w30.pt` with the metrics that justify it
+(§4 below). `lstm_world_model.pt` is retired.
+
+---
+
 ## P0 — decides the whole forecasting thesis
 
 ### 1. Transition-window F1  (NEW script: `src/eval_transition.py`)

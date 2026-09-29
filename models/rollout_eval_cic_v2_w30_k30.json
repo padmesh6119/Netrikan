@@ -1,0 +1,691 @@
+{
+  "model": "models/cic_v2_w30.pt",
+  "data": "/tmp/netrikan-cic-full-w30",
+  "n_windows": 20000,
+  "window": 30,
+  "features": 24,
+  "one_step": {
+    "model_mse": 0.38362,
+    "persistence_mse": 0.77265,
+    "window_mean_mse": 0.46121,
+    "skill_vs_persistence": 0.5035,
+    "skill_vs_window_mean": 0.1682,
+    "beats_persistence": true,
+    "beats_window_mean": true,
+    "verdict": "PASS: beats both persistence and the window mean -- the state head learned genuine dynamics"
+  },
+  "k_step_drift": [
+    {
+      "step": 1,
+      "model_mse": 0.38362,
+      "persistence_mse": 0.77265,
+      "skill": 0.5035
+    },
+    {
+      "step": 2,
+      "model_mse": 0.41916,
+      "persistence_mse": 0.77886,
+      "skill": 0.4618
+    },
+    {
+      "step": 3,
+      "model_mse": 0.42092,
+      "persistence_mse": 0.84411,
+      "skill": 0.5013
+    },
+    {
+      "step": 4,
+      "model_mse": 0.45125,
+      "persistence_mse": 0.85581,
+      "skill": 0.4727
+    },
+    {
+      "step": 5,
+      "model_mse": 0.54224,
+      "persistence_mse": 0.98687,
+      "skill": 0.4505
+    },
+    {
+      "step": 6,
+      "model_mse": 0.50355,
+      "persistence_mse": 0.9404,
+      "skill": 0.4645
+    },
+    {
+      "step": 7,
+      "model_mse": 0.59188,
+      "persistence_mse": 1.04527,
+      "skill": 0.4338
+    },
+    {
+      "step": 8,
+      "model_mse": 0.45317,
+      "persistence_mse": 0.90794,
+      "skill": 0.5009
+    },
+    {
+      "step": 9,
+      "model_mse": 1.18038,
+      "persistence_mse": 1.64788,
+      "skill": 0.2837
+    },
+    {
+      "step": 10,
+      "model_mse": 0.82269,
+      "persistence_mse": 1.27936,
+      "skill": 0.3569
+    },
+    {
+      "step": 11,
+      "model_mse": 0.68335,
+      "persistence_mse": 1.15429,
+      "skill": 0.408
+    },
+    {
+      "step": 12,
+      "model_mse": 0.50794,
+      "persistence_mse": 0.97113,
+      "skill": 0.477
+    },
+    {
+      "step": 13,
+      "model_mse": 0.48216,
+      "persistence_mse": 0.96141,
+      "skill": 0.4985
+    },
+    {
+      "step": 14,
+      "model_mse": 0.4777,
+      "persistence_mse": 0.95569,
+      "skill": 0.5002
+    },
+    {
+      "step": 15,
+      "model_mse": 0.48999,
+      "persistence_mse": 0.97778,
+      "skill": 0.4989
+    },
+    {
+      "step": 16,
+      "model_mse": 0.4611,
+      "persistence_mse": 0.94313,
+      "skill": 0.5111
+    },
+    {
+      "step": 17,
+      "model_mse": 0.47213,
+      "persistence_mse": 0.9611,
+      "skill": 0.5088
+    },
+    {
+      "step": 18,
+      "model_mse": 0.47231,
+      "persistence_mse": 0.95723,
+      "skill": 0.5066
+    },
+    {
+      "step": 19,
+      "model_mse": 0.71167,
+      "persistence_mse": 1.20084,
+      "skill": 0.4074
+    },
+    {
+      "step": 20,
+      "model_mse": 0.50227,
+      "persistence_mse": 0.99157,
+      "skill": 0.4935
+    },
+    {
+      "step": 21,
+      "model_mse": 0.50257,
+      "persistence_mse": 0.99468,
+      "skill": 0.4947
+    },
+    {
+      "step": 22,
+      "model_mse": 0.48006,
+      "persistence_mse": 0.96969,
+      "skill": 0.5049
+    },
+    {
+      "step": 23,
+      "model_mse": 0.45314,
+      "persistence_mse": 0.94632,
+      "skill": 0.5212
+    },
+    {
+      "step": 24,
+      "model_mse": 0.46068,
+      "persistence_mse": 0.95482,
+      "skill": 0.5175
+    },
+    {
+      "step": 25,
+      "model_mse": 0.50319,
+      "persistence_mse": 0.99212,
+      "skill": 0.4928
+    },
+    {
+      "step": 26,
+      "model_mse": 0.49878,
+      "persistence_mse": 0.98973,
+      "skill": 0.496
+    },
+    {
+      "step": 27,
+      "model_mse": 0.48928,
+      "persistence_mse": 0.9818,
+      "skill": 0.5017
+    },
+    {
+      "step": 28,
+      "model_mse": 0.5055,
+      "persistence_mse": 0.98768,
+      "skill": 0.4882
+    },
+    {
+      "step": 29,
+      "model_mse": 0.502,
+      "persistence_mse": 0.98948,
+      "skill": 0.4927
+    },
+    {
+      "step": 30,
+      "model_mse": 0.55756,
+      "persistence_mse": 1.03968,
+      "skill": 0.4637
+    }
+  ],
+  "steps_beating_persistence": 30,
+  "rollout_stage_volatility": 0.0133,
+  "stage_level": {
+    "target": "step k predicts y[j+k-1] (step 1 = ordinary one-step prediction)",
+    "transition_definition": "y[j+k-1] != y[j-1] (last observed label)",
+    "baselines": {
+      "persistence": "y[j-1] held; 0 on transitions by construction",
+      "classifier_held": "model's step-1 argmax held for all k (no rollout)",
+      "markov": "step-1 softmax projected k-1 hops through forecast.TRANSITION"
+    },
+    "per_step": [
+      {
+        "step": 1,
+        "n_all": 20000,
+        "n_transitions": 2432,
+        "n_transitions_in_random_sample": 527,
+        "rollout_all_f1": 0.8406,
+        "rollout_transition_f1": 0.3479,
+        "classifier_held_all_f1": 0.8406,
+        "classifier_held_transition_f1": 0.3479,
+        "markov_all_f1": 0.8406,
+        "markov_transition_f1": 0.3479,
+        "persistence_all_f1": 0.9448,
+        "persistence_transition_f1": 0.0
+      },
+      {
+        "step": 2,
+        "n_all": 20000,
+        "n_transitions": 3928,
+        "n_transitions_in_random_sample": 855,
+        "rollout_all_f1": 0.8189,
+        "rollout_transition_f1": 0.366,
+        "classifier_held_all_f1": 0.8211,
+        "classifier_held_transition_f1": 0.2956,
+        "markov_all_f1": 0.8225,
+        "markov_transition_f1": 0.292,
+        "persistence_all_f1": 0.9109,
+        "persistence_transition_f1": 0.0
+      },
+      {
+        "step": 3,
+        "n_all": 20000,
+        "n_transitions": 4923,
+        "n_transitions_in_random_sample": 1108,
+        "rollout_all_f1": 0.8058,
+        "rollout_transition_f1": 0.3644,
+        "classifier_held_all_f1": 0.8044,
+        "classifier_held_transition_f1": 0.2663,
+        "markov_all_f1": 0.806,
+        "markov_transition_f1": 0.2585,
+        "persistence_all_f1": 0.8858,
+        "persistence_transition_f1": 0.0
+      },
+      {
+        "step": 4,
+        "n_all": 20000,
+        "n_transitions": 5894,
+        "n_transitions_in_random_sample": 1292,
+        "rollout_all_f1": 0.7915,
+        "rollout_transition_f1": 0.3554,
+        "classifier_held_all_f1": 0.7925,
+        "classifier_held_transition_f1": 0.256,
+        "markov_all_f1": 0.7937,
+        "markov_transition_f1": 0.2444,
+        "persistence_all_f1": 0.8684,
+        "persistence_transition_f1": 0.0
+      },
+      {
+        "step": 5,
+        "n_all": 20000,
+        "n_transitions": 6720,
+        "n_transitions_in_random_sample": 1499,
+        "rollout_all_f1": 0.7752,
+        "rollout_transition_f1": 0.3285,
+        "classifier_held_all_f1": 0.7732,
+        "classifier_held_transition_f1": 0.2325,
+        "markov_all_f1": 0.775,
+        "markov_transition_f1": 0.2263,
+        "persistence_all_f1": 0.8486,
+        "persistence_transition_f1": 0.0
+      },
+      {
+        "step": 6,
+        "n_all": 20000,
+        "n_transitions": 7654,
+        "n_transitions_in_random_sample": 1716,
+        "rollout_all_f1": 0.7586,
+        "rollout_transition_f1": 0.3199,
+        "classifier_held_all_f1": 0.7615,
+        "classifier_held_transition_f1": 0.2315,
+        "markov_all_f1": 0.7632,
+        "markov_transition_f1": 0.2159,
+        "persistence_all_f1": 0.8279,
+        "persistence_transition_f1": 0.0
+      },
+      {
+        "step": 7,
+        "n_all": 20000,
+        "n_transitions": 8320,
+        "n_transitions_in_random_sample": 1868,
+        "rollout_all_f1": 0.7469,
+        "rollout_transition_f1": 0.3146,
+        "classifier_held_all_f1": 0.747,
+        "classifier_held_transition_f1": 0.2169,
+        "markov_all_f1": 0.7493,
+        "markov_transition_f1": 0.2013,
+        "persistence_all_f1": 0.8136,
+        "persistence_transition_f1": 0.0
+      },
+      {
+        "step": 8,
+        "n_all": 20000,
+        "n_transitions": 8985,
+        "n_transitions_in_random_sample": 1977,
+        "rollout_all_f1": 0.7337,
+        "rollout_transition_f1": 0.3174,
+        "classifier_held_all_f1": 0.7364,
+        "classifier_held_transition_f1": 0.2102,
+        "markov_all_f1": 0.7373,
+        "markov_transition_f1": 0.1918,
+        "persistence_all_f1": 0.8047,
+        "persistence_transition_f1": 0.0
+      },
+      {
+        "step": 9,
+        "n_all": 20000,
+        "n_transitions": 9471,
+        "n_transitions_in_random_sample": 2115,
+        "rollout_all_f1": 0.7236,
+        "rollout_transition_f1": 0.3155,
+        "classifier_held_all_f1": 0.7279,
+        "classifier_held_transition_f1": 0.2033,
+        "markov_all_f1": 0.7273,
+        "markov_transition_f1": 0.1818,
+        "persistence_all_f1": 0.7937,
+        "persistence_transition_f1": 0.0
+      },
+      {
+        "step": 10,
+        "n_all": 20000,
+        "n_transitions": 10035,
+        "n_transitions_in_random_sample": 2240,
+        "rollout_all_f1": 0.7087,
+        "rollout_transition_f1": 0.3082,
+        "classifier_held_all_f1": 0.716,
+        "classifier_held_transition_f1": 0.1945,
+        "markov_all_f1": 0.5085,
+        "markov_transition_f1": 0.1449,
+        "persistence_all_f1": 0.7813,
+        "persistence_transition_f1": 0.0
+      },
+      {
+        "step": 11,
+        "n_all": 20000,
+        "n_transitions": 10480,
+        "n_transitions_in_random_sample": 2325,
+        "rollout_all_f1": 0.6976,
+        "rollout_transition_f1": 0.3004,
+        "classifier_held_all_f1": 0.706,
+        "classifier_held_transition_f1": 0.1885,
+        "markov_all_f1": 0.5011,
+        "markov_transition_f1": 0.1394,
+        "persistence_all_f1": 0.7741,
+        "persistence_transition_f1": 0.0
+      },
+      {
+        "step": 12,
+        "n_all": 20000,
+        "n_transitions": 10818,
+        "n_transitions_in_random_sample": 2433,
+        "rollout_all_f1": 0.6829,
+        "rollout_transition_f1": 0.2991,
+        "classifier_held_all_f1": 0.6967,
+        "classifier_held_transition_f1": 0.1919,
+        "markov_all_f1": 0.4929,
+        "markov_transition_f1": 0.138,
+        "persistence_all_f1": 0.7651,
+        "persistence_transition_f1": 0.0
+      },
+      {
+        "step": 13,
+        "n_all": 20000,
+        "n_transitions": 11056,
+        "n_transitions_in_random_sample": 2468,
+        "rollout_all_f1": 0.669,
+        "rollout_transition_f1": 0.2959,
+        "classifier_held_all_f1": 0.6936,
+        "classifier_held_transition_f1": 0.1893,
+        "markov_all_f1": 0.4866,
+        "markov_transition_f1": 0.1343,
+        "persistence_all_f1": 0.7617,
+        "persistence_transition_f1": 0.0
+      },
+      {
+        "step": 14,
+        "n_all": 20000,
+        "n_transitions": 11248,
+        "n_transitions_in_random_sample": 2515,
+        "rollout_all_f1": 0.6596,
+        "rollout_transition_f1": 0.294,
+        "classifier_held_all_f1": 0.6915,
+        "classifier_held_transition_f1": 0.1887,
+        "markov_all_f1": 0.4808,
+        "markov_transition_f1": 0.1299,
+        "persistence_all_f1": 0.7582,
+        "persistence_transition_f1": 0.0
+      },
+      {
+        "step": 15,
+        "n_all": 20000,
+        "n_transitions": 11387,
+        "n_transitions_in_random_sample": 2585,
+        "rollout_all_f1": 0.6426,
+        "rollout_transition_f1": 0.2857,
+        "classifier_held_all_f1": 0.6876,
+        "classifier_held_transition_f1": 0.189,
+        "markov_all_f1": 0.4757,
+        "markov_transition_f1": 0.1236,
+        "persistence_all_f1": 0.7514,
+        "persistence_transition_f1": 0.0
+      },
+      {
+        "step": 16,
+        "n_all": 20000,
+        "n_transitions": 11511,
+        "n_transitions_in_random_sample": 2565,
+        "rollout_all_f1": 0.6277,
+        "rollout_transition_f1": 0.2745,
+        "classifier_held_all_f1": 0.6862,
+        "classifier_held_transition_f1": 0.1909,
+        "markov_all_f1": 0.4716,
+        "markov_transition_f1": 0.1232,
+        "persistence_all_f1": 0.7543,
+        "persistence_transition_f1": 0.0
+      },
+      {
+        "step": 17,
+        "n_all": 20000,
+        "n_transitions": 11559,
+        "n_transitions_in_random_sample": 2609,
+        "rollout_all_f1": 0.6132,
+        "rollout_transition_f1": 0.272,
+        "classifier_held_all_f1": 0.6841,
+        "classifier_held_transition_f1": 0.1898,
+        "markov_all_f1": 0.4704,
+        "markov_transition_f1": 0.1208,
+        "persistence_all_f1": 0.7485,
+        "persistence_transition_f1": 0.0
+      },
+      {
+        "step": 18,
+        "n_all": 20000,
+        "n_transitions": 11624,
+        "n_transitions_in_random_sample": 2599,
+        "rollout_all_f1": 0.5992,
+        "rollout_transition_f1": 0.2607,
+        "classifier_held_all_f1": 0.6818,
+        "classifier_held_transition_f1": 0.1859,
+        "markov_all_f1": 0.3879,
+        "markov_transition_f1": 0.0495,
+        "persistence_all_f1": 0.7509,
+        "persistence_transition_f1": 0.0
+      },
+      {
+        "step": 19,
+        "n_all": 20000,
+        "n_transitions": 11773,
+        "n_transitions_in_random_sample": 2651,
+        "rollout_all_f1": 0.5834,
+        "rollout_transition_f1": 0.2477,
+        "classifier_held_all_f1": 0.6804,
+        "classifier_held_transition_f1": 0.1849,
+        "markov_all_f1": 0.3852,
+        "markov_transition_f1": 0.0493,
+        "persistence_all_f1": 0.748,
+        "persistence_transition_f1": 0.0
+      },
+      {
+        "step": 20,
+        "n_all": 20000,
+        "n_transitions": 11940,
+        "n_transitions_in_random_sample": 2660,
+        "rollout_all_f1": 0.5682,
+        "rollout_transition_f1": 0.2337,
+        "classifier_held_all_f1": 0.6786,
+        "classifier_held_transition_f1": 0.1812,
+        "markov_all_f1": 0.3836,
+        "markov_transition_f1": 0.0496,
+        "persistence_all_f1": 0.7481,
+        "persistence_transition_f1": 0.0
+      },
+      {
+        "step": 21,
+        "n_all": 20000,
+        "n_transitions": 12010,
+        "n_transitions_in_random_sample": 2675,
+        "rollout_all_f1": 0.5549,
+        "rollout_transition_f1": 0.227,
+        "classifier_held_all_f1": 0.6764,
+        "classifier_held_transition_f1": 0.1785,
+        "markov_all_f1": 0.3817,
+        "markov_transition_f1": 0.0488,
+        "persistence_all_f1": 0.7443,
+        "persistence_transition_f1": 0.0
+      },
+      {
+        "step": 22,
+        "n_all": 20000,
+        "n_transitions": 12264,
+        "n_transitions_in_random_sample": 2727,
+        "rollout_all_f1": 0.5433,
+        "rollout_transition_f1": 0.2176,
+        "classifier_held_all_f1": 0.6745,
+        "classifier_held_transition_f1": 0.1789,
+        "markov_all_f1": 0.3783,
+        "markov_transition_f1": 0.0492,
+        "persistence_all_f1": 0.7385,
+        "persistence_transition_f1": 0.0
+      },
+      {
+        "step": 23,
+        "n_all": 20000,
+        "n_transitions": 12416,
+        "n_transitions_in_random_sample": 2707,
+        "rollout_all_f1": 0.5252,
+        "rollout_transition_f1": 0.2072,
+        "classifier_held_all_f1": 0.6769,
+        "classifier_held_transition_f1": 0.182,
+        "markov_all_f1": 0.376,
+        "markov_transition_f1": 0.0491,
+        "persistence_all_f1": 0.7407,
+        "persistence_transition_f1": 0.0
+      },
+      {
+        "step": 24,
+        "n_all": 20000,
+        "n_transitions": 12594,
+        "n_transitions_in_random_sample": 2762,
+        "rollout_all_f1": 0.5149,
+        "rollout_transition_f1": 0.1965,
+        "classifier_held_all_f1": 0.6741,
+        "classifier_held_transition_f1": 0.1823,
+        "markov_all_f1": 0.3731,
+        "markov_transition_f1": 0.0493,
+        "persistence_all_f1": 0.737,
+        "persistence_transition_f1": 0.0
+      },
+      {
+        "step": 25,
+        "n_all": 20000,
+        "n_transitions": 12773,
+        "n_transitions_in_random_sample": 2822,
+        "rollout_all_f1": 0.508,
+        "rollout_transition_f1": 0.1884,
+        "classifier_held_all_f1": 0.6688,
+        "classifier_held_transition_f1": 0.1838,
+        "markov_all_f1": 0.2265,
+        "markov_transition_f1": 0.0432,
+        "persistence_all_f1": 0.7284,
+        "persistence_transition_f1": 0.0
+      },
+      {
+        "step": 26,
+        "n_all": 20000,
+        "n_transitions": 12958,
+        "n_transitions_in_random_sample": 2876,
+        "rollout_all_f1": 0.4984,
+        "rollout_transition_f1": 0.1777,
+        "classifier_held_all_f1": 0.6619,
+        "classifier_held_transition_f1": 0.1829,
+        "markov_all_f1": 0.2249,
+        "markov_transition_f1": 0.0432,
+        "persistence_all_f1": 0.7221,
+        "persistence_transition_f1": 0.0
+      },
+      {
+        "step": 27,
+        "n_all": 20000,
+        "n_transitions": 13104,
+        "n_transitions_in_random_sample": 2911,
+        "rollout_all_f1": 0.4897,
+        "rollout_transition_f1": 0.1706,
+        "classifier_held_all_f1": 0.6604,
+        "classifier_held_transition_f1": 0.1849,
+        "markov_all_f1": 0.2241,
+        "markov_transition_f1": 0.0434,
+        "persistence_all_f1": 0.7202,
+        "persistence_transition_f1": 0.0
+      },
+      {
+        "step": 28,
+        "n_all": 20000,
+        "n_transitions": 13304,
+        "n_transitions_in_random_sample": 2984,
+        "rollout_all_f1": 0.4812,
+        "rollout_transition_f1": 0.1609,
+        "classifier_held_all_f1": 0.6577,
+        "classifier_held_transition_f1": 0.1828,
+        "markov_all_f1": 0.2212,
+        "markov_transition_f1": 0.0431,
+        "persistence_all_f1": 0.7142,
+        "persistence_transition_f1": 0.0
+      },
+      {
+        "step": 29,
+        "n_all": 20000,
+        "n_transitions": 13480,
+        "n_transitions_in_random_sample": 3042,
+        "rollout_all_f1": 0.4679,
+        "rollout_transition_f1": 0.1499,
+        "classifier_held_all_f1": 0.6523,
+        "classifier_held_transition_f1": 0.1828,
+        "markov_all_f1": 0.2205,
+        "markov_transition_f1": 0.0425,
+        "persistence_all_f1": 0.7076,
+        "persistence_transition_f1": 0.0
+      },
+      {
+        "step": 30,
+        "n_all": 20000,
+        "n_transitions": 13561,
+        "n_transitions_in_random_sample": 3055,
+        "rollout_all_f1": 0.4595,
+        "rollout_transition_f1": 0.1522,
+        "classifier_held_all_f1": 0.6501,
+        "classifier_held_transition_f1": 0.1813,
+        "markov_all_f1": 0.2213,
+        "markov_transition_f1": 0.0421,
+        "persistence_all_f1": 0.7068,
+        "persistence_transition_f1": 0.0
+      }
+    ],
+    "steps_rollout_beats_classifier_on_transitions": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25
+    ],
+    "steps_rollout_beats_markov_on_transitions": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30
+    ],
+    "verdict": "classifier_forecasts_rollout_illustrates: at the final step the rollout does not beat the held step-1 prediction and/or the Markov projection on transition windows"
+  },
+  "note": "skill = 1 - MSE_model/MSE_persistence. Positive means the state head predicts the next flow better than copying the last observed flow, which is the only baseline that matters here: consecutive flows are highly correlated, so a low raw MSE alone does not show that any dynamics were learned."
+}
