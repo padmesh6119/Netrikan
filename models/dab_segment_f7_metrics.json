@@ -1,0 +1,254 @@
+{
+  "tag": "dab_segment_f7",
+  "data": "/home/pontiff/.claude/jobs/ff891818/tmp/dab/dapt_segment_w30",
+  "window": 30,
+  "features": 24,
+  "horizon_k": 0,
+  "select_on": "onset_auc_k5",
+  "attention": false,
+  "shuffle_history": false,
+  "best": 0.6989503905050483,
+  "final_macro_f1": 0.15977961432506887,
+  "onset_auc": {
+    "k1": {
+      "auc": 0.6776356100198233,
+      "onset_rate": 0.04415392130613327,
+      "gap_over_persistence": 0.1776
+    },
+    "k5": {
+      "auc": 0.6989503905050483,
+      "onset_rate": 0.05204736068844795,
+      "gap_over_persistence": 0.199
+    },
+    "k15": {
+      "auc": 0.6794579497992782,
+      "onset_rate": 0.06413418799638748,
+      "gap_over_persistence": 0.1795
+    },
+    "k30": {
+      "auc": 0.6875975312259157,
+      "onset_rate": 0.08337444812059402,
+      "gap_over_persistence": 0.1876
+    }
+  },
+  "onset_horizons": [
+    1,
+    5,
+    15,
+    30
+  ],
+  "onset_weight": 2.0,
+  "persistence_onset_auc": 0.5,
+  "n_train": 82008,
+  "n_val": 4054,
+  "classes_present": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "report": {
+    "Benign": {
+      "precision": 0.47192839707078926,
+      "recall": 0.9897610921501706,
+      "f1-score": 0.6391184573002755,
+      "support": 1758.0
+    },
+    "InitialAccess": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 0.0
+    },
+    "DoS": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 0.0
+    },
+    "Infiltration": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 2296.0
+    },
+    "Botnet": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 0.0
+    },
+    "accuracy": 0.4292057227429699,
+    "macro avg": {
+      "precision": 0.09438567941415785,
+      "recall": 0.19795221843003413,
+      "f1-score": 0.1278236914600551,
+      "support": 4054.0
+    },
+    "weighted avg": {
+      "precision": 0.2046497587692273,
+      "recall": 0.4292057227429699,
+      "f1-score": 0.2771510231706671,
+      "support": 4054.0
+    }
+  },
+  "confusion_matrix": [
+    [
+      1740,
+      18,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      1947,
+      275,
+      74,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  ],
+  "history": [
+    {
+      "epoch": 1,
+      "macro_f1": 0.16062127976190477,
+      "onset_auc": {
+        "k1": 0.6776637231933681,
+        "k5": 0.6806411114934152,
+        "k15": 0.6579067150561615,
+        "k30": 0.6521869287456767
+      },
+      "per_class": {
+        "Benign": 0.6424851190476191,
+        "InitialAccess": 0.0,
+        "DoS": 0.0,
+        "Infiltration": 0.0,
+        "Botnet": 0.0
+      }
+    },
+    {
+      "epoch": 2,
+      "macro_f1": 0.15977961432506887,
+      "onset_auc": {
+        "k1": 0.6776356100198233,
+        "k5": 0.6989503905050483,
+        "k15": 0.6794579497992782,
+        "k30": 0.6875975312259157
+      },
+      "per_class": {
+        "Benign": 0.6391184573002755,
+        "InitialAccess": 0.0,
+        "DoS": 0.0,
+        "Infiltration": 0.0,
+        "Botnet": 0.0
+      }
+    },
+    {
+      "epoch": 3,
+      "macro_f1": 0.15960762742940962,
+      "onset_auc": {
+        "k1": 0.6366076770589296,
+        "k5": 0.6624983197122114,
+        "k15": 0.6759873889947691,
+        "k30": 0.6716645116910083
+      },
+      "per_class": {
+        "Benign": 0.6384305097176385,
+        "InitialAccess": 0.0,
+        "DoS": 0.0,
+        "Infiltration": 0.0,
+        "Botnet": 0.0
+      }
+    },
+    {
+      "epoch": 4,
+      "macro_f1": 0.11371041552260663,
+      "onset_auc": {
+        "k1": 0.5544696341683186,
+        "k5": 0.5626109144095315,
+        "k15": 0.6108627995620616,
+        "k30": 0.6103452366545435
+      },
+      "per_class": {
+        "Benign": 0.5685520776130332,
+        "InitialAccess": 0.0,
+        "DoS": 0.0,
+        "Infiltration": 0.0,
+        "Botnet": 0.0
+      }
+    },
+    {
+      "epoch": 5,
+      "macro_f1": 0.12395777419932011,
+      "onset_auc": {
+        "k1": 0.6206639034060191,
+        "k5": 0.621489431760584,
+        "k15": 0.6570789911195816,
+        "k30": 0.6473915771237125
+      },
+      "per_class": {
+        "Benign": 0.6197888709966005,
+        "InitialAccess": 0.0,
+        "DoS": 0.0,
+        "Infiltration": 0.0,
+        "Botnet": 0.0
+      }
+    },
+    {
+      "epoch": 6,
+      "macro_f1": 0.12188761596328632,
+      "onset_auc": {
+        "k1": 0.6212290502793296,
+        "k5": 0.6356346801533655,
+        "k15": 0.663600421718503,
+        "k30": 0.6507633709339431
+      },
+      "per_class": {
+        "Benign": 0.6077250177179305,
+        "InitialAccess": 0.0,
+        "DoS": 0.0,
+        "Infiltration": 0.0017130620985010706,
+        "Botnet": 0.0
+      }
+    },
+    {
+      "epoch": 7,
+      "macro_f1": 0.11920744679497741,
+      "onset_auc": {
+        "k1": 0.6157520273923229,
+        "k5": 0.6235403077917256,
+        "k15": 0.6552005190381573,
+        "k30": 0.644512614569334
+      },
+      "per_class": {
+        "Benign": 0.5926716471006759,
+        "InitialAccess": 0.0,
+        "DoS": 0.0,
+        "Infiltration": 0.0033655868742111907,
+        "Botnet": 0.0
+      }
+    }
+  ],
+  "minutes": 0.8
+}
