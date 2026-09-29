@@ -201,7 +201,7 @@ Build these into the deck. They're what separates us from the other 5 teams.
 - **One hero number per slide:** 13.5 min (S2) · the pipeline diagram (S3) · the 4-tile stress strip (S4) · the 4 impact tiles (S5).
 - Icons over words. Kill-chain as a horizontal arrow: Recon → Initial Access → Lateral → C2 → Exfil, with the forecast marker *ahead* of the current stage.
 - Font size ≥ 14 pt. If it doesn't fit, cut words, not font size.
-- Put a **dashboard screenshot** on slide 3 or 5: run `streamlit run src/app.py`, pick the "Intrusion" scenario, and capture the risk curve with the forecast marker.
+- Put a **dashboard screenshot** on slide 3 or 5: run `streamlit run src/app.py`, upload `demo/real_intrusion_dapt_wednesday.csv`, and capture the risk curve rising at the attack. Don't use the built-in synthetic scenarios: their benign baseline false-alarms. See `DECKBOOK.md` §4.
 
 ---
 

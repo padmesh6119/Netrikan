@@ -56,12 +56,13 @@ Written 2026-09-29. Repo branch for the new experiment: `exp/dapt-identity-ab`.
 2. **Use only the numbers in `PPT_CONTENT.md`.** Its §7 table says which file each one comes from.
 3. **Slide 2 opens with the clock: "13.5 min"**, the median warning before an attack starts.
 4. **Slide 4 carries the "we tried to break our own model" strip**: held-out days, an unseen network, shuffled time order, 4 seeds.
-5. **Dashboard screenshot:** run `streamlit run src/app.py`, pick the "Intrusion" scenario, and capture the risk curve with the forecast marker.
-6. **60-second demo video** with a QR code on slide 3. Replay a capture and show the forecast firing *before* the attack stage arrives. Then click "Simulate interventions" to show the risk drop.
+5. **Dashboard screenshot:** run `streamlit run src/app.py`, upload `demo/real_intrusion_dapt_wednesday.csv`, and capture the risk curve rising at the attack. **Don't use the built-in synthetic scenarios.** Their "Benign baseline" shows a false alarm (risk 0.82).
+6. **60-second demo video** with a QR code on slide 3. Follow the script in `DECKBOOK.md` §4: real benign Monday (quiet), then real Wednesday intrusion (risk climbs), then "Simulate interventions".
 7. **Fill in the Team ID, the team name and the exact problem-statement title from the portal.**
 
 ### Don't
 
+- ❌ Don't claim on screen that the forecast fires before the attack. On the real replays, risk rises as the attack starts; the 13.5 min is a median over 15,898 onsets, and belongs on the slide, not in the demo.
 - ❌ Don't add per-host / "tracks the individual attacker" as a feature. It stays **roadmap** until Pranav's UWF result lands.
 - ❌ Don't show SPRT, "Time Bought", a Suricata comparison or D3FEND as built. They're roadmap.
 - ❌ Don't write "99% accuracy", "beats persistence" without "on transition windows", or any number not in `PPT_CONTENT.md`.
