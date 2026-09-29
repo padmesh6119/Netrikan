@@ -1,0 +1,74 @@
+{
+  "lstm_wins_transition": true,
+  "n_horizons_lstm_wins": 5,
+  "n_horizons_total": 5,
+  "verdict": "LSTM beats persistence on transition-only macro-F1 at every horizon tested (5/5) -- the forecasting claim stands.",
+  "note": "Persistence names the wrong stage on every transition window by construction, so persistence_transition_f1 is exactly 0 at every horizon -- that is expected, not a bug. The gap column is what carries the argument. Onset recall is reported on the benign->attack subset of transitions only; persistence_onset_recall is 0 by construction for the same reason.",
+  "horizons": [
+    {
+      "k": 0,
+      "checkpoint": "/Users/pranavmuthukumaran/Downloads/netrikan/models/htz_k0.pt",
+      "n_val": 1225426,
+      "n_transitions": 31781,
+      "transition_rate": 0.0259,
+      "n_onsets": 15892,
+      "lstm_transition_f1": 0.38,
+      "persistence_transition_f1": 0.0,
+      "gap": 0.38,
+      "lstm_onset_recall": 0.4735,
+      "persistence_onset_recall": 0.0
+    },
+    {
+      "k": 30,
+      "checkpoint": "/Users/pranavmuthukumaran/Downloads/netrikan/models/htz_k30.pt",
+      "n_val": 1225425,
+      "n_transitions": 187573,
+      "transition_rate": 0.1531,
+      "n_onsets": 93828,
+      "lstm_transition_f1": 0.4588,
+      "persistence_transition_f1": 0.0,
+      "gap": 0.4588,
+      "lstm_onset_recall": 0.6914,
+      "persistence_onset_recall": 0.0
+    },
+    {
+      "k": 90,
+      "checkpoint": "/Users/pranavmuthukumaran/Downloads/netrikan/models/htz_k90.pt",
+      "n_val": 1225414,
+      "n_transitions": 168677,
+      "transition_rate": 0.1376,
+      "n_onsets": 84482,
+      "lstm_transition_f1": 0.4643,
+      "persistence_transition_f1": 0.0,
+      "gap": 0.4643,
+      "lstm_onset_recall": 0.6974,
+      "persistence_onset_recall": 0.0
+    },
+    {
+      "k": 180,
+      "checkpoint": "/Users/pranavmuthukumaran/Downloads/netrikan/models/htz_k180.pt",
+      "n_val": 1237647,
+      "n_transitions": 190380,
+      "transition_rate": 0.1538,
+      "n_onsets": 95187,
+      "lstm_transition_f1": 0.4547,
+      "persistence_transition_f1": 0.0,
+      "gap": 0.4547,
+      "lstm_onset_recall": 0.6916,
+      "persistence_onset_recall": 0.0
+    },
+    {
+      "k": 360,
+      "checkpoint": "/Users/pranavmuthukumaran/Downloads/netrikan/models/htz_k360.pt",
+      "n_val": 1237608,
+      "n_transitions": 185045,
+      "transition_rate": 0.1495,
+      "n_onsets": 92086,
+      "lstm_transition_f1": 0.438,
+      "persistence_transition_f1": 0.0,
+      "gap": 0.438,
+      "lstm_onset_recall": 0.6855,
+      "persistence_onset_recall": 0.0
+    }
+  ]
+}
