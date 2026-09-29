@@ -242,7 +242,7 @@ system that predicts autocorrelation.
 | Capability | **Netrikan V2** | AttackForecast | What-the-Hack | ShadowCat | csxzor |
 |---|---|---|---|---|---|
 | Onset/hazard target | **YES** | NO | NO | head built, no weights | formulated, no training |
-| Beats persistence | **YES (onset AUC >> 0)** | 5/5 transition windows | unknown | unknown | N/A |
+| Beats persistence | **YES (onset AUC >> 0)** | 9/10 horizons | unknown | unknown | N/A |
 | Calibrated confidence (ECE) | **YES** | NO | NO | NO | NO |
 | Time Bought (τ_b) | **YES** | NO | NO | NO | NO |
 | SPRT per-host alert | **YES** | NO | NO | NO | NO |

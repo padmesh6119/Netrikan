@@ -64,7 +64,7 @@ because of the 180-day in-India log retention mandate.
 ## COMPETITOR LANDSCAPE (all verified from source code)
 
 Best competitor: HowSuyash/AttackForecast -- real RSSM world model (DreamerV2-style),
-per-host 60s buckets built and running, beats persistence on 5/5 transition windows,
+per-host 60s buckets built and running, beats persistence at 9/10 horizons,
 family-holdout FPR 0.002-0.019. This is the one repo that looks more finished than us today.
 
 DurgeshLabs/What-the-hack -- real trained autoregressive LSTM rollout, JWT/RBAC/Docker/CI,

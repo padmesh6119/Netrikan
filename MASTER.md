@@ -411,7 +411,7 @@ All findings verified from source code, not READMEs. File:line citations availab
 **Architecture**: Real RSSM (DreamerV2-style) — encoder → GRU dynamics → prior/posterior → stage/detection heads. Per-host 60-second bucket windowing actually built and running on real CTU-13 IPs.
 
 **Real results**:
-- Stage F1: 0.537 vs persistence 0.478 — **beats persistence on 5/5 transition windows**
+- Stage F1: 0.537 vs persistence 0.478 — **beats persistence at 9/10 horizons**
 - Family-holdout generalization (train on 4 malware families, test on unseen Virut/Murlo): F1 0.874, ROC-AUC 0.982, FPR 0.002–0.019
 - Found and fixed their own leakage bug (`has_packet_features`, 0.9995→0.0029 accuracy cliff)
 - `tests/prove_no_peeking.py` — formal proof-of-no-leakage test
@@ -530,7 +530,7 @@ All findings verified from source code, not READMEs. File:line citations availab
 | Capability | Netrikan | AttackForecast | What-the-Hack | DEFENDER | csxzor | NetForecast | ShadowCat |
 |---|---|---|---|---|---|---|---|
 | Real trained rollout model | PARTIAL (rollout exists, not used in forecast) | YES | YES | YES | code only | NO | code only |
-| Beats persistence baseline | NO (all-window) | YES (5/5 transition windows) | unknown | NO | N/A | N/A | unknown |
+| Beats persistence baseline | YES (transition windows, 5/5 horizons); NO on all-window | YES (9/10 horizons) | unknown | NO | N/A | N/A | unknown |
 | Per-host windowing | PARTIAL (eval done, not in prod) | YES | NO | NO | YES | NO | unknown |
 | Cross-dataset generalization | YES (honest ugly) | NO | NO | cross-day only | NO | cross-day | NO |
 | MITRE ATT&CK mapping | YES | partial | NO | NO | NO | NO | NO |
