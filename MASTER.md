@@ -149,7 +149,7 @@ NEURAL ROLLOUT  (forecast.py + model.py:rollout)
   append to window → drop oldest → repeat. Returns (steps, 5) stage probs.
   Mapped 5→6 class via MODEL_TO_CHAIN. Passed to forecast() as projections.
   Fallback: TRANSITION matrix (MEASURED_PERSISTENCE + DOCTRINE_SHAPE) when
-  world_w30.pt absent. Output: damage_risk, trajectory phrase, ETA, confidence.
+  no state head is available. Output: damage_risk, trajectory phrase, ETA, confidence.
 
 COUNTERFACTUAL ENGINE  (counterfactual.py)
   For each of 4 interventions (block SMB, block admin ports, isolate host,

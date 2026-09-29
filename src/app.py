@@ -1,3 +1,4 @@
+import io
 import os
 import sys
 import json
@@ -95,15 +96,17 @@ def run(key, horizon, _frame):
 
 
 @st.cache_data(show_spinner=False)
-def run_counterfactual(key, horizon, _df):
-    return counterfactual.run_all(_df, horizon, infer.analyze)
+def run_counterfactual(key, horizon, _df, _base):
+    return counterfactual.run_all(_df, horizon, infer.analyze, _base)
 
 
 @st.cache_data(show_spinner="Reading capture…")
-def read_capture(raw: bytes, name: str):
-    suffix = os.path.splitext(name)[1] or '.pcap'
+def read_upload(key, name, _raw):
+    suffix = os.path.splitext(name)[1].lower() or '.pcap'
+    if suffix == '.csv':
+        return pd.read_csv(io.BytesIO(_raw))
     with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as tmp:
-        tmp.write(raw)
+        tmp.write(_raw)
         path = tmp.name
     try:
         return pcap_ingest.load_pcap(path)
@@ -165,7 +168,7 @@ horizon = fc.HORIZONS[hlabel]
 if up is not None:
     ext = os.path.splitext(up.name)[1].lower()
     if ext == '.csv':
-        df = pd.read_csv(up)
+        df = read_upload(up.file_id, up.name, up.getvalue())
         miss = [f for f in infer.FEATURES if f not in df.columns]
         if miss:
             st.error(f"CSV missing {len(miss)} columns, e.g. {miss[:3]}")
@@ -175,7 +178,7 @@ if up is not None:
             st.error("Neither nfstream nor tshark found. `pip install nfstream` or `sudo apt install tshark`")
             st.stop()
         try:
-            df = read_capture(up.getvalue(), up.name)
+            df = read_upload(up.file_id, up.name, up.getvalue())
         except Exception as e:
             st.error(f"Could not read capture: {e}")
             st.stop()
@@ -183,17 +186,18 @@ if up is not None:
             st.error("No usable flows in that capture.")
             st.stop()
         st.caption(f"{up.name} → {len(df):,} bidirectional flows extracted")
-    source = up.name
+    source, src_id = up.name, up.file_id
 else:
     df = demo_data.generate(scenario, 260)
-    source = scenario
+    source = src_id = scenario
 
 if len(df) < infer.WINDOW + 2:
     st.warning(f"Only {len(df)} flows — need at least {infer.WINDOW+2} to build a "
                f"window. Try a longer capture.")
     st.stop()
 
-r = run(f"{source}{len(df)}{horizon}", horizon, df)
+run_key = f"{src_id}|{len(df)}|{horizon}"
+r = run(run_key, horizon, df)
 if r is None:
     st.error("Not enough flows.")
     st.stop()
@@ -461,9 +465,16 @@ with st.expander("Run counterfactual interventions", expanded=(risk > 0.3)):
     st.caption("Each intervention modifies the current traffic window and re-runs "
                "inference. Risk delta shows how much your response changes the "
                "breach probability.")
-    with st.spinner("Simulating interventions…"):
-        iv_results = run_counterfactual(f"{source}{len(df)}{horizon}", horizon, df)
-    if not iv_results:
+    if st.button("Simulate interventions"):
+        st.session_state.cf_key = run_key
+    if st.session_state.get("cf_key") != run_key:
+        iv_results = None
+    else:
+        with st.spinner("Simulating interventions…"):
+            iv_results = run_counterfactual(run_key, horizon, df, r)
+    if iv_results is None:
+        pass
+    elif not iv_results:
         st.warning("No flows available for counterfactual analysis.")
     else:
         for iv in iv_results:

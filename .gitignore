@@ -6,13 +6,11 @@ data/processed
 *.7CcE4fEA
 
 # ---- model checkpoints: only the ones we ship are tracked (see !rules below) ----
-# world_w30.pt is the trained state_head used for K-step rollout. Without it
-# forecast() silently falls back to the hand-coded DOCTRINE_SHAPE matrix, so a
-# clone would not contain the dynamics model at all. It must stay tracked.
+# The K-step rollout uses cic_v2_w30.pt's state head. world_w30.pt is a stale
+# pre-v2 checkpoint and stays untracked.
 models/*
 !models/lstm_world_model.pt
 !models/base_w30.pt
-!models/world_w30.pt
 !models/cic_full_w30.pt
 !models/cic_v2_w30.pt
 !models/scaler.pkl

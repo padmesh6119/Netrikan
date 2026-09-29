@@ -89,6 +89,52 @@ horizon sweep so every horizon claim has a per-k naive floor, not just persisten
 
 ---
 
+## Round 2 — 2026-09-29 (after LODO + transition eval merged)
+
+Done since the list below was written: §1 transition F1 (`transition_f1.json`,
+LSTM wins 5/5 horizons), LODO (`lodo_cic_full_w30.json`, see `LODO_ANALYSIS.md`),
+B8 claims rewritten to "5/5 transition windows", rollout state-space eval
+(`rollout_eval_cic_v2_w30.json`: PASS, 1-step skill +0.22 vs persistence).
+
+App side, done on main: rollout now always uses `cic_v2_w30.pt`'s state head
+(`analyze()` reports `rollout_checkpoint`); a stale local `world_w30.pt` can no
+longer shadow it. Upload lag fixed (uploads cached by file id, counterfactuals
+behind a button and reusing the base analysis).
+
+Open, in order:
+
+### R1. Rollout eval at the horizons the app actually uses
+`rollout_eval.py` defaults to `--steps 10`. The 15-min horizon runs **30** steps
+(`fc._steps_for_horizon`). Re-run with `--steps 30` on `cic_v2_w30.pt`, and add a
+**stage-level** column: argmax of the rolled-out stage distribution at step k vs
+the true stage at t+k, macro-F1 on transition windows only, against persistence
+and the Markov `TRANSITION` matrix. Output `rollout_eval_cic_v2_w30_k30.json`.
+Decides whether the pitch says "the world model forecasts" or "the classifier
+forecasts; the rollout illustrates".
+
+### R2. Calibration on a real held-out partition → §2 below
+`calibrate.py` currently fits and scores T within val. Split val into fit/test
+by time (not random — windows overlap), report ECE before/after on test only.
+
+### R3. DAPT recall at fixed FPR → §3 below
+`operating_points` at FPR ∈ {0.05, 0.10, 0.20}. Slide line: "recall X% at 10% FPR".
+
+### R4. LODO fold 1 DoS diagnostic
+Fold 1 onset_auc_k1 = 0.425 (only fold < 0.5). Hypothesis: DoS volume inversion
+(52,498 train vs 601,802 held-out). Produce a DoS-only onset curve and a
+class-weighted rerun of fold 1. Output `lodo_f1_dos_diag.json`. Confirms or kills
+the Q&A answer.
+
+### R5. LODO fold 0 reported separately
+Fold 0 is a zero-shot Botnet holdout, not domain shift. Add
+`aggregate_excl_family_holdout` to `lodo_cic_full_w30.json` (folds 1–6 only).
+
+### R6. Promote the deployed model
+Write `models/BEST.txt` → `cic_v2_w30.pt` with the metrics that justify it
+(§4 below). `lstm_world_model.pt` is retired.
+
+---
+
 ## P0 — decides the whole forecasting thesis
 
 ### 1. Transition-window F1  (NEW script: `src/eval_transition.py`)

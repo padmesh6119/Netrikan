@@ -76,6 +76,7 @@ MODEL_WEIGHT = _model_weight()
 
 _model = None
 _world = None
+_world_src = None
 _scaler = None
 _device = torch.device('cpu')
 
@@ -137,20 +138,20 @@ def world_model_ready() -> bool:
     the deployed MODEL_PATH itself carries a trained state head. Only when neither
     holds does forecast() fall back to the hand-coded DOCTRINE_SHAPE matrix.
     """
-    if os.path.exists(WORLD_PATH):
-        return True
-    return 'state_head.weight' in _ckpt_keys()
+    return 'state_head.weight' in _ckpt_keys() or os.path.exists(WORLD_PATH)
 
 
 def _load_world():
-    global _world
+    global _world, _world_src
     if _world is None:
-        # a dedicated world checkpoint wins; otherwise reuse the main model if it
-        # has a trained state head (cic_v2 does), so no separate file is needed
+        # the deployed checkpoint's state head wins; world_w30.pt is only a fallback
+        # for a MODEL_PATH without one, so a stale local file cannot shadow it
+        if 'state_head.weight' in _ckpt_keys():
+            _world_src = os.path.basename(MODEL_PATH)
+            return _load_model()
         if os.path.exists(WORLD_PATH):
             sd = torch.load(WORLD_PATH, map_location=_device, weights_only=True)
-        elif 'state_head.weight' in _ckpt_keys():
-            return _load_model()
+            _world_src = os.path.basename(WORLD_PATH)
         else:
             print("WARNING: no trained state head available — K-step rollout is "
                   "running on the hand-coded Markov fallback, not learned dynamics.",
@@ -306,6 +307,7 @@ def analyze(df: pd.DataFrame, horizon_seconds: float = fc.HORIZON_SECONDS) -> di
         "lead_seconds": lead,
         "n_flows": len(df),
         "rollout_source": "learned" if world is not None else "markov_fallback",
+        "rollout_checkpoint": _world_src if world is not None else None,
         "onset_horizons": list(ONSET_HORIZONS) if has_onset else None,
         "temperature": _T,
         # explainability provenance, so the UI can name the method honestly

@@ -99,12 +99,13 @@ def apply(df: pd.DataFrame, name: str) -> pd.DataFrame:
     return df.copy()
 
 
-def run_all(df: pd.DataFrame, horizon_seconds: float, analyze_fn) -> list:
+def run_all(df: pd.DataFrame, horizon_seconds: float, analyze_fn, base=None) -> list:
     """
     Runs all interventions and returns list of result dicts sorted by risk_after.
     analyze_fn = infer.analyze, passed in to avoid circular import.
     """
-    base = analyze_fn(df, horizon_seconds)
+    if base is None:
+        base = analyze_fn(df, horizon_seconds)
     if base is None:
         return []
     risk_before = float(np.max(base['breach']))
