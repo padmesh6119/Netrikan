@@ -90,8 +90,13 @@ def provenance():
 
 
 @st.cache_data(show_spinner="Analysing traffic…")
-def run(frame, key, horizon):
-    return infer.analyze(frame, horizon)
+def run(key, horizon, _frame):
+    return infer.analyze(_frame, horizon)
+
+
+@st.cache_data(show_spinner=False)
+def run_counterfactual(key, horizon, _df):
+    return counterfactual.run_all(_df, horizon, infer.analyze)
 
 
 @st.cache_data(show_spinner="Reading capture…")
@@ -188,7 +193,7 @@ if len(df) < infer.WINDOW + 2:
                f"window. Try a longer capture.")
     st.stop()
 
-r = run(df, f"{source}{len(df)}{horizon}", horizon)
+r = run(f"{source}{len(df)}{horizon}", horizon, df)
 if r is None:
     st.error("Not enough flows.")
     st.stop()
@@ -457,7 +462,7 @@ with st.expander("Run counterfactual interventions", expanded=(risk > 0.3)):
                "inference. Risk delta shows how much your response changes the "
                "breach probability.")
     with st.spinner("Simulating interventions…"):
-        iv_results = counterfactual.run_all(df, horizon, infer.analyze)
+        iv_results = run_counterfactual(f"{source}{len(df)}{horizon}", horizon, df)
     if not iv_results:
         st.warning("No flows available for counterfactual analysis.")
     else:
