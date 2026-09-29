@@ -1,0 +1,318 @@
+
+======== DAPT2020
+columns: 85 rows: 86691
+files without header row: ['pvt-thursday']
+                        n                  t0                  t1  time_ordered  dup_flow_id  src_ips  dst_ips
+file                                                                                                          
+monday               8728 2019-07-15 13:45:37 2019-07-15 21:30:10         False         3058      201      212
+monday-pvt           3404 2019-07-15 13:55:20 2019-07-15 21:09:02         False         1631       23       32
+public-thursday      9685 2019-07-18 11:32:57 2019-07-18 21:31:28         False         3492      162      172
+public-tuesday      29242 2019-07-16 11:50:58 2019-07-16 21:16:32         False        14206      365      390
+public-wednesday    17487 2019-07-17 14:33:01 2019-07-17 22:45:22         False         7899      284      304
+pvt-thursday         4114 2019-07-18 11:31:21 2019-07-18 21:32:30         False         2145       11       17
+pvt-tuesday          2615 2019-07-16 11:50:51 2019-07-16 21:17:45         False         1912       13       20
+pvt-wednesday        1437 2019-07-17 14:34:55 2019-07-17 22:46:39         False         1284       14       22
+tcpdump-friday       7361 2019-07-19 12:35:58 2019-07-19 22:28:33         False         2488      154      168
+tcpdump-pvt-friday   2618 2019-07-19 12:35:35 2019-07-19 22:29:23         False         1774       27       40
+full-row duplicates: 0
+rows == 1,048,575: False
+
+Stage x Activity:
+Stage               Activity              
+BENIGN              BENIGN                    19454
+Benign              Normal                    44258
+Data Exfiltration   Data Exfiltration             6
+                    Network Scan                  9
+Establish Foothold  Account Bruteforce           47
+                    Account Discovery            12
+                    CSRF                          7
+                    Command Injection            12
+                    Directory Bruteforce       8467
+                    Malware Download              2
+                    Network Scan                  2
+                    SQL Injection                55
+Lateral Movement    Account Discovery          2272
+                    Backdoor                     20
+                    Network Scan                117
+                    Privilege Escalation         13
+                    SQL Injection                29
+Reconnaissance      Account Bruteforce           94
+                    Account Discovery           124
+                    Directory Bruteforce       1503
+                    Network Scan               7614
+                    Web Vulnerability Scan     2574
+dtype: int64
+
+Stage x file:
+Stage               BENIGN  Benign  Data Exfiltration  Establish Foothold  Lateral Movement  Reconnaissance
+file                                                                                                       
+monday                   0    8728                  0                   0                 0               0
+monday-pvt               0    3404                  0                   0                 0               0
+public-thursday          0    9548                  0                   0               137               0
+public-tuesday       16842     535                  0                   0                 0           11865
+public-wednesday         0    8855                  0                8588                 0              44
+pvt-thursday             0    1800                  0                   0              2314               0
+pvt-tuesday              0    2615                  0                   0                 0               0
+pvt-wednesday            0    1433                  0                   4                 0               0
+tcpdump-friday           0    7340                  9                  12                 0               0
+tcpdump-pvt-friday    2612       0                  6                   0                 0               0
+
+malicious flows: 22979  malicious src IPs: 11
+                     n                                             stages  days                  t0                  t1
+Src IP                                                                                                                 
+184.98.36.245     3567               [Establish Foothold, Reconnaissance]     3 2019-07-16 19:02:45 2019-07-19 18:44:55
+192.168.3.29      2294             [Establish Foothold, Lateral Movement]     2 2019-07-17 22:03:46 2019-07-18 21:32:03
+192.168.3.30         1                                [Data Exfiltration]     1 2019-07-19 22:21:43 2019-07-19 22:21:43
+192.168.3.34        42                                 [Lateral Movement]     1 2019-07-18 12:55:57 2019-07-18 21:32:11
+206.207.50.35        2                               [Establish Foothold]     1 2019-07-17 18:23:03 2019-07-17 18:23:13
+206.207.50.50    16594  [Data Exfiltration, Establish Foothold, Latera...     4 2019-07-16 12:12:20 2019-07-19 22:25:32
+209.147.138.11      18  [Establish Foothold, Lateral Movement, Reconna...     3 2019-07-16 13:45:08 2019-07-18 16:44:49
+209.147.138.154     42                                   [Reconnaissance]     1 2019-07-16 17:11:13 2019-07-16 17:12:29
+209.147.138.211    252             [Establish Foothold, Lateral Movement]     2 2019-07-17 15:10:41 2019-07-18 15:41:05
+209.147.138.38     154  [Establish Foothold, Lateral Movement, Reconna...     3 2019-07-16 14:04:52 2019-07-18 14:59:25
+72.201.228.135      13             [Establish Foothold, Lateral Movement]     2 2019-07-17 22:08:11 2019-07-18 21:16:31
+Src IP: hosts with >=1 attack stage: 11, with >1 distinct attack stage: 7
+Dst IP: hosts with >=1 attack stage: 5, with >1 distinct attack stage: 3
+(Src,Dst) pairs with attack: 15, with >1 stage: 7
+
+======== ZeekData22 (parquet)
+columns: ['wk', 'resp_pkts', 'service', 'orig_ip_bytes', 'local_resp', 'missed_bytes', 'proto', 'duration', 'conn_state', 'dest_ip_zeek', 'orig_pkts', 'community_id', 'resp_ip_bytes', 'dest_port_zeek', 'orig_bytes', 'local_orig', 'datetime', 'history', 'resp_bytes', 'uid', 'src_port_zeek', 'ts', 'src_ip_zeek', 'label_tactic']
+           wk   n_rows    uids  rows_per_uid                  dt_min                  dt_max  src_ips  dst_ips
+0  2021-12-12   428724  222336           1.9 2021-12-17 07:00:45.213 2021-12-18 23:59:59.414       20       46
+1  2021-12-19  1757069  911355           1.9 2021-12-19 00:00:06.165 2021-12-25 23:59:55.385       18       42
+2  2022-02-13       63      48           1.3 2022-02-17 14:34:35.270 2022-02-19 19:16:36.163        7        8
+   total_rows     uids  distinct_rows
+0     2185856  1133739        1133749
+uid multiplicity in attack week:
+Empty DataFrame
+Columns: [copies, n_uids]
+Index: []
+
+after exact-row dedup: label counts
+           label_tactic        n     uids  src_ips
+0                  none  1133691  1133691       20
+1     Credential Access       27       27        2
+2  Privilege Escalation       13       13        3
+3          Exfiltration        7        7        1
+4  Resource Development        3        3        2
+5      Lateral Movement        3        3        2
+6        Reconnaissance        2        2        1
+7           Persistence        1        1        1
+8        Initial Access        1        1        1
+9       Defense Evasion        1        1        1
+distinct-row count per uid after dedup (uids with >1 label row):
+   count_star()
+0             8
+
+weeks x label (after dedup):
+            wk          label_tactic       n
+0   2021-12-12                  none  222336
+1   2021-12-19                  none  911355
+2   2022-02-13     Credential Access      27
+3   2022-02-13  Privilege Escalation      13
+4   2022-02-13          Exfiltration       7
+5   2022-02-13  Resource Development       3
+6   2022-02-13      Lateral Movement       3
+7   2022-02-13        Reconnaissance       2
+8   2022-02-13       Defense Evasion       1
+9   2022-02-13        Initial Access       1
+10  2022-02-13           Persistence       1
+
+ts (epoch) vs datetime offset, hours (should be constant tz shift):
+   mean_h  min_h  max_h
+0     6.0    0.0    6.0
+
+ts range (UTC via epoch):
+                                t0                               t1
+0 2021-12-17 13:00:45.213779+00:00 2022-02-19 19:16:36.163731+00:00
+
+host overlap: benign-src vs attack-src
+   benign_hosts  attack_hosts  in_both
+0            20             7        0
+
+benign vs attack calendar overlap:
+   is_benign                               t0                               t1
+0      False 2022-02-17 14:34:35.270261+00:00 2022-02-19 19:16:36.163731+00:00
+1       True 2021-12-17 13:00:45.213779+00:00 2021-12-26 05:59:55.385038+00:00
+
+attack hosts (dedup) with tactic sets:
+    src_ip_zeek  flows  n_tactics                                                                                tactics
+0   143.88.4.15     27          5  Defense Evasion, Privilege Escalation, Credential Access, Initial Access, Persistence
+1   143.88.5.17     17          2                                                     Exfiltration, Privilege Escalation
+2   143.88.3.12      4          2                                                   Resource Development, Reconnaissance
+3  143.88.10.11      4          2                                                 Lateral Movement, Privilege Escalation
+4   143.88.9.13      4          1                                                                      Credential Access
+5   143.88.9.18      1          1                                                                       Lateral Movement
+6   143.88.8.12      1          1                                                                   Resource Development
+
+benign hosts per day:
+                          d   flows  hosts
+0 2021-12-17 00:00:00+00:00   59632     20
+1 2021-12-18 00:00:00+00:00  130055     17
+2 2021-12-19 00:00:00+00:00  130329     18
+3 2021-12-20 00:00:00+00:00  130069     17
+4 2021-12-21 00:00:00+00:00  130183     18
+5 2021-12-22 00:00:00+00:00  130198     18
+6 2021-12-23 00:00:00+00:00  130349     18
+7 2021-12-24 00:00:00+00:00  130167     18
+8 2021-12-25 00:00:00+00:00  130199     18
+9 2021-12-26 00:00:00+00:00   32510     17
+
+======== ZeekData22 (csv) - relation to parquet
+   n_rows   uids
+0   43753  36883
+       part  n_rows          tactic
+0  f53-44fd   18395            none
+1  f53-44fd    4608  Reconnaissance
+       part  n_rows     tactic
+0  a76-429e    8404       none
+1  a76-429e    2086  Discovery
+       part  n_rows          tactic
+0  cdc-4dd0    8212            none
+1  cdc-4dd0    2048  Reconnaissance
+   csv_uids  csv_uids_in_parquet
+0     36883                    0
+
+======== ZeekDataFall22
+not present in data/ (removed by the user after the first audit)
+
+======== ZeekData24 (parquet)
+columns: ['wk', 'community_id', 'conn_state', 'duration', 'history', 'src_ip_zeek', 'src_port_zeek', 'dest_ip_zeek', 'dest_port_zeek', 'local_orig', 'local_resp', 'missed_bytes', 'orig_bytes', 'orig_ip_bytes', 'orig_pkts', 'proto', 'resp_bytes', 'resp_ip_bytes', 'resp_pkts', 'service', 'ts', 'uid', 'datetime', 'label_tactic', 'label_technique', 'label_binary', 'label_cve']
+           wk  n_rows    uids  rows_per_uid                               t0                               t1  src_ips  dst_ips
+0  2024-02-25  255443  251617          1.02 2024-02-28 04:00:37.805641+00:00 2024-03-02 23:59:59.989889+00:00       15      104
+1  2024-03-03   50444   49395          1.02 2024-03-03 00:00:00.013611+00:00 2024-03-03 23:59:41.761063+00:00       15      104
+2  2024-03-10  167578  163731          1.02 2024-03-13 21:04:09.685424+00:00 2024-03-16 23:58:15.340257+00:00       15      105
+3  2024-03-17  378821  370665          1.02 2024-03-17 00:02:36.199889+00:00 2024-03-23 23:59:38.701747+00:00       15      105
+4  2024-03-24  106362  104295          1.02 2024-03-24 00:01:21.805095+00:00 2024-03-27 23:59:45.702562+00:00       15      105
+5  2024-10-27  454846  454846          1.00 2024-10-31 07:00:00.581671+00:00 2024-11-02 23:59:58.540189+00:00       95      338
+6  2024-11-03  503263  503263          1.00 2024-11-03 00:00:00.155694+00:00 2024-11-05 23:59:48.335452+00:00       94      339
+   total_rows  distinct_rows
+0     1916757        1916757
+tactic x week:
+            wk          label_tactic       n
+0   2024-02-25     Credential Access  236706
+1   2024-02-25        Reconnaissance   12762
+2   2024-02-25        Initial Access    2172
+3   2024-02-25           Persistence    1251
+4   2024-02-25       Defense Evasion    1251
+5   2024-02-25  Privilege Escalation    1251
+6   2024-02-25          Exfiltration      50
+7   2024-03-03     Credential Access   45491
+8   2024-03-03        Reconnaissance    3339
+9   2024-03-03        Initial Access     576
+10  2024-03-03  Privilege Escalation     336
+11  2024-03-03       Defense Evasion     336
+12  2024-03-03           Persistence     336
+13  2024-03-03          Exfiltration      30
+14  2024-03-10     Credential Access  150887
+15  2024-03-10        Reconnaissance   10834
+16  2024-03-10        Initial Access    2090
+17  2024-03-10  Privilege Escalation    1193
+18  2024-03-10       Defense Evasion    1193
+19  2024-03-10           Persistence    1193
+20  2024-03-10          Exfiltration     188
+21  2024-03-17     Credential Access  341945
+22  2024-03-17        Reconnaissance   24233
+23  2024-03-17        Initial Access    4602
+24  2024-03-17  Privilege Escalation    2591
+25  2024-03-17       Defense Evasion    2591
+26  2024-03-17           Persistence    2591
+27  2024-03-17          Exfiltration     268
+28  2024-03-24     Credential Access   96159
+29  2024-03-24        Reconnaissance    6927
+30  2024-03-24        Initial Access    1222
+31  2024-03-24       Defense Evasion     677
+32  2024-03-24  Privilege Escalation     677
+33  2024-03-24           Persistence     677
+34  2024-03-24          Exfiltration      23
+35  2024-10-27                  none  454846
+36  2024-11-03                  none  503263
+technique x tactic (attack rows):
+  label_technique          label_tactic       n
+0       Duplicate        Initial Access    6048
+1       Duplicate  Privilege Escalation    6048
+2       Duplicate           Persistence    6048
+3           T1048          Exfiltration     559
+4           T1078       Defense Evasion    6048
+5           T1110     Credential Access  871188
+6           T1190        Initial Access    4614
+7           T1595        Reconnaissance   58095
+uids carrying more than one attack row (multi-tactic labelling of one flow):
+   n_uids
+0    6050
+host overlap between benign weeks and attack weeks:
+   benign_hosts  attack_hosts  hosts_in_both  benign_src  attack_src  attack_src_also_benign_src
+0           357           106            106          95          15                          15
+attack sources:
+     src_ip_zeek   flows  victims                                    techniques
+0    143.88.3.11  125622        3                T1110, T1190, T1078, Duplicate
+1    143.88.4.11  113297       20         Duplicate, T1078, T1110, T1595, T1190
+2    143.88.7.11  107748        5         Duplicate, T1110, T1190, T1595, T1078
+3   143.88.13.12  107669        5         Duplicate, T1078, T1110, T1190, T1595
+4   143.88.14.11   93100        5         T1110, T1595, T1190, T1078, Duplicate
+5    143.88.8.12   65736        5         Duplicate, T1595, T1110, T1190, T1078
+6    143.88.2.17   62120        5                Duplicate, T1078, T1110, T1595
+7   143.88.15.10   55736        5         Duplicate, T1078, T1595, T1110, T1190
+8    143.88.5.14   53180        5         T1078, T1110, T1595, T1190, Duplicate
+9    143.88.9.12   44200        5         Duplicate, T1078, T1110, T1595, T1190
+10   143.88.6.11   33844        5         Duplicate, T1110, T1190, T1595, T1078
+11  143.88.12.12   32782        6         Duplicate, T1110, T1595, T1190, T1078
+12   143.88.1.18   27566        6  T1078, T1595, T1110, T1190, T1048, Duplicate
+13  143.88.10.12   14661       20                                         T1595
+14  143.88.11.10    2442        5                       T1078, T1595, Duplicate
+chronology for one attacker (143.88.7.11): technique first/last time per week:
+            wk       tech  flows                          first_t                           last_t
+0   2024-02-25      T1190     91 2024-02-28 04:29:36.643499+00:00 2024-03-02 23:47:08.435609+00:00
+1   2024-02-25      T1595    552 2024-02-28 04:30:27.872889+00:00 2024-03-02 23:00:33.190102+00:00
+2   2024-02-25  Duplicate     92 2024-02-28 04:45:27.285150+00:00 2024-03-02 23:53:05.299187+00:00
+3   2024-02-25      T1078     92 2024-02-28 04:45:27.285150+00:00 2024-03-02 23:53:05.299187+00:00
+4   2024-02-25      T1110  24288 2024-02-28 04:52:50.037939+00:00 2024-03-02 23:05:58.116700+00:00
+5   2024-03-03  Duplicate     24 2024-03-03 00:08:27.385851+00:00 2024-03-03 23:58:35.868810+00:00
+6   2024-03-03      T1078     24 2024-03-03 00:08:27.385851+00:00 2024-03-03 23:58:35.868810+00:00
+7   2024-03-03      T1190     23 2024-03-03 00:23:17.039814+00:00 2024-03-03 23:10:15.774296+00:00
+8   2024-03-03      T1110   6000 2024-03-03 00:46:43.917353+00:00 2024-03-03 23:59:41.761063+00:00
+9   2024-03-03      T1595    144 2024-03-03 00:48:21.913982+00:00 2024-03-03 23:08:14.555581+00:00
+10  2024-03-10      T1190     76 2024-03-13 21:19:00.691822+00:00 2024-03-16 23:09:23.483741+00:00
+11  2024-03-10  Duplicate     76 2024-03-13 21:29:33.681716+00:00 2024-03-16 23:23:58.200028+00:00
+12  2024-03-10      T1078     76 2024-03-13 21:29:33.681716+00:00 2024-03-16 23:23:58.200028+00:00
+13  2024-03-10      T1595    450 2024-03-13 21:34:29.638867+00:00 2024-03-16 23:52:19.262013+00:00
+14  2024-03-10      T1110  19202 2024-03-13 21:45:04.664321+00:00 2024-03-16 23:34:20.431551+00:00
+15  2024-03-17      T1110  42250 2024-03-17 00:05:51.193741+00:00 2024-03-23 23:33:49.704776+00:00
+16  2024-03-17      T1190    168 2024-03-17 00:10:25.566994+00:00 2024-03-23 23:35:12.734954+00:00
+17  2024-03-17      T1078    168 2024-03-17 00:17:05.452617+00:00 2024-03-23 23:38:58.789722+00:00
+18  2024-03-17  Duplicate    168 2024-03-17 00:17:05.452617+00:00 2024-03-23 23:38:58.789722+00:00
+19  2024-03-17      T1595   1008 2024-03-17 00:23:44.192483+00:00 2024-03-23 23:59:38.701747+00:00
+20  2024-03-24      T1190     49 2024-03-24 00:17:49.967344+00:00 2024-03-27 23:04:58.003359+00:00
+21  2024-03-24      T1110  12750 2024-03-24 00:30:46.719065+00:00 2024-03-27 23:16:55.052776+00:00
+22  2024-03-24      T1595    288 2024-03-24 00:39:07.623571+00:00 2024-03-27 23:01:21.891005+00:00
+23  2024-03-24      T1078     49 2024-03-24 00:46:55.845118+00:00 2024-03-27 23:00:24.964184+00:00
+24  2024-03-24  Duplicate     49 2024-03-24 00:46:55.845118+00:00 2024-03-27 23:00:24.964184+00:00
+order in which techniques first appear per (attacker, victim, week):
+                  pattern  n_pairs
+0                   T1595      390
+1           T1190 > T1595       28
+2           T1595 > T1190       27
+3           T1078 > T1110       20
+4           T1110 > T1078       20
+5                   T1078       10
+6                   T1110        5
+7   T1078 > T1110 > T1595        4
+8                   T1190        3
+9   T1078 > T1595 > T1110        3
+10  T1110 > T1595 > T1078        3
+11  T1110 > T1078 > T1595        3
+exfiltration (T1048) sources/victims:
+   src_ip_zeek dest_ip_zeek          wk    n                               t0
+0  143.88.1.18  143.88.2.20  2024-02-25   50 2024-03-01 08:42:00.449349+00:00
+1  143.88.1.18  143.88.2.20  2024-03-03   30 2024-03-03 00:38:04.326723+00:00
+2  143.88.1.18  143.88.2.20  2024-03-10  188 2024-03-13 21:39:06.179262+00:00
+3  143.88.1.18  143.88.2.20  2024-03-17  268 2024-03-17 00:32:07.259848+00:00
+4  143.88.1.18  143.88.2.20  2024-03-24   23 2024-03-24 00:19:22.665819+00:00
+ts vs datetime offset (hours):
+    mn   mx
+0  0.0  0.0
+benign vs attack rows / sources:
+   is_benign  n_rows  src_ips                               t0                               t1
+0      False  958648       15 2024-02-28 04:00:37.805641+00:00 2024-03-27 23:59:45.702562+00:00
+1       True  958109       95 2024-10-31 07:00:00.581671+00:00 2024-11-05 23:59:48.335452+00:00
+benign-week host activity, flows per source-day quantiles:

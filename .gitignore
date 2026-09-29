@@ -41,6 +41,7 @@ __pycache__/
 *.pyc
 .env
 .venv/
+.pytest_cache/
 
 # ---- os cruft ----
 .DS_Store
@@ -57,3 +58,9 @@ RESUME.md
 # large capture files — too big for GitHub (>100MB)
 demo_attack_lab/attack_capture.pcap
 *.pcapng
+
+# pranav's derived artifacts
+processed/
+checkpoints/
+results/*.parquet
+results/tmp/
