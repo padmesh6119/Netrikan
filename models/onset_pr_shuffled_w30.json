@@ -1,0 +1,107 @@
+{
+  "model": "models/shuffled_w30.pt",
+  "data": "/tmp/netrikan-cic-full-w30",
+  "n_val": 1225426,
+  "horizons": {
+    "k1": {
+      "positive_rate": 0.02593,
+      "positive_count": 31780,
+      "n": 1225424,
+      "roc_auc": 0.8547,
+      "pr_auc": 0.1336,
+      "no_skill_pr_baseline": 0.02593,
+      "recall_at_fpr": {
+        "0.001": {
+          "recall": 0.0149,
+          "threshold": 0.27509,
+          "achieved_fpr": 0.001
+        },
+        "0.01": {
+          "recall": 0.098,
+          "threshold": 0.20491,
+          "achieved_fpr": 0.01
+        },
+        "0.05": {
+          "recall": 0.3288,
+          "threshold": 0.14186,
+          "achieved_fpr": 0.05
+        }
+      }
+    },
+    "k5": {
+      "positive_rate": 0.07394,
+      "positive_count": 90611,
+      "n": 1225416,
+      "roc_auc": 0.8676,
+      "pr_auc": 0.3712,
+      "no_skill_pr_baseline": 0.07394,
+      "recall_at_fpr": {
+        "0.001": {
+          "recall": 0.0402,
+          "threshold": 0.57422,
+          "achieved_fpr": 0.001
+        },
+        "0.01": {
+          "recall": 0.1352,
+          "threshold": 0.48719,
+          "achieved_fpr": 0.01
+        },
+        "0.05": {
+          "recall": 0.4089,
+          "threshold": 0.35443,
+          "achieved_fpr": 0.05
+        }
+      }
+    },
+    "k15": {
+      "positive_rate": 0.12662,
+      "positive_count": 155160,
+      "n": 1225396,
+      "roc_auc": 0.8733,
+      "pr_auc": 0.4925,
+      "no_skill_pr_baseline": 0.12662,
+      "recall_at_fpr": {
+        "0.001": {
+          "recall": 0.0279,
+          "threshold": 0.81555,
+          "achieved_fpr": 0.001
+        },
+        "0.01": {
+          "recall": 0.1372,
+          "threshold": 0.66464,
+          "achieved_fpr": 0.01
+        },
+        "0.05": {
+          "recall": 0.3866,
+          "threshold": 0.51951,
+          "achieved_fpr": 0.05
+        }
+      }
+    },
+    "k30": {
+      "positive_rate": 0.15029,
+      "positive_count": 184158,
+      "n": 1225366,
+      "roc_auc": 0.8734,
+      "pr_auc": 0.5118,
+      "no_skill_pr_baseline": 0.15029,
+      "recall_at_fpr": {
+        "0.001": {
+          "recall": 0.0097,
+          "threshold": 0.66455,
+          "achieved_fpr": 0.001
+        },
+        "0.01": {
+          "recall": 0.0971,
+          "threshold": 0.59954,
+          "achieved_fpr": 0.01
+        },
+        "0.05": {
+          "recall": 0.3773,
+          "threshold": 0.52989,
+          "achieved_fpr": 0.05
+        }
+      }
+    }
+  }
+}

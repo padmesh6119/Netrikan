@@ -3,7 +3,10 @@ import glob
 import numpy as np
 import pandas as pd
 
-DAPT_DIR = os.path.expanduser("~/netrikan/data/dapt2020")
+_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# The published layout puts the flow CSVs in a csv/ subfolder; accept either.
+_D = os.path.join(_ROOT, 'data', 'dapt2020')
+DAPT_DIR = os.path.join(_D, 'csv') if os.path.isdir(os.path.join(_D, 'csv')) else _D
 
 # CICFlowMeter v4 (DAPT) -> v3 names (CIC-IDS-2018 / our pipeline)
 RENAME = {

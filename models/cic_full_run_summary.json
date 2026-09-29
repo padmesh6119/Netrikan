@@ -1,0 +1,91 @@
+{
+  "source": "CIC-IDS-2018, 7 capture days (Wed14/Thu15/Fri16/Fri23/Wed28/Thu01/Fri02) downloaded from the CIC AWS bucket; 6.16M windows, window 30, all 5 classes",
+  "checkpoint": "models/cic_full_w30.pt",
+  "device": "Apple MPS",
+  "train_minutes": 29.5,
+  "epochs": 13,
+  "selected_on": "onset_auc_k5",
+  "headline_onset_auc_in_dataset": {
+    "k1": 0.8901,
+    "k5": 0.9018,
+    "k15": 0.9023,
+    "k30": 0.8927
+  },
+  "persistence_onset_auc": 0.5,
+  "stage_classification": {
+    "macro_f1": 0.8357,
+    "accuracy": 0.9274,
+    "per_class_f1": {
+      "Benign": 0.951,
+      "InitialAccess": 0.956,
+      "DoS": 0.979,
+      "Infiltration": 0.415,
+      "Botnet": 0.878
+    }
+  },
+  "mandatory_baseline": {
+    "logreg_single_flow": 0.4204,
+    "logreg_flat_window": 0.6916,
+    "lstm": 0.8357,
+    "value_of_sequence": 0.2713,
+    "value_of_lstm_on_top": 0.1441
+  },
+  "transition_only": {
+    "n_transition_windows": 31781,
+    "model_macro_f1": 0.3913,
+    "persistence_macro_f1": 0.0,
+    "gap": 0.3913,
+    "brier_skill_score": 0.5216,
+    "all_window_model_f1": 0.8357,
+    "all_window_persistence_f1": 0.9468,
+    "finding": "On all-window F1 persistence wins (0.947 vs 0.836) - the autocorrelation artifact. On the 31,781 windows where the stage changes, persistence scores 0.000 and the model 0.391 (BSS +0.52). Infiltration transition F1 (0.562) exceeds its all-window F1 (0.415)."
+  },
+  "calibration": {
+    "T": 1.0320861409284523,
+    "ece_before": 0.0045,
+    "ece_after": 0.0028,
+    "finding": "ECE 0.0045 before scaling - already well calibrated (CrossEntropy is a proper scoring rule and classes are learnable). T~1.03."
+  },
+  "world_model_rollout": {
+    "one_step_model_mse": 0.60528,
+    "persistence_mse": 0.7817,
+    "window_mean_mse": 0.64912,
+    "skill_vs_persistence": 0.2257,
+    "skill_vs_window_mean": 0.0675,
+    "verdict": "PASS: beats both persistence and the window mean -- the state head learned genuine dynamics",
+    "steps_beating_persistence": 10,
+    "finding": "PASS - beats persistence (+0.226) AND the window mean (+0.068), holds skill for all 10 rollout steps. Genuine learned dynamics, unlike the CTU-13 checkpoint which lost to the window mean."
+  },
+  "fusion_weight_ablation": {
+    "note": "multiclass macro_f1 is label-space-mismatched on DAPT (7-stage chain preds vs 5-stage DAPT labels); binary attack/benign SEDI is the meaningful axis",
+    "binary_sedi_by_weight": {
+      "0.0": -0.256,
+      "0.1": -0.256,
+      "0.3": -0.256,
+      "0.5": -0.0427,
+      "0.7": -0.0467,
+      "0.9": -0.0018,
+      "1.0": 0.0496
+    },
+    "finding": "Cross-dataset binary SEDI rises monotonically with model weight: pure rules (0.0) -0.256, pure model (1.0) +0.050. The hand-written port rules help in-dataset but hurt generalization to unseen networks. Argues to raise MODEL_WEIGHT above the current 0.30 for deployment."
+  },
+  "cross_dataset_dapt": {
+    "attack_recall": 0.2947,
+    "attack_precision": 0.2891,
+    "breach_roc_auc": 0.6205528052961959,
+    "per_phase": {
+      "Benign": 0.737,
+      "Reconnaissance": 0.408,
+      "Establish Foothold": 0.015,
+      "Lateral Movement": 0.727,
+      "Data Exfiltration": 0.333
+    },
+    "onset_transfer_auc": {
+      "k1": 0.6211,
+      "k5": 0.6386,
+      "k15": 0.6314,
+      "k30": 0.6206
+    },
+    "finding": "Cross-dataset attack recall 29.5% - markedly worse than the classification-optimized base_w30 (79.7%). This checkpoint was selected on onset AUC, which optimizes transition forecasting at the cost of raw breach-head transfer. The onset head itself DOES transfer: k5 AUC 0.639 vs persistence 0.500. Honest tradeoff: onset-optimized forecasting vs classification-optimized detection are different objectives."
+  }
+}

@@ -1,0 +1,123 @@
+{
+  "what": "Seed variance for the in-dataset headline metrics, plus the cross-dataset breach AUC of the same checkpoints, over 4 seeds (42/43/44/45).",
+  "caveat": "NOT a clean 5-seed replication of Task 8a. Seed 42 (xfer_w30) trained 15 epochs; seeds 43/44/45 trained 5. All four select the best checkpoint on the same `combined` criterion, so each is a valid run of the recipe, but the training budget is not held constant and a 5th seed is missing. Reported because it is measured, and because the in-dataset-vs-cross-dataset variance contrast below does not depend on the budget difference.",
+  "not_computed": "transition-window macro-F1 and onset PR-AUC per seed -- each needs a separate eval pass per checkpoint; left blank rather than guessed.",
+  "per_seed": {
+    "42": {
+      "tag": "xfer_w30",
+      "epochs_run": 15,
+      "macro_f1": 0.8367,
+      "onset_auc": {
+        "k1": 0.889,
+        "k5": 0.9013,
+        "k15": 0.901,
+        "k30": 0.8915
+      },
+      "per_class_f1": {
+        "Benign": 0.952,
+        "InitialAccess": 0.968,
+        "DoS": 0.979,
+        "Infiltration": 0.402,
+        "Botnet": 0.882
+      }
+    },
+    "43": {
+      "tag": "xfer_s43",
+      "epochs_run": 5,
+      "macro_f1": 0.8377,
+      "onset_auc": {
+        "k1": 0.8823,
+        "k5": 0.8998,
+        "k15": 0.9085,
+        "k30": 0.9027
+      },
+      "per_class_f1": {
+        "Benign": 0.964,
+        "InitialAccess": 0.967,
+        "DoS": 0.974,
+        "Infiltration": 0.43,
+        "Botnet": 0.854
+      }
+    },
+    "44": {
+      "tag": "xfer_s44",
+      "epochs_run": 5,
+      "macro_f1": 0.8394,
+      "onset_auc": {
+        "k1": 0.8821,
+        "k5": 0.8994,
+        "k15": 0.8993,
+        "k30": 0.8891
+      },
+      "per_class_f1": {
+        "Benign": 0.943,
+        "InitialAccess": 0.97,
+        "DoS": 0.979,
+        "Infiltration": 0.444,
+        "Botnet": 0.861
+      }
+    },
+    "45": {
+      "tag": "xfer_s45",
+      "epochs_run": 5,
+      "macro_f1": 0.8211,
+      "onset_auc": {
+        "k1": 0.8811,
+        "k5": 0.8867,
+        "k15": 0.8852,
+        "k30": 0.875
+      },
+      "per_class_f1": {
+        "Benign": 0.935,
+        "InitialAccess": 0.967,
+        "DoS": 0.971,
+        "Infiltration": 0.385,
+        "Botnet": 0.847
+      }
+    }
+  },
+  "dapt_breach_roc_auc_per_seed": {
+    "42": 0.7386,
+    "43": 0.8595,
+    "44": 0.8469,
+    "45": 0.7868
+  },
+  "aggregate": {
+    "macro_f1": {
+      "mean": 0.8337,
+      "std": 0.0085,
+      "min": 0.8211,
+      "max": 0.8394,
+      "n": 4
+    },
+    "onset_auc_k5": {
+      "mean": 0.8968,
+      "std": 0.0068,
+      "min": 0.8867,
+      "max": 0.9013,
+      "n": 4
+    },
+    "onset_auc_k15": {
+      "mean": 0.8985,
+      "std": 0.0097,
+      "min": 0.8852,
+      "max": 0.9085,
+      "n": 4
+    },
+    "infiltration_f1": {
+      "mean": 0.4153,
+      "std": 0.0267,
+      "min": 0.385,
+      "max": 0.444,
+      "n": 4
+    },
+    "dapt_breach_roc_auc": {
+      "mean": 0.808,
+      "std": 0.0561,
+      "min": 0.7386,
+      "max": 0.8595,
+      "n": 4
+    }
+  },
+  "finding": "In-dataset metrics are stable across seeds and cross-dataset metrics are not. macro-F1 0.8337 +/- 0.0085, onset AUC k5 0.8968 +/- 0.0068, but DAPT breach AUC 0.808 +/- 0.0561 -- a standard deviation 8.2x larger than the onset AUC's. Every headline in-dataset number is safe to quote as a point value; no single-run cross-dataset number is."
+}

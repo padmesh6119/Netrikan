@@ -1,0 +1,24 @@
+{
+  "hardware": {
+    "platform": "macOS-26.3-arm64-arm-64bit-Mach-O",
+    "processor": "arm",
+    "torch_threads": 1
+  },
+  "model_file": "cic_v2_w30.pt",
+  "model_size_mb": 0.893,
+  "pytorch": {
+    "median_ms": 3.007,
+    "p95_ms": 5.1405,
+    "p99_ms": 6.893,
+    "mean_ms": 3.2832,
+    "throughput_per_s": 304.6
+  },
+  "onnx": {
+    "median_ms": 1.4069,
+    "p95_ms": 2.7777,
+    "p99_ms": 4.8906,
+    "mean_ms": 1.6402,
+    "throughput_per_s": 609.7,
+    "model_size_mb": 0.893
+  }
+}

@@ -1,0 +1,186 @@
+{
+  "model": "models/cic_v2_w30.pt",
+  "data": "/tmp/netrikan-cic-full-w30",
+  "seconds_per_window": 30.0,
+  "seconds_per_flow": 1.0,
+  "min_persist": 2,
+  "n_val_windows": 1225426,
+  "n_benign_to_attack_onsets": 15898,
+  "n_attack_escalations": 0,
+  "horizons": {
+    "k1": [
+      {
+        "target_fpr": 0.001,
+        "threshold": 0.32009,
+        "achieved_fpr": 0.001,
+        "coverage": 0.0034,
+        "events_warned": 54,
+        "events_total": 15898,
+        "benign_windows": 911959,
+        "median_s": 90.0,
+        "p25_s": 60.0,
+        "p75_s": 180.0,
+        "mean_s": 144.44
+      },
+      {
+        "target_fpr": 0.01,
+        "threshold": 0.14592,
+        "achieved_fpr": 0.01,
+        "coverage": 0.0514,
+        "events_warned": 817,
+        "events_total": 15898,
+        "benign_windows": 911959,
+        "median_s": 420.0,
+        "p25_s": 150.0,
+        "p75_s": 1200.0,
+        "mean_s": 825.2
+      },
+      {
+        "target_fpr": 0.05,
+        "threshold": 0.08011,
+        "achieved_fpr": 0.05,
+        "coverage": 0.2771,
+        "events_warned": 4405,
+        "events_total": 15898,
+        "benign_windows": 911959,
+        "median_s": 180.0,
+        "p25_s": 90.0,
+        "p75_s": 570.0,
+        "mean_s": 563.97
+      }
+    ],
+    "k5": [
+      {
+        "target_fpr": 0.001,
+        "threshold": 0.63636,
+        "achieved_fpr": 0.001,
+        "coverage": 0.0212,
+        "events_warned": 337,
+        "events_total": 15898,
+        "benign_windows": 870901,
+        "median_s": 90.0,
+        "p25_s": 60.0,
+        "p75_s": 120.0,
+        "mean_s": 86.8
+      },
+      {
+        "target_fpr": 0.01,
+        "threshold": 0.38651,
+        "achieved_fpr": 0.01,
+        "coverage": 0.159,
+        "events_warned": 2528,
+        "events_total": 15898,
+        "benign_windows": 870901,
+        "median_s": 120.0,
+        "p25_s": 60.0,
+        "p75_s": 180.0,
+        "mean_s": 150.65
+      },
+      {
+        "target_fpr": 0.05,
+        "threshold": 0.24481,
+        "achieved_fpr": 0.05,
+        "coverage": 0.5042,
+        "events_warned": 8015,
+        "events_total": 15898,
+        "benign_windows": 870901,
+        "median_s": 210.0,
+        "p25_s": 120.0,
+        "p75_s": 360.0,
+        "mean_s": 314.86
+      }
+    ],
+    "k15": [
+      {
+        "target_fpr": 0.001,
+        "threshold": 0.7022,
+        "achieved_fpr": 0.001,
+        "coverage": 0.0494,
+        "events_warned": 785,
+        "events_total": 15898,
+        "benign_windows": 802217,
+        "median_s": 90.0,
+        "p25_s": 60.0,
+        "p75_s": 120.0,
+        "mean_s": 99.59
+      },
+      {
+        "target_fpr": 0.01,
+        "threshold": 0.5338,
+        "achieved_fpr": 0.01,
+        "coverage": 0.2685,
+        "events_warned": 4269,
+        "events_total": 15898,
+        "benign_windows": 802217,
+        "median_s": 150.0,
+        "p25_s": 90.0,
+        "p75_s": 270.0,
+        "mean_s": 204.99
+      },
+      {
+        "target_fpr": 0.05,
+        "threshold": 0.3039,
+        "achieved_fpr": 0.05,
+        "coverage": 0.6144,
+        "events_warned": 9768,
+        "events_total": 15898,
+        "benign_windows": 802217,
+        "median_s": 510.0,
+        "p25_s": 240.0,
+        "p75_s": 990.0,
+        "mean_s": 837.18
+      }
+    ],
+    "k30": [
+      {
+        "target_fpr": 0.001,
+        "threshold": 0.70636,
+        "achieved_fpr": 0.001,
+        "coverage": 0.0225,
+        "events_warned": 358,
+        "events_total": 15898,
+        "benign_windows": 752452,
+        "median_s": 120.0,
+        "p25_s": 60.0,
+        "p75_s": 180.0,
+        "mean_s": 141.87
+      },
+      {
+        "target_fpr": 0.01,
+        "threshold": 0.54163,
+        "achieved_fpr": 0.01,
+        "coverage": 0.2611,
+        "events_warned": 4151,
+        "events_total": 15898,
+        "benign_windows": 752452,
+        "median_s": 210.0,
+        "p25_s": 120.0,
+        "p75_s": 330.0,
+        "mean_s": 241.74
+      },
+      {
+        "target_fpr": 0.05,
+        "threshold": 0.28238,
+        "achieved_fpr": 0.05,
+        "coverage": 0.6628,
+        "events_warned": 10537,
+        "events_total": 15898,
+        "benign_windows": 752452,
+        "median_s": 810.0,
+        "p25_s": 300.0,
+        "p75_s": 2160.0,
+        "mean_s": 2232.3
+      }
+    ]
+  },
+  "baselines": {
+    "persistence": {
+      "coverage": 0.0,
+      "note": "0 by construction: persistence predicts no change, so it never warns before an onset"
+    },
+    "logreg_flat": {
+      "note": "flattened-window logreg has no temporal onset probability; see models/baseline_*.json for its stage macro-F1. It produces no lead-time curve."
+    }
+  },
+  "finding": "Benign->attack onsets in val: 15898. Best coverage across operating points: 0.66. Coverage is adequate for a lead-time claim."
+}

@@ -1,0 +1,57 @@
+{
+  "source": "CTU-13 (data/CTU13_*.csv, committed in this repo)",
+  "purpose": "First end-to-end training run on real data in this repo. Validates the full pipeline and produces the problem statement's mandatory logistic-regression comparison. NOT a substitute for CIC-IDS-2018: CTU-13 here is binary and has one label transition.",
+  "dataset": {
+    "n_windows": 63151,
+    "window": 30,
+    "features": 24,
+    "classes_present": [
+      0,
+      4
+    ],
+    "n_train": 50520,
+    "n_val": 12631
+  },
+  "classifier": {
+    "checkpoint": "models/ctu13_w30.pt",
+    "macro_f1_present_classes": 0.9989,
+    "accuracy": 0.9989,
+    "benign_f1": 0.999,
+    "botnet_f1": 0.9987,
+    "epochs_to_early_stop": 15,
+    "minutes": 2.9
+  },
+  "mandatory_baseline_comparison": {
+    "logreg_single_flow": 0.8353,
+    "logreg_flattened_window": 0.994,
+    "lstm": 0.9989,
+    "value_of_sequence_information": 0.1587,
+    "value_of_the_lstm_on_top": 0.0049,
+    "finding": "Sequence information is worth +0.159, but the LSTM adds only +0.005 over logistic regression on the flattened window. On CIC-IDS-2018 the LSTM was worth +0.180 over the same baseline. CTU-13 binary botnet detection is near-degenerate: it has no pre-compromise baseline, so every infected-host window is labelled attack and a linear model on the raw window solves it. Any team reporting a high CTU-13 number is reporting an easy task, and this run is the evidence."
+  },
+  "world_model_state_head": {
+    "one_step_mse": 0.97397,
+    "persistence_mse": 1.69299,
+    "window_mean_mse": 0.8933,
+    "skill_vs_persistence": 0.4247,
+    "skill_vs_window_mean": -0.0903,
+    "verdict": "PARTIAL: beats persistence but LOSES to the window mean. The state head predicts a smoothed central estimate of the window, not its trajectory. Do not describe this as learned dynamics without stating this.",
+    "steps_beating_persistence": 10,
+    "rollout_stage_volatility": 0.0001,
+    "finding": "The state head beats copying the last flow (+0.425 skill) so it is not merely echoing its input, but it LOSES to averaging the window (-0.090). It has learned a smoothed central estimate, not a trajectory. K-step drift is nearly flat (0.974 -> 1.019 over 10 steps) and predicted-stage volatility across the rollout is 0.0001, meaning the free-running simulation reaches a fixed point almost immediately instead of evolving. The rollout is real code on real weights, but on this corpus it does not simulate a trajectory."
+  },
+  "calibration": {
+    "T": 1.4521900496467695,
+    "ece_before": 0.0008,
+    "ece_after": 0.001,
+    "finding": "Already calibrated (ECE 0.0008) because the task is trivially easy -- 99.9% accurate at 99.98% confidence is well calibrated. Temperature scaling has nothing to fix here and slightly worsens it. The machinery is verified by calibration.py --self-check, which corrects genuine overconfidence 0.280 -> 0.010."
+  },
+  "transition_eval": {
+    "status": "not computable",
+    "reason": "0 transition windows in the validation split. The corpus is two concatenated captures, so it contains exactly 1 label transition and it falls in train or is purged at a block edge. transition_eval.py refuses rather than reporting a number."
+  },
+  "onset_head": {
+    "status": "trained but unscoreable",
+    "reason": "1 label transition in 92,152 windows means onset labels are degenerate (positive rate 1.1e-05 at k=1) and AUC is undefined. train_v2 detected this and fell back to macro_f1 selection. The onset head needs CIC-IDS-2018 or DAPT 2020."
+  }
+}

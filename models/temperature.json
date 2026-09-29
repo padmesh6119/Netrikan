@@ -1,0 +1,121 @@
+{
+  "T": 1.0761524231260249,
+  "model": "models/cic_v2_w30.pt",
+  "data": "/tmp/netrikan-cic-full-w30",
+  "n_fit": 612713,
+  "n_score": 612713,
+  "bins": 10,
+  "binning": "equal_mass",
+  "ece_before": 0.0088,
+  "ece_after": 0.0052,
+  "accuracy_before": 0.9266,
+  "accuracy_after": 0.9266,
+  "mean_confidence_before": 0.9348,
+  "mean_confidence_after": 0.9299,
+  "reliability_before": [
+    {
+      "confidence": 0.6158,
+      "accuracy": 0.5759,
+      "weight": 0.1
+    },
+    {
+      "confidence": 0.8166,
+      "accuracy": 0.8004,
+      "weight": 0.1
+    },
+    {
+      "confidence": 0.9425,
+      "accuracy": 0.9257,
+      "weight": 0.1
+    },
+    {
+      "confidence": 0.9841,
+      "accuracy": 0.987,
+      "weight": 0.1
+    },
+    {
+      "confidence": 0.9941,
+      "accuracy": 0.9912,
+      "weight": 0.1
+    },
+    {
+      "confidence": 0.9974,
+      "accuracy": 0.9922,
+      "weight": 0.1
+    },
+    {
+      "confidence": 0.9984,
+      "accuracy": 0.9973,
+      "weight": 0.1
+    },
+    {
+      "confidence": 0.9993,
+      "accuracy": 0.998,
+      "weight": 0.1
+    },
+    {
+      "confidence": 0.9998,
+      "accuracy": 0.9984,
+      "weight": 0.1
+    },
+    {
+      "confidence": 1.0,
+      "accuracy": 0.9994,
+      "weight": 0.1
+    }
+  ],
+  "reliability_after": [
+    {
+      "confidence": 0.6078,
+      "accuracy": 0.5764,
+      "weight": 0.1
+    },
+    {
+      "confidence": 0.7998,
+      "accuracy": 0.8002,
+      "weight": 0.1
+    },
+    {
+      "confidence": 0.93,
+      "accuracy": 0.9255,
+      "weight": 0.1
+    },
+    {
+      "confidence": 0.9783,
+      "accuracy": 0.9872,
+      "weight": 0.1
+    },
+    {
+      "confidence": 0.9912,
+      "accuracy": 0.991,
+      "weight": 0.1
+    },
+    {
+      "confidence": 0.996,
+      "accuracy": 0.9922,
+      "weight": 0.1
+    },
+    {
+      "confidence": 0.9973,
+      "accuracy": 0.9972,
+      "weight": 0.1
+    },
+    {
+      "confidence": 0.9987,
+      "accuracy": 0.998,
+      "weight": 0.1
+    },
+    {
+      "confidence": 0.9996,
+      "accuracy": 0.9984,
+      "weight": 0.1
+    },
+    {
+      "confidence": 0.9999,
+      "accuracy": 0.9994,
+      "weight": 0.1
+    }
+  ],
+  "plot": "models/reliability_cic_v2_w30.png",
+  "note": "T is fitted on one half of the blocked-split validation set and ECE is measured on the other half, so ece_after is not fitted on its own scoring data. Temperature scaling cannot change the argmax, so accuracy is identical before and after -- only confidence is rescaled."
+}

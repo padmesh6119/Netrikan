@@ -5,14 +5,25 @@ data/processed
 /storage/
 *.7CcE4fEA
 
-# ---- model checkpoints: only the two we ship are tracked (see !rules below) ----
+# ---- model checkpoints: only the ones we ship are tracked (see !rules below) ----
+# world_w30.pt is the trained state_head used for K-step rollout. Without it
+# forecast() silently falls back to the hand-coded DOCTRINE_SHAPE matrix, so a
+# clone would not contain the dynamics model at all. It must stay tracked.
 models/*
 !models/lstm_world_model.pt
 !models/base_w30.pt
+!models/world_w30.pt
+!models/cic_full_w30.pt
+!models/cic_v2_w30.pt
 !models/scaler.pkl
 !models/scaler_w30.pkl
+!models/scaler_cic_full.pkl
+!models/features_cic_full.txt
+!models/cic_v2_w30.onnx
 !models/*.json
 !models/BEST.txt
+# reliability diagrams are a deliverable, and small
+!models/reliability*.png
 
 # ---- logs and scratch ----
 *.log
@@ -32,6 +43,9 @@ __pycache__/
 *.pyc
 .env
 .venv/
+
+# ---- os cruft ----
+.DS_Store
 
 # presentation / idea files
 SIH*.pdf

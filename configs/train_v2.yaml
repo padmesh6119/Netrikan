@@ -1,10 +1,19 @@
-window: 10
+# Reproduces models/base_w30.pt (macro-F1 0.9221) and models/world_w30.pt.
+#
+#   python3 src/pipeline_v2.py --out /storage/netrikan-base-w30
+#   python3 src/train_v2.py --data /storage/netrikan-base-w30 --tag base_w30
+#
+# `window` is read by pipeline_v2.py at dataset build time; the trainer infers
+# it from the built X.npy. Everything else is read by train_v2.py.
+
+window: 30
 epochs: 25
 patience: 5
 batch: 1024
 samples: 1200000
 horizon: 0
 state_weight: 0.3
+onset_weight: 2.0
 seed: 42
 n_blocks: 500
 val_frac: 0.2

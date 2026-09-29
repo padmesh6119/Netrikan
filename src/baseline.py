@@ -8,7 +8,8 @@ from sklearn.metrics import classification_report, f1_score
 
 from train_v2 import blocked_split, STAGES
 
-MODEL_DIR = os.path.expanduser("~/netrikan/models")
+MODEL_DIR = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'models')
 
 
 def subsample(idx, y, per_class, seed=0):
@@ -80,8 +81,11 @@ def main():
         f1 = f1_score(T, P, average='macro', zero_division=0)
         per = f1_score(T, P, average=None, zero_division=0, labels=list(range(len(STAGES))))
         print(f"  [{mode}] macroF1={f1:.4f}  ({(time.time()-t)/60:.1f} min)", flush=True)
-        print(classification_report(T, P, target_names=STAGES, digits=3, zero_division=0),
-              flush=True)
+        # labels= required: a corpus missing some classes (CTU-13 is binary)
+        # otherwise raises on the target_names length mismatch
+        print(classification_report(T, P, labels=list(range(len(STAGES))),
+                                    target_names=STAGES, digits=3,
+                                    zero_division=0), flush=True)
         results[mode] = {
             "macro_f1": float(f1),
             "per_class": {s: float(v) for s, v in zip(STAGES, per)},

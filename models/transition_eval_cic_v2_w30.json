@@ -1,0 +1,136 @@
+{
+  "model": "models/cic_v2_w30.pt",
+  "data": "/tmp/netrikan-cic-full-w30",
+  "window": 30,
+  "n_val": 1225426,
+  "transition_rate": 0.0259,
+  "note": "Persistence names the wrong stage on every transition window by construction, so its transition macro-F1 is exactly 0. Its binary attack/benign SEDI on that subset can still be high, because an attack-to-attack transition keeps the binary call correct -- do not quote the SEDI row as if persistence collapsed. Conditioning on transitions measures discrimination given that a change occurred, not how often the model claims a change that did not happen; read it alongside the all_windows and steady_windows rows.",
+  "subsets": {
+    "all_windows": {
+      "n": 1225426,
+      "model_macro_f1": 0.8369,
+      "persistence_macro_f1": 0.9468,
+      "gap": -0.11,
+      "model_brier": 0.1014,
+      "persistence_brier": 0.0519,
+      "brier_skill_score": -0.9545,
+      "model_sedi": 0.9432,
+      "persistence_sedi": 0.9796,
+      "model_binary": {
+        "hit_rate": 0.9262,
+        "fpr": 0.0731,
+        "tp": 275600,
+        "fp": 67812,
+        "fn": 21969,
+        "tn": 860045
+      },
+      "persistence_binary": {
+        "hit_rate": 0.9466,
+        "fpr": 0.0171,
+        "tp": 281677,
+        "fp": 15889,
+        "fn": 15892,
+        "tn": 911968
+      }
+    },
+    "transition_windows": {
+      "n": 31781,
+      "model_macro_f1": 0.3425,
+      "persistence_macro_f1": 0.0,
+      "gap": 0.3425,
+      "model_brier": 1.0236,
+      "persistence_brier": 2.0,
+      "brier_skill_score": 0.4882,
+      "model_sedi": -0.5033,
+      "persistence_sedi": -1.0,
+      "model_binary": {
+        "hit_rate": 0.4511,
+        "fpr": 0.8096,
+        "tp": 7169,
+        "fp": 12864,
+        "fn": 8723,
+        "tn": 3025
+      },
+      "persistence_binary": {
+        "hit_rate": 0.0,
+        "fpr": 1.0,
+        "tp": 0,
+        "fp": 15889,
+        "fn": 15892,
+        "tn": 0
+      }
+    },
+    "steady_windows": {
+      "n": 1193645,
+      "model_macro_f1": 0.8588,
+      "persistence_macro_f1": 1.0,
+      "gap": -0.1412,
+      "model_brier": 0.0768,
+      "persistence_brier": 0.0,
+      "brier_skill_score": null,
+      "model_sedi": 0.9631,
+      "persistence_sedi": 1.0,
+      "model_binary": {
+        "hit_rate": 0.953,
+        "fpr": 0.0603,
+        "tp": 268431,
+        "fp": 54948,
+        "fn": 13246,
+        "tn": 857020
+      },
+      "persistence_binary": {
+        "hit_rate": 1.0,
+        "fpr": 0.0,
+        "tp": 281677,
+        "fp": 0,
+        "fn": 0,
+        "tn": 911968
+      }
+    }
+  },
+  "per_class_transition": {
+    "Benign": {
+      "precision": 0.25749063670411987,
+      "recall": 0.1903832840329788,
+      "f1-score": 0.21890943300647683,
+      "support": 15889.0
+    },
+    "InitialAccess": {
+      "precision": 0.25821596244131456,
+      "recall": 0.2290798939795532,
+      "f1-score": 0.242776886035313,
+      "support": 2641.0
+    },
+    "DoS": {
+      "precision": 0.2998991935483871,
+      "recall": 0.26246140273489194,
+      "f1-score": 0.2799341331451423,
+      "support": 2267.0
+    },
+    "Infiltration": {
+      "precision": 0.5031038374717833,
+      "recall": 0.6307039264237708,
+      "f1-score": 0.5597237482341861,
+      "support": 2827.0
+    },
+    "Botnet": {
+      "precision": 0.34336457819437594,
+      "recall": 0.5119529238690695,
+      "f1-score": 0.411043850583198,
+      "support": 8157.0
+    },
+    "accuracy": 0.3204430320002517,
+    "macro avg": {
+      "precision": 0.33241484167199614,
+      "recall": 0.36491628620805283,
+      "f1-score": 0.3424776102008632,
+      "support": 31781.0
+    },
+    "weighted avg": {
+      "precision": 0.3044645532877418,
+      "recall": 0.3204430320002517,
+      "f1-score": 0.3048758737095875,
+      "support": 31781.0
+    }
+  }
+}

@@ -8,8 +8,8 @@ from torch.utils.data import Dataset, DataLoader, WeightedRandomSampler
 from sklearn.metrics import classification_report, f1_score, confusion_matrix
 from model import WorldModel
 
-DATA_DIR = os.path.expanduser("~/netrikan/data/processed")
-MODEL_DIR = os.path.expanduser("~/netrikan/models")
+DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "processed")
+MODEL_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "models")
 os.makedirs(MODEL_DIR, exist_ok=True)
 
 BATCH_SIZE = 1024

@@ -1,0 +1,366 @@
+{
+  "tag": "ctu13_w30",
+  "data": "/tmp/netrikan-ctu13-w30",
+  "window": 30,
+  "features": 24,
+  "horizon_k": 0,
+  "select_on": "macro_f1",
+  "attention": false,
+  "best": 0.9988629657195551,
+  "final_macro_f1": 0.9988629657195551,
+  "onset_auc": {},
+  "onset_horizons": [
+    1,
+    5,
+    15,
+    30
+  ],
+  "onset_weight": 2.0,
+  "persistence_onset_auc": 0.5,
+  "n_train": 50520,
+  "n_val": 12631,
+  "classes_present": [
+    0,
+    4
+  ],
+  "report": {
+    "Benign": {
+      "precision": 1.0,
+      "recall": 0.9980887372013652,
+      "f1-score": 0.9990434544957638,
+      "support": 7325.0
+    },
+    "InitialAccess": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 0.0
+    },
+    "DoS": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 0.0
+    },
+    "Infiltration": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 0.0
+    },
+    "Botnet": {
+      "precision": 0.9973684210526316,
+      "recall": 1.0,
+      "f1-score": 0.9986824769433466,
+      "support": 5306.0
+    },
+    "accuracy": 0.9988916158657272,
+    "macro avg": {
+      "precision": 0.3994736842105263,
+      "recall": 0.399617747440273,
+      "f1-score": 0.39954518628782204,
+      "support": 12631.0
+    },
+    "weighted avg": {
+      "precision": 0.9988945326660805,
+      "recall": 0.9988916158657272,
+      "f1-score": 0.9988918159166231,
+      "support": 12631.0
+    }
+  },
+  "confusion_matrix": [
+    [
+      7311,
+      0,
+      0,
+      0,
+      14
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      5306
+    ]
+  ],
+  "history": [
+    {
+      "epoch": 1,
+      "macro_f1": 0.9756780973630309,
+      "onset_auc": {
+        "k1": NaN,
+        "k5": NaN,
+        "k15": NaN,
+        "k30": NaN
+      },
+      "per_class": {
+        "Benign": 0.979889323795384,
+        "InitialAccess": 0.0,
+        "DoS": 0.0,
+        "Infiltration": 0.0,
+        "Botnet": 0.9714668709306779
+      }
+    },
+    {
+      "epoch": 2,
+      "macro_f1": 0.9957723260489422,
+      "onset_auc": {
+        "k1": NaN,
+        "k5": NaN,
+        "k15": NaN,
+        "k30": NaN
+      },
+      "per_class": {
+        "Benign": 0.9964568002180431,
+        "InitialAccess": 0.0,
+        "DoS": 0.0,
+        "Infiltration": 0.0,
+        "Botnet": 0.9950878518798413
+      }
+    },
+    {
+      "epoch": 3,
+      "macro_f1": 0.9967482851973477,
+      "onset_auc": {
+        "k1": NaN,
+        "k5": NaN,
+        "k15": NaN,
+        "k30": NaN
+      },
+      "per_class": {
+        "Benign": 0.9972737186477645,
+        "InitialAccess": 0.0,
+        "DoS": 0.0,
+        "Infiltration": 0.0,
+        "Botnet": 0.996222851746931
+      }
+    },
+    {
+      "epoch": 4,
+      "macro_f1": 0.9959428953934469,
+      "onset_auc": {
+        "k1": NaN,
+        "k5": NaN,
+        "k15": NaN,
+        "k30": NaN
+      },
+      "per_class": {
+        "Benign": 0.9965753424657534,
+        "InitialAccess": 0.0,
+        "DoS": 0.0,
+        "Infiltration": 0.0,
+        "Botnet": 0.9953104483211405
+      }
+    },
+    {
+      "epoch": 5,
+      "macro_f1": 0.9974022647352605,
+      "onset_auc": {
+        "k1": NaN,
+        "k5": NaN,
+        "k15": NaN,
+        "k30": NaN
+      },
+      "per_class": {
+        "Benign": 0.9978109180462443,
+        "InitialAccess": 0.0,
+        "DoS": 0.0,
+        "Infiltration": 0.0,
+        "Botnet": 0.9969936114242766
+      }
+    },
+    {
+      "epoch": 6,
+      "macro_f1": 0.996429205119127,
+      "onset_auc": {
+        "k1": NaN,
+        "k5": NaN,
+        "k15": NaN,
+        "k30": NaN
+      },
+      "per_class": {
+        "Benign": 0.9969875393673833,
+        "InitialAccess": 0.0,
+        "DoS": 0.0,
+        "Infiltration": 0.0,
+        "Botnet": 0.9958708708708709
+      }
+    },
+    {
+      "epoch": 7,
+      "macro_f1": 0.9985382493916606,
+      "onset_auc": {
+        "k1": NaN,
+        "k5": NaN,
+        "k15": NaN,
+        "k30": NaN
+      },
+      "per_class": {
+        "Benign": 0.9987698195735375,
+        "InitialAccess": 0.0,
+        "DoS": 0.0,
+        "Infiltration": 0.0,
+        "Botnet": 0.9983066792097837
+      }
+    },
+    {
+      "epoch": 8,
+      "macro_f1": 0.9987817803881142,
+      "onset_auc": {
+        "k1": NaN,
+        "k5": NaN,
+        "k15": NaN,
+        "k30": NaN
+      },
+      "per_class": {
+        "Benign": 0.998975059788179,
+        "InitialAccess": 0.0,
+        "DoS": 0.0,
+        "Infiltration": 0.0,
+        "Botnet": 0.9985885009880493
+      }
+    },
+    {
+      "epoch": 9,
+      "macro_f1": 0.9987817803881142,
+      "onset_auc": {
+        "k1": NaN,
+        "k5": NaN,
+        "k15": NaN,
+        "k30": NaN
+      },
+      "per_class": {
+        "Benign": 0.998975059788179,
+        "InitialAccess": 0.0,
+        "DoS": 0.0,
+        "Infiltration": 0.0,
+        "Botnet": 0.9985885009880493
+      }
+    },
+    {
+      "epoch": 10,
+      "macro_f1": 0.9988629657195551,
+      "onset_auc": {
+        "k1": NaN,
+        "k5": NaN,
+        "k15": NaN,
+        "k30": NaN
+      },
+      "per_class": {
+        "Benign": 0.9990434544957638,
+        "InitialAccess": 0.0,
+        "DoS": 0.0,
+        "Infiltration": 0.0,
+        "Botnet": 0.9986824769433466
+      }
+    },
+    {
+      "epoch": 11,
+      "macro_f1": 0.9987817803881142,
+      "onset_auc": {
+        "k1": NaN,
+        "k5": NaN,
+        "k15": NaN,
+        "k30": NaN
+      },
+      "per_class": {
+        "Benign": 0.998975059788179,
+        "InitialAccess": 0.0,
+        "DoS": 0.0,
+        "Infiltration": 0.0,
+        "Botnet": 0.9985885009880493
+      }
+    },
+    {
+      "epoch": 12,
+      "macro_f1": 0.9987817803881142,
+      "onset_auc": {
+        "k1": NaN,
+        "k5": NaN,
+        "k15": NaN,
+        "k30": NaN
+      },
+      "per_class": {
+        "Benign": 0.998975059788179,
+        "InitialAccess": 0.0,
+        "DoS": 0.0,
+        "Infiltration": 0.0,
+        "Botnet": 0.9985885009880493
+      }
+    },
+    {
+      "epoch": 13,
+      "macro_f1": 0.9982947558195008,
+      "onset_auc": {
+        "k1": NaN,
+        "k5": NaN,
+        "k15": NaN,
+        "k30": NaN
+      },
+      "per_class": {
+        "Benign": 0.9985644951808053,
+        "InitialAccess": 0.0,
+        "DoS": 0.0,
+        "Infiltration": 0.0,
+        "Botnet": 0.9980250164581962
+      }
+    },
+    {
+      "epoch": 14,
+      "macro_f1": 0.9980512995784527,
+      "onset_auc": {
+        "k1": NaN,
+        "k5": NaN,
+        "k15": NaN,
+        "k30": NaN
+      },
+      "per_class": {
+        "Benign": 0.9983590865581841,
+        "InitialAccess": 0.0,
+        "DoS": 0.0,
+        "Infiltration": 0.0,
+        "Botnet": 0.9977435125987213
+      }
+    },
+    {
+      "epoch": 15,
+      "macro_f1": 0.9985382493916606,
+      "onset_auc": {
+        "k1": NaN,
+        "k5": NaN,
+        "k15": NaN,
+        "k30": NaN
+      },
+      "per_class": {
+        "Benign": 0.9987698195735375,
+        "InitialAccess": 0.0,
+        "DoS": 0.0,
+        "Infiltration": 0.0,
+        "Botnet": 0.9983066792097837
+      }
+    }
+  ],
+  "minutes": 2.9
+}

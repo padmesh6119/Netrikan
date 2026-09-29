@@ -1,0 +1,30 @@
+{
+  "tag": "baseline_ctu13_w30",
+  "data": "/tmp/netrikan-ctu13-w30",
+  "window": 30,
+  "results": {
+    "last": {
+      "macro_f1": 0.8353356496010793,
+      "per_class": {
+        "Benign": 0.8708732174252783,
+        "InitialAccess": 0.0,
+        "DoS": 0.0,
+        "Infiltration": 0.0,
+        "Botnet": 0.7997980817768804
+      },
+      "n_features": 24
+    },
+    "flat": {
+      "macro_f1": 0.9939908899068932,
+      "per_class": {
+        "Benign": 0.9949419002050581,
+        "InitialAccess": 0.0,
+        "DoS": 0.0,
+        "Infiltration": 0.0,
+        "Botnet": 0.9930398796087284
+      },
+      "n_features": 720
+    }
+  },
+  "minutes": 0.0
+}

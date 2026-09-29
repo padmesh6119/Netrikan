@@ -1,0 +1,674 @@
+{
+  "model": "models/cic_v2_w30.pt",
+  "data": "/tmp/netrikan-cic-full-w30",
+  "n_windows": 86391,
+  "n_attack_windows": 22979,
+  "n_benign_windows": 63412,
+  "n_captures": 10,
+  "n_hosts": 715,
+  "shipped_operating_point": {
+    "what": "stage_logits.argmax() > 0 -- the decision eval_dapt.py reports, a hard 5-class argmax with no threshold and so no way to trade recall against FPR",
+    "tp": 15578,
+    "fp": 25625,
+    "fn": 7401,
+    "tn": 37787,
+    "recall": 0.6779,
+    "fpr": 0.4041,
+    "precision": 0.3781,
+    "f1": 0.4854,
+    "sedi": 0.3845
+  },
+  "curves": {
+    "breach": {
+      "persist1": [
+        {
+          "target_fpr": 0.001,
+          "threshold": 0.92024,
+          "tp": 20,
+          "fp": 66,
+          "fn": 22959,
+          "tn": 63346,
+          "recall": 0.0009,
+          "fpr": 0.001,
+          "precision": 0.2326,
+          "f1": 0.0017,
+          "sedi": -0.0129
+        },
+        {
+          "target_fpr": 0.01,
+          "threshold": 0.90403,
+          "tp": 814,
+          "fp": 637,
+          "fn": 22165,
+          "tn": 62775,
+          "recall": 0.0354,
+          "fpr": 0.01,
+          "precision": 0.561,
+          "f1": 0.0666,
+          "sedi": 0.161
+        },
+        {
+          "target_fpr": 0.05,
+          "threshold": 0.88619,
+          "tp": 1448,
+          "fp": 3173,
+          "fn": 21531,
+          "tn": 60239,
+          "recall": 0.063,
+          "fpr": 0.05,
+          "precision": 0.3134,
+          "f1": 0.1049,
+          "sedi": 0.0416
+        },
+        {
+          "target_fpr": 0.1,
+          "threshold": 0.83625,
+          "tp": 2295,
+          "fp": 6344,
+          "fn": 20684,
+          "tn": 57068,
+          "recall": 0.0999,
+          "fpr": 0.1,
+          "precision": 0.2657,
+          "f1": 0.1452,
+          "sedi": -0.0004
+        }
+      ],
+      "persist2": [
+        {
+          "target_fpr": 0.001,
+          "threshold": 0.91573,
+          "tp": 13,
+          "fp": 66,
+          "fn": 22966,
+          "tn": 63346,
+          "recall": 0.0006,
+          "fpr": 0.001,
+          "precision": 0.1646,
+          "f1": 0.0011,
+          "sedi": -0.0425
+        },
+        {
+          "target_fpr": 0.01,
+          "threshold": 0.90366,
+          "tp": 824,
+          "fp": 636,
+          "fn": 22155,
+          "tn": 62776,
+          "recall": 0.0359,
+          "fpr": 0.01,
+          "precision": 0.5644,
+          "f1": 0.0674,
+          "sedi": 0.163
+        },
+        {
+          "target_fpr": 0.05,
+          "threshold": 0.88347,
+          "tp": 1443,
+          "fp": 3173,
+          "fn": 21536,
+          "tn": 60239,
+          "recall": 0.0628,
+          "fpr": 0.05,
+          "precision": 0.3126,
+          "f1": 0.1046,
+          "sedi": 0.0409
+        },
+        {
+          "target_fpr": 0.1,
+          "threshold": 0.8341,
+          "tp": 2291,
+          "fp": 6342,
+          "fn": 20688,
+          "tn": 57070,
+          "recall": 0.0997,
+          "fpr": 0.1,
+          "precision": 0.2654,
+          "f1": 0.1449,
+          "sedi": -0.0007
+        }
+      ],
+      "persist3": [
+        {
+          "target_fpr": 0.001,
+          "threshold": 0.91304,
+          "tp": 12,
+          "fp": 66,
+          "fn": 22967,
+          "tn": 63346,
+          "recall": 0.0005,
+          "fpr": 0.001,
+          "precision": 0.1538,
+          "f1": 0.001,
+          "sedi": -0.0478
+        },
+        {
+          "target_fpr": 0.01,
+          "threshold": 0.90339,
+          "tp": 815,
+          "fp": 636,
+          "fn": 22164,
+          "tn": 62776,
+          "recall": 0.0355,
+          "fpr": 0.01,
+          "precision": 0.5617,
+          "f1": 0.0667,
+          "sedi": 0.1614
+        },
+        {
+          "target_fpr": 0.05,
+          "threshold": 0.88102,
+          "tp": 1449,
+          "fp": 3173,
+          "fn": 21530,
+          "tn": 60239,
+          "recall": 0.0631,
+          "fpr": 0.05,
+          "precision": 0.3135,
+          "f1": 0.105,
+          "sedi": 0.0417
+        },
+        {
+          "target_fpr": 0.1,
+          "threshold": 0.8324,
+          "tp": 2271,
+          "fp": 6343,
+          "fn": 20708,
+          "tn": 57069,
+          "recall": 0.0988,
+          "fpr": 0.1,
+          "precision": 0.2636,
+          "f1": 0.1438,
+          "sedi": -0.0028
+        }
+      ],
+      "persist5": [
+        {
+          "target_fpr": 0.001,
+          "threshold": 0.90592,
+          "tp": 574,
+          "fp": 63,
+          "fn": 22405,
+          "tn": 63349,
+          "recall": 0.025,
+          "fpr": 0.001,
+          "precision": 0.9011,
+          "f1": 0.0486,
+          "sedi": 0.3056
+        },
+        {
+          "target_fpr": 0.01,
+          "threshold": 0.90282,
+          "tp": 803,
+          "fp": 634,
+          "fn": 22176,
+          "tn": 62778,
+          "recall": 0.0349,
+          "fpr": 0.01,
+          "precision": 0.5588,
+          "f1": 0.0658,
+          "sedi": 0.1595
+        },
+        {
+          "target_fpr": 0.05,
+          "threshold": 0.87438,
+          "tp": 1440,
+          "fp": 3168,
+          "fn": 21539,
+          "tn": 60244,
+          "recall": 0.0627,
+          "fpr": 0.05,
+          "precision": 0.3125,
+          "f1": 0.1044,
+          "sedi": 0.0408
+        },
+        {
+          "target_fpr": 0.1,
+          "threshold": 0.83011,
+          "tp": 2165,
+          "fp": 6344,
+          "fn": 20814,
+          "tn": 57068,
+          "recall": 0.0942,
+          "fpr": 0.1,
+          "precision": 0.2544,
+          "f1": 0.1375,
+          "sedi": -0.0137
+        }
+      ]
+    },
+    "stage": {
+      "persist1": [
+        {
+          "target_fpr": 0.001,
+          "threshold": 0.90167,
+          "tp": 10,
+          "fp": 66,
+          "fn": 22969,
+          "tn": 63346,
+          "recall": 0.0004,
+          "fpr": 0.001,
+          "precision": 0.1316,
+          "f1": 0.0009,
+          "sedi": -0.0597
+        },
+        {
+          "target_fpr": 0.01,
+          "threshold": 0.89133,
+          "tp": 789,
+          "fp": 637,
+          "fn": 22190,
+          "tn": 62775,
+          "recall": 0.0343,
+          "fpr": 0.01,
+          "precision": 0.5533,
+          "f1": 0.0647,
+          "sedi": 0.1564
+        },
+        {
+          "target_fpr": 0.05,
+          "threshold": 0.87281,
+          "tp": 1408,
+          "fp": 3173,
+          "fn": 21571,
+          "tn": 60239,
+          "recall": 0.0613,
+          "fpr": 0.05,
+          "precision": 0.3074,
+          "f1": 0.1022,
+          "sedi": 0.0363
+        },
+        {
+          "target_fpr": 0.1,
+          "threshold": 0.82794,
+          "tp": 2464,
+          "fp": 6344,
+          "fn": 20515,
+          "tn": 57068,
+          "recall": 0.1072,
+          "fpr": 0.1,
+          "precision": 0.2797,
+          "f1": 0.155,
+          "sedi": 0.0163
+        }
+      ],
+      "persist2": [
+        {
+          "target_fpr": 0.001,
+          "threshold": 0.89986,
+          "tp": 11,
+          "fp": 66,
+          "fn": 22968,
+          "tn": 63346,
+          "recall": 0.0005,
+          "fpr": 0.001,
+          "precision": 0.1429,
+          "f1": 0.001,
+          "sedi": -0.0536
+        },
+        {
+          "target_fpr": 0.01,
+          "threshold": 0.89104,
+          "tp": 791,
+          "fp": 637,
+          "fn": 22188,
+          "tn": 62775,
+          "recall": 0.0344,
+          "fpr": 0.01,
+          "precision": 0.5539,
+          "f1": 0.0648,
+          "sedi": 0.1568
+        },
+        {
+          "target_fpr": 0.05,
+          "threshold": 0.87066,
+          "tp": 1414,
+          "fp": 3172,
+          "fn": 21565,
+          "tn": 60240,
+          "recall": 0.0615,
+          "fpr": 0.05,
+          "precision": 0.3083,
+          "f1": 0.1026,
+          "sedi": 0.0372
+        },
+        {
+          "target_fpr": 0.1,
+          "threshold": 0.82591,
+          "tp": 2454,
+          "fp": 6343,
+          "fn": 20525,
+          "tn": 57069,
+          "recall": 0.1068,
+          "fpr": 0.1,
+          "precision": 0.279,
+          "f1": 0.1545,
+          "sedi": 0.0153
+        }
+      ],
+      "persist3": [
+        {
+          "target_fpr": 0.001,
+          "threshold": 0.89799,
+          "tp": 68,
+          "fp": 66,
+          "fn": 22911,
+          "tn": 63346,
+          "recall": 0.003,
+          "fpr": 0.001,
+          "precision": 0.5075,
+          "f1": 0.0059,
+          "sedi": 0.0825
+        },
+        {
+          "target_fpr": 0.01,
+          "threshold": 0.89081,
+          "tp": 792,
+          "fp": 637,
+          "fn": 22187,
+          "tn": 62775,
+          "recall": 0.0345,
+          "fpr": 0.01,
+          "precision": 0.5542,
+          "f1": 0.0649,
+          "sedi": 0.157
+        },
+        {
+          "target_fpr": 0.05,
+          "threshold": 0.8681,
+          "tp": 1414,
+          "fp": 3173,
+          "fn": 21565,
+          "tn": 60239,
+          "recall": 0.0615,
+          "fpr": 0.05,
+          "precision": 0.3083,
+          "f1": 0.1026,
+          "sedi": 0.0371
+        },
+        {
+          "target_fpr": 0.1,
+          "threshold": 0.82457,
+          "tp": 2457,
+          "fp": 6344,
+          "fn": 20522,
+          "tn": 57068,
+          "recall": 0.1069,
+          "fpr": 0.1,
+          "precision": 0.2792,
+          "f1": 0.1546,
+          "sedi": 0.0156
+        }
+      ],
+      "persist5": [
+        {
+          "target_fpr": 0.001,
+          "threshold": 0.89237,
+          "tp": 595,
+          "fp": 66,
+          "fn": 22384,
+          "tn": 63346,
+          "recall": 0.0259,
+          "fpr": 0.001,
+          "precision": 0.9002,
+          "f1": 0.0503,
+          "sedi": 0.3071
+        },
+        {
+          "target_fpr": 0.01,
+          "threshold": 0.89025,
+          "tp": 788,
+          "fp": 637,
+          "fn": 22191,
+          "tn": 62775,
+          "recall": 0.0343,
+          "fpr": 0.01,
+          "precision": 0.553,
+          "f1": 0.0646,
+          "sedi": 0.1562
+        },
+        {
+          "target_fpr": 0.05,
+          "threshold": 0.86303,
+          "tp": 1414,
+          "fp": 3171,
+          "fn": 21565,
+          "tn": 60241,
+          "recall": 0.0615,
+          "fpr": 0.05,
+          "precision": 0.3084,
+          "f1": 0.1026,
+          "sedi": 0.0372
+        },
+        {
+          "target_fpr": 0.1,
+          "threshold": 0.82258,
+          "tp": 2466,
+          "fp": 6339,
+          "fn": 20513,
+          "tn": 57073,
+          "recall": 0.1073,
+          "fpr": 0.1,
+          "precision": 0.2801,
+          "f1": 0.1552,
+          "sedi": 0.0166
+        }
+      ]
+    }
+  },
+  "entity_rollup": {
+    "argmax": {
+      "bucket": "1h",
+      "attack_cells": 63,
+      "benign_cells": 2273,
+      "attack_cells_detected": 44,
+      "entity_recall": 0.6984,
+      "false_alarm_cells": 1133,
+      "false_alarm_rate_per_benign_cell": 0.4985
+    },
+    "breach": {
+      "persist1": {
+        "window_threshold": 0.88619,
+        "window_level": {
+          "tp": 1448,
+          "fp": 3173,
+          "fn": 21531,
+          "tn": 60239,
+          "recall": 0.063,
+          "fpr": 0.05,
+          "precision": 0.3134,
+          "f1": 0.1049,
+          "sedi": 0.0416
+        },
+        "bucket": "1h",
+        "attack_cells": 63,
+        "benign_cells": 2273,
+        "attack_cells_detected": 19,
+        "entity_recall": 0.3016,
+        "false_alarm_cells": 143,
+        "false_alarm_rate_per_benign_cell": 0.0629
+      },
+      "persist2": {
+        "window_threshold": 0.86795,
+        "window_level": {
+          "tp": 1567,
+          "fp": 3172,
+          "fn": 21412,
+          "tn": 60240,
+          "recall": 0.0682,
+          "fpr": 0.05,
+          "precision": 0.3307,
+          "f1": 0.1131,
+          "sedi": 0.0567
+        },
+        "bucket": "1h",
+        "attack_cells": 63,
+        "benign_cells": 2273,
+        "attack_cells_detected": 16,
+        "entity_recall": 0.254,
+        "false_alarm_cells": 47,
+        "false_alarm_rate_per_benign_cell": 0.0207
+      },
+      "persist3": {
+        "window_threshold": 0.85878,
+        "window_level": {
+          "tp": 1613,
+          "fp": 3173,
+          "fn": 21366,
+          "tn": 60239,
+          "recall": 0.0702,
+          "fpr": 0.05,
+          "precision": 0.337,
+          "f1": 0.1162,
+          "sedi": 0.0623
+        },
+        "bucket": "1h",
+        "attack_cells": 63,
+        "benign_cells": 2273,
+        "attack_cells_detected": 16,
+        "entity_recall": 0.254,
+        "false_alarm_cells": 42,
+        "false_alarm_rate_per_benign_cell": 0.0185
+      },
+      "persist5": {
+        "window_threshold": 0.84187,
+        "window_level": {
+          "tp": 1697,
+          "fp": 3169,
+          "fn": 21282,
+          "tn": 60243,
+          "recall": 0.0739,
+          "fpr": 0.05,
+          "precision": 0.3487,
+          "f1": 0.1219,
+          "sedi": 0.0726
+        },
+        "bucket": "1h",
+        "attack_cells": 63,
+        "benign_cells": 2273,
+        "attack_cells_detected": 13,
+        "entity_recall": 0.2063,
+        "false_alarm_cells": 34,
+        "false_alarm_rate_per_benign_cell": 0.015
+      }
+    },
+    "stage": {
+      "persist1": {
+        "window_threshold": 0.87281,
+        "window_level": {
+          "tp": 1408,
+          "fp": 3173,
+          "fn": 21571,
+          "tn": 60239,
+          "recall": 0.0613,
+          "fpr": 0.05,
+          "precision": 0.3074,
+          "f1": 0.1022,
+          "sedi": 0.0363
+        },
+        "bucket": "1h",
+        "attack_cells": 63,
+        "benign_cells": 2273,
+        "attack_cells_detected": 16,
+        "entity_recall": 0.254,
+        "false_alarm_cells": 133,
+        "false_alarm_rate_per_benign_cell": 0.0585
+      },
+      "persist2": {
+        "window_threshold": 0.85549,
+        "window_level": {
+          "tp": 1529,
+          "fp": 3172,
+          "fn": 21450,
+          "tn": 60240,
+          "recall": 0.0665,
+          "fpr": 0.05,
+          "precision": 0.3252,
+          "f1": 0.1105,
+          "sedi": 0.052
+        },
+        "bucket": "1h",
+        "attack_cells": 63,
+        "benign_cells": 2273,
+        "attack_cells_detected": 16,
+        "entity_recall": 0.254,
+        "false_alarm_cells": 47,
+        "false_alarm_rate_per_benign_cell": 0.0207
+      },
+      "persist3": {
+        "window_threshold": 0.84782,
+        "window_level": {
+          "tp": 1586,
+          "fp": 3172,
+          "fn": 21393,
+          "tn": 60240,
+          "recall": 0.069,
+          "fpr": 0.05,
+          "precision": 0.3333,
+          "f1": 0.1144,
+          "sedi": 0.0591
+        },
+        "bucket": "1h",
+        "attack_cells": 63,
+        "benign_cells": 2273,
+        "attack_cells_detected": 15,
+        "entity_recall": 0.2381,
+        "false_alarm_cells": 43,
+        "false_alarm_rate_per_benign_cell": 0.0189
+      },
+      "persist5": {
+        "window_threshold": 0.8337,
+        "window_level": {
+          "tp": 1762,
+          "fp": 3172,
+          "fn": 21217,
+          "tn": 60240,
+          "recall": 0.0767,
+          "fpr": 0.05,
+          "precision": 0.3571,
+          "f1": 0.1262,
+          "sedi": 0.08
+        },
+        "bucket": "1h",
+        "attack_cells": 63,
+        "benign_cells": 2273,
+        "attack_cells_detected": 12,
+        "entity_recall": 0.1905,
+        "false_alarm_cells": 35,
+        "false_alarm_rate_per_benign_cell": 0.0154
+      }
+    }
+  },
+  "matched_fpr_vs_argmax": {
+    "argmax_fpr": 0.4041,
+    "argmax_recall": 0.6779,
+    "argmax_sedi": 0.3845,
+    "scores": {
+      "breach": {
+        "threshold": 0.51186,
+        "tp": 15659,
+        "fp": 25627,
+        "fn": 7320,
+        "tn": 37785,
+        "recall": 0.6814,
+        "fpr": 0.4041,
+        "precision": 0.3793,
+        "f1": 0.4873,
+        "sedi": 0.3892
+      },
+      "stage": {
+        "threshold": 0.50317,
+        "tp": 15579,
+        "fp": 25627,
+        "fn": 7400,
+        "tn": 37785,
+        "recall": 0.678,
+        "fpr": 0.4041,
+        "precision": 0.3781,
+        "f1": 0.4854,
+        "sedi": 0.3846
+      }
+    }
+  },
+  "finding": "The shipped argmax decision is one point on a curve that was never drawn. Compare its FPR against the swept operating points at matched recall before quoting any single false-positive number."
+}

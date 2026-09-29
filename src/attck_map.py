@@ -1,6 +1,22 @@
 BENIGN, INITIAL_ACCESS, DOS, LATERAL, C2, EXFIL = 0, 1, 2, 3, 4, 5
+# RECON is appended rather than inserted at chain position 1, because the
+# numeric ids are baked into every trained checkpoint through MODEL_TO_CHAIN.
+# Kill-chain ordering lives in forecast.CHAIN_POS, not in the id order.
+RECON = 6
 
 STAGE_INFO = {
+    RECON: {
+        "name": "Reconnaissance",
+        "short": "reconnaissance",
+        "mitre": "TA0043",
+        "capec": ["CAPEC-300 Port Scanning", "CAPEC-292 Host Discovery",
+                  "CAPEC-309 Network Topology Mapping"],
+        "color": "#38bdf8",
+        "description": "Scanning and enumeration before access is attempted — "
+                       "port sweeps, host discovery, service fingerprinting.",
+        "techniques": ["T1595 Active Scanning", "T1046 Network Service Discovery",
+                       "T1590 Gather Victim Network Information"],
+    },
     BENIGN: {
         "name": "Benign",
         "short": "benign",
@@ -56,10 +72,17 @@ STAGE_INFO = {
     },
 }
 
-N_STAGES = 6
+N_STAGES = 7
 
-# model emits 5 classes; EXFIL is forecast-only (never observed as a label)
+# The model emits 5 classes. EXFIL and RECON are forecast-only: CIC-IDS-2018
+# labels neither as a distinct class (its brute-force days are already past the
+# scanning phase), so the model cannot emit them directly. They are reachable in
+# the forecast through the transition matrix, and the rule layer can hint RECON
+# from a port sweep. Training on identity-bearing data that labels scanning
+# separately — DAPT has a Reconnaissance phase — is what would let the model
+# predict RECON itself.
 MODEL_TO_CHAIN = {0: BENIGN, 1: INITIAL_ACCESS, 2: DOS, 3: LATERAL, 4: C2}
+FORECAST_ONLY_STAGES = {EXFIL, RECON}
 
 # damage is already done at or beyond these stages — a signature IDS fires here
 DAMAGE_STAGES = {DOS, C2, EXFIL}

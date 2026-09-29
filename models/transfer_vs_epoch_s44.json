@@ -1,0 +1,108 @@
+{
+  "data": "/tmp/netrikan-cic-full-w30",
+  "tag": "xfer_s44",
+  "eval_set": "DAPT 2020 (never seen in training)",
+  "n_checkpoints": 5,
+  "per_epoch": [
+    {
+      "epoch": 1,
+      "dapt_breach_auc": 0.707,
+      "dapt_breach_pr_auc": 0.4307,
+      "dapt_onset_auc": {
+        "k1": 0.598,
+        "k5": 0.6241,
+        "k15": 0.669,
+        "k30": 0.6095
+      },
+      "cic_macro_f1": 0.8195,
+      "cic_onset_auc_k5": 0.8794,
+      "dapt_recall_at_fpr05": 0.0862,
+      "dapt_sedi_at_fpr05": 0.1043,
+      "dapt_entity_recall": 0.0635,
+      "dapt_entity_fa_rate": 0.0044
+    },
+    {
+      "epoch": 2,
+      "dapt_breach_auc": 0.7927,
+      "dapt_breach_pr_auc": 0.4932,
+      "dapt_onset_auc": {
+        "k1": 0.6224,
+        "k5": 0.6607,
+        "k15": 0.6991,
+        "k30": 0.6094
+      },
+      "cic_macro_f1": 0.8324,
+      "cic_onset_auc_k5": 0.8911,
+      "dapt_recall_at_fpr05": 0.0698,
+      "dapt_sedi_at_fpr05": 0.0614,
+      "dapt_entity_recall": 0.0635,
+      "dapt_entity_fa_rate": 0.0031
+    },
+    {
+      "epoch": 3,
+      "dapt_breach_auc": 0.8408,
+      "dapt_breach_pr_auc": 0.5636,
+      "dapt_onset_auc": {
+        "k1": 0.6288,
+        "k5": 0.6664,
+        "k15": 0.702,
+        "k30": 0.6433
+      },
+      "cic_macro_f1": 0.8356,
+      "cic_onset_auc_k5": 0.8931,
+      "dapt_recall_at_fpr05": 0.1977,
+      "dapt_sedi_at_fpr05": 0.3157,
+      "dapt_entity_recall": 0.0794,
+      "dapt_entity_fa_rate": 0.0048
+    },
+    {
+      "epoch": 4,
+      "dapt_breach_auc": 0.8639,
+      "dapt_breach_pr_auc": 0.6984,
+      "dapt_onset_auc": {
+        "k1": 0.6463,
+        "k5": 0.6819,
+        "k15": 0.6877,
+        "k30": 0.6582
+      },
+      "cic_macro_f1": 0.8353,
+      "cic_onset_auc_k5": 0.8985,
+      "dapt_recall_at_fpr05": 0.4177,
+      "dapt_sedi_at_fpr05": 0.5855,
+      "dapt_entity_recall": 0.1746,
+      "dapt_entity_fa_rate": 0.0101
+    },
+    {
+      "epoch": 5,
+      "dapt_breach_auc": 0.8469,
+      "dapt_breach_pr_auc": 0.5922,
+      "dapt_onset_auc": {
+        "k1": 0.631,
+        "k5": 0.6722,
+        "k15": 0.6917,
+        "k30": 0.6259
+      },
+      "cic_macro_f1": 0.8394,
+      "cic_onset_auc_k5": 0.8994,
+      "dapt_recall_at_fpr05": 0.3516,
+      "dapt_sedi_at_fpr05": 0.5154,
+      "dapt_entity_recall": 0.1905,
+      "dapt_entity_fa_rate": 0.0123
+    }
+  ],
+  "peak_transfer": {
+    "epoch": 4,
+    "dapt_breach_auc": 0.8639
+  },
+  "final_epoch": {
+    "epoch": 5,
+    "dapt_breach_auc": 0.8469
+  },
+  "decay_from_peak": 0.017,
+  "best_cic_epoch": {
+    "epoch": 5,
+    "cic_macro_f1": 0.8394
+  },
+  "cic_criterion_would_pick_transfer_peak": false,
+  "honesty_note": "Reporting this curve is legitimate; choosing a deployment epoch by reading DAPT off it is test-set selection. Acting on a peak requires a CIC-only proxy that correlates with it -- cic_criterion_would_pick_transfer_peak reports whether the obvious proxy (best in-dataset macro-F1) does."
+}

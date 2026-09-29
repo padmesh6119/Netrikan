@@ -1,0 +1,82 @@
+{
+  "model": "models/ctu13_w30.pt",
+  "data": "/tmp/netrikan-ctu13-w30",
+  "n_windows": 12631,
+  "window": 30,
+  "features": 24,
+  "one_step": {
+    "model_mse": 0.97397,
+    "persistence_mse": 1.69299,
+    "window_mean_mse": 0.8933,
+    "skill_vs_persistence": 0.4247,
+    "skill_vs_window_mean": -0.0903,
+    "beats_persistence": true,
+    "beats_window_mean": false,
+    "verdict": "PARTIAL: beats persistence but LOSES to the window mean. The state head predicts a smoothed central estimate of the window, not its trajectory. Do not describe this as learned dynamics without stating this."
+  },
+  "k_step_drift": [
+    {
+      "step": 1,
+      "model_mse": 0.97397,
+      "persistence_mse": 1.69299,
+      "skill": 0.4247
+    },
+    {
+      "step": 2,
+      "model_mse": 0.96014,
+      "persistence_mse": 1.62534,
+      "skill": 0.4093
+    },
+    {
+      "step": 3,
+      "model_mse": 0.96176,
+      "persistence_mse": 1.69055,
+      "skill": 0.4311
+    },
+    {
+      "step": 4,
+      "model_mse": 0.96155,
+      "persistence_mse": 1.66685,
+      "skill": 0.4231
+    },
+    {
+      "step": 5,
+      "model_mse": 0.96263,
+      "persistence_mse": 1.70056,
+      "skill": 0.4339
+    },
+    {
+      "step": 6,
+      "model_mse": 0.9609,
+      "persistence_mse": 1.69932,
+      "skill": 0.4345
+    },
+    {
+      "step": 7,
+      "model_mse": 0.96341,
+      "persistence_mse": 1.70378,
+      "skill": 0.4345
+    },
+    {
+      "step": 8,
+      "model_mse": 0.95999,
+      "persistence_mse": 1.684,
+      "skill": 0.4299
+    },
+    {
+      "step": 9,
+      "model_mse": 0.99973,
+      "persistence_mse": 1.73906,
+      "skill": 0.4251
+    },
+    {
+      "step": 10,
+      "model_mse": 1.0186,
+      "persistence_mse": 1.75935,
+      "skill": 0.421
+    }
+  ],
+  "steps_beating_persistence": 10,
+  "rollout_stage_volatility": 0.0001,
+  "note": "skill = 1 - MSE_model/MSE_persistence. Positive means the state head predicts the next flow better than copying the last observed flow, which is the only baseline that matters here: consecutive flows are highly correlated, so a low raw MSE alone does not show that any dynamics were learned."
+}

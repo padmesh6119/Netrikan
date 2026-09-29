@@ -1,0 +1,123 @@
+{
+  "n_flows": 86691,
+  "n_captures": 10,
+  "n_hosts": 715,
+  "min_observations_for_reliable": 200,
+  "dapt_phase_to_chain_stage": {
+    "Benign": "benign",
+    "Reconnaissance": "reconnaissance",
+    "Establish Foothold": "initial access",
+    "Lateral Movement": "lateral movement",
+    "Data Exfiltration": "exfiltration"
+  },
+  "measured": {
+    "per_capture": {
+      "Benign": {
+        "n": 63702,
+        "persistence": 0.9797,
+        "reliable": true
+      },
+      "Reconnaissance": {
+        "n": 11909,
+        "persistence": 0.9289,
+        "reliable": true
+      },
+      "Establish Foothold": {
+        "n": 8604,
+        "persistence": 0.9689,
+        "reliable": true
+      },
+      "Lateral Movement": {
+        "n": 2451,
+        "persistence": 0.9323,
+        "reliable": true
+      },
+      "Data Exfiltration": {
+        "n": 15,
+        "persistence": 0.0,
+        "reliable": false
+      }
+    },
+    "per_host": {
+      "Benign": {
+        "n": 63001,
+        "persistence": 0.9972,
+        "reliable": true
+      },
+      "Reconnaissance": {
+        "n": 11908,
+        "persistence": 0.994,
+        "reliable": true
+      },
+      "Establish Foothold": {
+        "n": 8604,
+        "persistence": 0.9985,
+        "reliable": true
+      },
+      "Lateral Movement": {
+        "n": 2449,
+        "persistence": 0.9575,
+        "reliable": true
+      },
+      "Data Exfiltration": {
+        "n": 14,
+        "persistence": 0.9286,
+        "reliable": false
+      }
+    }
+  },
+  "comparison_with_forecast_py": {
+    "benign": {
+      "declared": 0.98,
+      "measured_per_host": 0.9972,
+      "delta": 0.0172,
+      "dapt_phase": "Benign",
+      "n": 63001,
+      "reliable": true,
+      "status": "OK"
+    },
+    "reconnaissance": {
+      "declared": 0.929,
+      "measured_per_host": 0.994,
+      "delta": 0.065,
+      "dapt_phase": "Reconnaissance",
+      "n": 11908,
+      "reliable": true,
+      "status": "DIFFERS"
+    },
+    "initial access": {
+      "declared": 0.929,
+      "measured_per_host": 0.9985,
+      "delta": 0.0695,
+      "dapt_phase": "Establish Foothold",
+      "n": 8604,
+      "reliable": true,
+      "status": "DIFFERS"
+    },
+    "lateral movement": {
+      "declared": 0.931,
+      "measured_per_host": 0.9575,
+      "delta": 0.0265,
+      "dapt_phase": "Lateral Movement",
+      "n": 2449,
+      "reliable": true,
+      "status": "DIFFERS"
+    },
+    "exfiltration": {
+      "declared": 0.93,
+      "measured_per_host": 0.9286,
+      "delta": -0.0014,
+      "dapt_phase": "Data Exfiltration",
+      "n": 14,
+      "reliable": false,
+      "status": "unreliable"
+    }
+  },
+  "recommended_diagonal": {
+    "benign": 0.997,
+    "reconnaissance": 0.994,
+    "initial access": 0.999,
+    "lateral movement": 0.958
+  },
+  "note": "per_host is the quantity the forecast needs: P(this host is still in this stage on its next flow). per_capture mixes unrelated hosts and is what the current values came from. DoS is absent from DAPT entirely, so its declared 0.900 is an assumption."
+}

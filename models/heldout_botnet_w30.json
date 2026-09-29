@@ -1,0 +1,98 @@
+{
+  "holdout_class": 4,
+  "holdout_name": "Botnet",
+  "checkpoint": "/Users/pranavmuthukumaran/Downloads/netrikan/models/heldout_botnet_w30.pt",
+  "data": "/tmp/netrikan-cic-full-w30",
+  "note": "onset positives restricted to transitions INTO the held-out class; model never trained on it",
+  "horizons": {
+    "k1": {
+      "positive_count": 8156,
+      "n": 920120,
+      "positive_rate": 0.00886,
+      "roc_auc": 0.3316,
+      "pr_auc": 0.0059,
+      "no_skill_pr": 0.00886,
+      "recall_at_fpr": {
+        "0.001": {
+          "recall": 0.0,
+          "achieved_fpr": 0.001
+        },
+        "0.01": {
+          "recall": 0.0,
+          "achieved_fpr": 0.01
+        },
+        "0.05": {
+          "recall": 0.0016,
+          "achieved_fpr": 0.05
+        }
+      }
+    },
+    "k5": {
+      "positive_count": 23337,
+      "n": 905874,
+      "positive_rate": 0.02576,
+      "roc_auc": 0.2523,
+      "pr_auc": 0.0156,
+      "no_skill_pr": 0.02576,
+      "recall_at_fpr": {
+        "0.001": {
+          "recall": 0.0,
+          "achieved_fpr": 0.001
+        },
+        "0.01": {
+          "recall": 0.0,
+          "achieved_fpr": 0.01
+        },
+        "0.05": {
+          "recall": 0.0018,
+          "achieved_fpr": 0.05
+        }
+      }
+    },
+    "k15": {
+      "positive_count": 37868,
+      "n": 888101,
+      "positive_rate": 0.04264,
+      "roc_auc": 0.2222,
+      "pr_auc": 0.0251,
+      "no_skill_pr": 0.04264,
+      "recall_at_fpr": {
+        "0.001": {
+          "recall": 0.0,
+          "achieved_fpr": 0.001
+        },
+        "0.01": {
+          "recall": 0.0,
+          "achieved_fpr": 0.01
+        },
+        "0.05": {
+          "recall": 0.001,
+          "achieved_fpr": 0.05
+        }
+      }
+    },
+    "k30": {
+      "positive_count": 40357,
+      "n": 876012,
+      "positive_rate": 0.04607,
+      "roc_auc": 0.1976,
+      "pr_auc": 0.0264,
+      "no_skill_pr": 0.04607,
+      "recall_at_fpr": {
+        "0.001": {
+          "recall": 0.0,
+          "achieved_fpr": 0.001
+        },
+        "0.01": {
+          "recall": 0.0,
+          "achieved_fpr": 0.01
+        },
+        "0.05": {
+          "recall": 0.0005,
+          "achieved_fpr": 0.05
+        }
+      }
+    }
+  },
+  "finding": "Held-out Botnet forecast with up to 40357 val positives. Positive volume adequate for a real estimate."
+}

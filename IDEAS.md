@@ -1,3 +1,6 @@
+> **See [STATUS.md](STATUS.md) for the authoritative current state.** This document
+> was written earlier and is stale in places; where the two disagree, STATUS.md is right.
+
 # Netrikan — Differentiating Ideas
 
 **SIH26153 · NTRO · drafted 2026-09-21**
