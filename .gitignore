@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+.pytest_cache/
+# large / derived artifacts live in the repo tree but are not versioned
+data/
+processed/
+checkpoints/
+results/*.parquet
+results/tmp/
