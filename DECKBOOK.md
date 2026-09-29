@@ -223,6 +223,56 @@ Methods
 
 ---
 
+## 3b. Layout blueprint (modelled on the SIH 2025 "404 The Optimistics" deck)
+
+Their pattern: **three stacked text boxes on the left, one big infographic on the right, a risk-vs-solution ladder, prototype links as badges, real-world photos for emotion.** Copy the layout. **Do not copy their habit of unsourced numbers**: every chart of ours plots a value from §5.
+
+**Slide 2 — "NETRIKAN: Forecasting the Attacker's Next Move"**
+- **Left column, 3 boxes:**
+  - **Real-world issue:** multi-stage cyberattacks on power, telecom, banking and railway networks look harmless step by step, and are detected only after the breach.
+  - **Why it matters:** CERT-In's 6-hour reporting rule starts at detection. Every minute of warning is compliance margin.
+  - **Solution:** an AI world model that forecasts when the attack will advance, and simulates what stops it.
+- **Centre: a pyramid** (their triangle, our content):
+  - Top: **CORE: Onset forecasting world model**
+  - Tier 2 (Primary): *Next-stage forecast* · *Kill-chain + ATT&CK/CAPEC* · *Response simulation*
+  - Tier 3 (Trust): *Calibrated risk* · *Attention: "why"* · *Hash-chained ledger*
+  - Base (Deployment): *Offline / air-gapped* · *0.89 MB CPU model* · *Metadata only (TLS 1.3 OK)* · *ONNX edge runtime*
+- **Right: risk → solution ladder** (red → green arrows):
+  - Breach found after the fact → **Forecast before the stage advances**
+  - 6-hour CERT-In clock → **Median 13.5 min head start**
+  - "What do I do now?" → **Simulated response, with risk before and after**
+  - Evidence tampering → **SHA-256 hash-chained alerts**
+- **Bottom-left badges:** `Video` · `Prototype` · `GitHub`, each with a QR code or link
+- **Hero number:** `13.5 min` in the top-right corner
+
+**Slide 3 — Technical Approach**
+- **Left: methodology cycle** (their 5-node circle): Capture flows → Build 30-flow window → Forecast onset + stage → Simulate responses → Hash-chain alert → back to Capture
+- **Centre top: pipeline strip** with icons: Tap/SPAN → nfstream → LSTM world model (4 heads) → Fusion with 14 rules → SOC dashboard
+- **Centre bottom: dashboard screenshot** (real Wednesday intrusion, risk curve rising)
+- **Right: "Technologies used" pill column:** Frontend: Streamlit + Plotly · ML: PyTorch + ONNX Runtime · Ingest: nfstream / tshark · Frameworks: MITRE ATT&CK + CAPEC · Integrity: SHA-256 hash chain · Data: CIC-IDS-2018 · DAPT 2020 · CTU-13
+- **Bottom-left badges:** `Report` · `GitHub`
+
+**Slide 4 — Feasibility**
+- **Left: 4 "we tried to break it" tiles** in a 2×2 grid, each with a ✓ and one number (0.64 · 0.70 / 94% · 0.49→0.37 · ±0.007)
+- **Right: a spec card** styled like a product label: 0.89 MB · 1.4 ms · 610/s · CPU · offline
+- **Bottom: challenge → strategy ladder**, the same red → green style as slide 2, with 4 rows
+
+**Slide 5 — Impact and Benefits**
+- **Left: their numbered 4-node circle** (IMPACTS / BENEFITS in the centre):
+  1. Minutes of warning, not post-mortems
+  2. Compliance margin under CERT-In
+  3. Sovereign: offline, in-India
+  4. Near-zero hardware cost
+- **Right: bar chart, real numbers only.** Two honest options:
+  - (a) **Lead time at 3 false-alarm budgets** (k30): 1% FPR → 26% of attacks warned, median 3.5 min · 5% FPR → 66%, median 13.5 min. Source: `lead_time_cic_v2_w30.json`.
+  - (b) **Transition-window F1, Netrikan vs copy-last-label** at 5 horizons: 0.38–0.46 vs 0.00. Source: `transition_f1.json`.
+- **Bottom-right: emotional image pair:** a dark SOC screen with a "breach" alert → a green "forecast: act now" dashboard. Caption: **"From post-mortem to pre-emption."**
+- **Roadmap strip** along the bottom edge, in small grey text
+
+**Photos to source** (royalty-free): a power substation, a railway control room, a SOC wall of screens, a network rack. They make it feel like national infrastructure, the way their traffic jam does.
+
+---
+
 ## 4. Demo script
 
 ### ⚠ Use real traffic, not the built-in synthetic scenarios
