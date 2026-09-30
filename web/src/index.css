@@ -1,19 +1,30 @@
 @import 'tailwindcss';
 
+/* NType82 (Nothing). Not bundled: this uses a locally installed copy, or files placed in web/public/fonts/. */
+@font-face {
+  font-family: 'NType82';
+  src: local('NType82'), local('NType82-Regular'), local('NType 82'),
+    url('/fonts/NType82-Regular.woff2') format('woff2'), url('/fonts/NType82-Regular.otf') format('opentype');
+  font-weight: 100 900;
+  font-display: swap;
+}
+
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
 /* Design tokens. Light is the base; dark is its own selected steps (OS setting or the toggle). */
 :root {
   color-scheme: light;
-  --page: #f6f6f3;
-  --surface: #fcfcfb;
-  --surface-2: #f1f0ec;
-  --surface-hover: #ecebe6;
-  --ink: #0b0b0b;
-  --ink-2: #52514e;
-  --muted: #7d7b75;
-  --grid: #e7e6e0;
-  --axis: #c3c2b7;
+  --page: #f3f4f7;
+  --surface: #ffffff;
+  --surface-2: #eceef2;
+  --surface-hover: #e7e9ee;
+  --ink: #0e1116;
+  --ink-2: #4b5160;
+  --muted: #767c8a;
+  --grid: #e3e6ec;
+  --axis: #c3c8d2;
+  /* Light mode type: NType82 when available (installed, or files in web/public/fonts), else Geist */
+  --app-font: 'NType82', 'Geist Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --border: rgba(11, 11, 11, 0.1);
   --border-strong: rgba(11, 11, 11, 0.18);
   --accent: #2a78d6;
@@ -35,7 +46,7 @@
   --up: #d03b3b; /* diverging: pushes risk up */
   --down: #2a78d6; /* diverging: pushes risk down */
 
-  --seq-0: #eeede8;
+  --seq-0: #e7e9ee;
   --seq-1: #cde2fb;
   --seq-2: #b7d3f6;
   --seq-3: #9ec5f4;
@@ -49,6 +60,7 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
     color-scheme: dark;
+    --app-font: 'Geist Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
     --page: #0d0d0d;
     --surface: #161615;
     --surface-2: #1f1f1d;
@@ -86,6 +98,7 @@
 
 :root[data-theme='dark'] {
   color-scheme: dark;
+  --app-font: 'Geist Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --page: #0d0d0d;
   --surface: #161615;
   --surface-2: #1f1f1d;
@@ -138,7 +151,7 @@
   --color-good: var(--good);
   --color-good-ink: var(--good-ink);
   --color-warning: var(--warning);
-  --font-sans: 'Geist Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-sans: var(--app-font);
   --font-mono: 'Geist Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace;
 }
 

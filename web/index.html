@@ -6,7 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Netrikan · Attack forecasting</title>
     <script>
-      try { const t = localStorage.getItem('netrikan-theme'); if (t) document.documentElement.dataset.theme = t } catch {}
+      // Dark by default; a saved choice wins ('system' follows the OS, so no data-theme is set).
+      (function () {
+        var t = 'dark'
+        try { t = localStorage.getItem('netrikan-theme') || 'dark' } catch (e) {}
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t
+        document.documentElement.dataset.themeChoice = t
+      })()
     </script>
   </head>
   <body>

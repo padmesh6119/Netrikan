@@ -1,5 +1,6 @@
 import clsx from 'clsx'
 import { ArrowCounterClockwise as Undo2, ArrowRight, Check, CheckCircle as CheckCircle2, Circle as CircleDot, Copy as ClipboardCopy, Crosshair, Eye, Lock, MagnifyingGlass as Search, ShieldCheck, ShieldWarning as ShieldAlert, Target, Wrench } from '@phosphor-icons/react'
+import { motion } from 'motion/react'
 import { useMemo, useState } from 'react'
 import { DriverBars } from '../components/charts/Bars'
 import { TimeChart, toBands } from '../components/charts/TimeChart'
@@ -189,8 +190,10 @@ export default function ResponsePage() {
               </div>
             </div>
             <ul className="max-h-[70vh] overflow-y-auto">
-              {filtered.map((i) => (
-                <QueueItem key={i.id} inc={i} status={statusOf(i.id)} selected={i.id === selId} showTruth={showTruth} onClick={() => set({ inc: i.id })} />
+              {filtered.map((i, n) => (
+                <motion.div key={i.id} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.35, delay: Math.min(n, 14) * 0.035, ease: [0.16, 1, 0.3, 1] }}>
+                  <QueueItem inc={i} status={statusOf(i.id)} selected={i.id === selId} showTruth={showTruth} onClick={() => set({ inc: i.id })} />
+                </motion.div>
               ))}
               {!filtered.length && <li className="p-6 text-center text-[13px] text-muted">No incidents match these filters.</li>}
             </ul>

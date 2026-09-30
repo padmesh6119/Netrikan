@@ -54,4 +54,7 @@ if os.path.isdir(DIST):
     @app.get("/{path:path}", include_in_schema=False)
     def spa(path: str):
         f = os.path.join(DIST, path)
+        if path.startswith("fonts/") and not os.path.isfile(f):
+            from fastapi import HTTPException
+            raise HTTPException(404)  # optional font files (see web/src/index.css): a real 404, not the SPA page
         return FileResponse(f if path and os.path.isfile(f) else f"{DIST}/index.html")
