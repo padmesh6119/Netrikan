@@ -1,1 +1,46 @@
-{"i": 5, "t": 1708819200000, "probs": [{"id": "T1595", "name": "Active Scanning", "p": 0.82}, {"id": "T1110", "name": "Brute Force", "p": 0.88}, {"id": "T1190", "name": "Exploit Public-Facing App", "p": 0.74}, {"id": "T1078", "name": "Valid Accounts", "p": 0.65}, {"id": "T1048", "name": "Exfil Over Alt. Protocol", "p": 0.45}], "explained": "High-confidence scanning followed by brute force patterns detected.", "drivers": [{"feature": "port_variety", "value": 0.94}, {"feature": "syn_ratio", "value": 0.87}, {"feature": "flow_rate", "value": 0.73}]}
+{
+  "i": 5,
+  "t": 1708819200000,
+  "probs": [
+    {
+      "id": "T1595",
+      "name": "Active Scanning",
+      "p": 0.82
+    },
+    {
+      "id": "T1110",
+      "name": "Brute Force",
+      "p": 0.88
+    },
+    {
+      "id": "T1190",
+      "name": "Exploit Public-Facing App",
+      "p": 0.74
+    },
+    {
+      "id": "T1078",
+      "name": "Valid Accounts",
+      "p": 0.65
+    },
+    {
+      "id": "T1048",
+      "name": "Exfil Over Alt. Protocol",
+      "p": 0.45
+    }
+  ],
+  "explained": "T1110",
+  "drivers": [
+    {
+      "feature": "port_variety",
+      "value": 0.94
+    },
+    {
+      "feature": "syn_ratio",
+      "value": 0.87
+    },
+    {
+      "feature": "flow_rate",
+      "value": 0.73
+    }
+  ]
+}
