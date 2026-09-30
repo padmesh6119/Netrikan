@@ -3,9 +3,8 @@ LGB := .venv/lib/python3.12/site-packages/lightgbm/lib/lib_lightgbm.dylib
 
 .PHONY: setup fix-lightgbm-macos audit test demo-train z24-train zero-shot web-install web-build api web demo infer
 setup:
-	/opt/homebrew/bin/python3.12 -m venv .venv
+	python3 -m venv .venv
 	.venv/bin/pip install -r requirements.txt
-	$(MAKE) fix-lightgbm-macos
 
 # macOS only: LightGBM looks for libomp in Homebrew paths; reuse the copy bundled with torch instead
 fix-lightgbm-macos:

@@ -60,7 +60,7 @@ def sh(cmd):
         return "n/a"
 
 
-def data_hash(path="data/dapt2020/csv"):
+def data_hash(path="data/dapt2020"):
     h = hashlib.sha256()
     for f in sorted(os.listdir(path)):
         if f.endswith(".csv"):

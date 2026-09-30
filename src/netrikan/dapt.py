@@ -99,7 +99,7 @@ def normalise(df: pd.DataFrame) -> pd.DataFrame:
     return df.sort_values("ts", kind="stable").reset_index(drop=True)
 
 
-def load_dapt_dir(path: str = "data/dapt2020/csv") -> tuple[pd.DataFrame, dict]:
+def load_dapt_dir(path: str = "data/dapt2020") -> tuple[pd.DataFrame, dict]:
     files = sorted(glob.glob(os.path.join(path, "*.csv")))
     header = None
     for f in files:
