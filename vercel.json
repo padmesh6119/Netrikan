@@ -1,0 +1,6 @@
+{
+  "outputDirectory": "web/dist",
+  "rewrites": [
+    { "source": "/api/:path*", "destination": "https://netrikan-hn92.onrender.com/api/:path*" }
+  ]
+}
