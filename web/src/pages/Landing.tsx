@@ -147,8 +147,8 @@ function Intro() {
 
 // ---------------------------------------------------------------- hero: a real forecast from a held-out day
 function LiveForecast() {
-  const meta = useApi<DaptMeta>('/api/dapt/meta')
-  const sc = useApi<DaptScores>('/api/dapt/scores', { source: HERO_DAY })
+  const meta = useApi<DaptMeta>('/demo-meta.json')
+  const sc = useApi<DaptScores>('/demo-scores.json')
   const d = useMemo(() => {
     if (!sc.data || !meta.data) return null
     const hi = sc.data.hosts.indexOf(HERO_HOST)
@@ -248,9 +248,9 @@ interface DM { pooled: Record<string, Record<string, number>>; stage: { accuracy
 interface ZM { forecast: { macro: Record<string, Record<string, number>> } }
 
 function Evidence() {
-  const dm = useApi<DM>('/api/dapt/metrics')
-  const zm = useApi<ZM>('/api/z24/metrics')
-  const zs = useApi<ZeroShot>('/api/zeroshot')
+  const dm = useApi<DM>('/demo-dapt-metrics.json')
+  const zm = useApi<ZM>('/demo-z24-metrics.json')
+  const zs = useApi<ZeroShot>('/demo-zeroshot.json')
   const lag = dm.data?.pooled.lag, prev = dm.data?.pooled.lr.prevalence
   const f = zm.data?.forecast.macro
   const mean = (k: 'iforest' | 'gbdt') => (zs.data ? zs.data.rows.reduce((a, r) => a + (r.auc[k] ?? 0), 0) / zs.data.rows.length : undefined)
@@ -325,9 +325,9 @@ function Evidence() {
 
 // ---------------------------------------------------------------- response: a real incident, live
 function LiveIncident() {
-  const list = useApi<IncidentList>('/api/response/incidents', { dataset: 'dapt', source: '2019-07-17', model: 'lag', thr: 0.48 })
+  const list = useApi<IncidentList>('/demo-incidents.json')
   const top = list.data?.incidents.reduce((a, b) => (b.score > a.score ? b : a), list.data.incidents[0])
-  const d = useApi<IncidentDetail>('/api/response/incident', { dataset: 'dapt', source: '2019-07-17', model: 'lag', thr: 0.48, id: top?.id }, !!top)
+  const d = useApi<IncidentDetail>('/demo-incident-detail.json', {}, !!top)
   if (!d.data) return <div className="skeleton h-[360px] rounded-2xl" />
   const i = d.data.incident
   const items = d.data.playbook.flatMap((g) => g.items.map((c) => ({ ...c, hyp: g.confidence === 'low' })))
