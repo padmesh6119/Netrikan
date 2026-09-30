@@ -1,0 +1,1 @@
+import{$ as e,X as t,et as n}from"./index-BPsFe6nn.js";var r=n(e(),1);function i(){let[e,n]=t();return{get:(0,r.useCallback)((t,n=``)=>e.get(t)??n,[e]),set:(0,r.useCallback)(e=>n(t=>{let n=new URLSearchParams(t);for(let[t,r]of Object.entries(e))r==null||r===``?n.delete(t):n.set(t,String(r));return n},{replace:!0}),[n])}}export{i as t};

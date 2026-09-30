@@ -66,9 +66,9 @@ export default function DaptPage() {
         <Field label="Traffic source" hint={isUpload ? 'Scored by the model trained on all five days (in-sample for DAPT files).' : 'Scored by a model trained on the other four days.'}>
           <div className="flex flex-wrap items-center gap-2">
             <Select value={source} onChange={(v) => set({ src: v, host: null, i: null })}
-              options={[...m.days.map((d) => ({ value: d, label: `${weekday(d)} · ${m.onsets_by_day[d]} attack onsets` })), ...m.uploads.map((u) => ({ value: u.source, label: `Upload · ${u.name}` }))]} />
-            <button onClick={() => fileRef.current?.click()} className="btn btn-quiet">
-              <Upload className="size-3.5" /> {uploading ? 'Scoring…' : 'Upload CSV'}
+              options={[...m.days.map((d) => ({ value: d, label: m.labels?.[d] ?? `${weekday(d)} · ${m.onsets_by_day[d]} attack onsets` })), ...m.uploads.map((u) => ({ value: u.source, label: `Upload · ${u.name}` }))]} />
+            <button disabled className="btn btn-quiet opacity-40 cursor-not-allowed" title="Uploads disabled in demo mode">
+              <Upload className="size-3.5" /> Upload CSV
             </button>
             <input ref={fileRef} type="file" accept=".csv,.gz" className="hidden" onChange={(e) => onFile(e.target.files?.[0])} />
           </div>

@@ -1,1 +1,13 @@
-{"days":["2019-07-15","2019-07-16","2019-07-17","2019-07-18","2019-07-19"],"onsets_by_day":{"2019-07-15":0,"2019-07-16":15,"2019-07-17":35,"2019-07-18":51,"2019-07-19":8},"K":5,"L":10,"bucket_s":60,"primary":"lag","stages":["Benign","Reconnaissance","Initial Access","Lateral Movement","Exfiltration"],"thresholds":{"lag":0.48025950194188793,"world":0.5039162201428433},"uploads":[]}
+{
+  "days": ["2019-07-16", "2019-07-17", "2019-07-18"],
+  "labels": {
+    "2019-07-16": "Foothold · Jul 16",
+    "2019-07-17": "Lateral Movement · Jul 17",
+    "2019-07-18": "Exfiltration · Jul 18"
+  },
+  "onsets_by_day": {"2019-07-15": 0, "2019-07-16": 15, "2019-07-17": 35, "2019-07-18": 51, "2019-07-19": 8},
+  "K": 5, "L": 10, "bucket_s": 60, "primary": "lag",
+  "stages": ["Benign", "Reconnaissance", "Initial Access", "Lateral Movement", "Exfiltration"],
+  "thresholds": {"lag": 0.48025950194188793, "world": 0.5039162201428433},
+  "uploads": []
+}

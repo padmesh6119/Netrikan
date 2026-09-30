@@ -29,12 +29,43 @@ export function qs(params: Record<string, string | number | boolean | undefined 
   return p.toString()
 }
 
+const DEMO_MAP: Record<string, string> = {
+  '/api/dapt/meta': '/demo-meta.json',
+  '/api/dapt/metrics': '/demo-dapt-metrics.json',
+  '/api/z24/metrics': '/demo-z24-metrics.json',
+  '/api/z24/meta': '/demo-z24-meta.json',
+  '/api/zeroshot': '/demo-zeroshot.json',
+  '/api/response/incidents': '/demo-incidents.json',
+  '/api/response/incident': '/demo-incident-detail.json',
+}
+
+function demoUrl(url: string): string | null {
+  if (DEMO_MAP[url]) return DEMO_MAP[url]
+  const q = url.indexOf('?')
+  const path = q >= 0 ? url.slice(0, q) : url
+  if (DEMO_MAP[path]) return DEMO_MAP[path]
+  const p = q >= 0 ? new URLSearchParams(url.slice(q + 1)) : new URLSearchParams()
+  const src = p.get('source')
+  if (path === '/api/dapt/scores') {
+    if (src === '2019-07-16') return '/demo-scores.json'
+    if (src === '2019-07-17') return '/demo-scores-0717.json'
+    if (src === '2019-07-18') return '/demo-scores-0718.json'
+  }
+  if (path === '/api/dapt/summary') {
+    if (src === '2019-07-16') return '/demo-summary-0716.json'
+    if (src === '2019-07-17') return '/demo-summary-0717.json'
+    if (src === '2019-07-18') return '/demo-summary-0718.json'
+  }
+  if (path === '/api/dapt/explain') return '/demo-explain.json'
+  return null
+}
+
 /** GET a JSON endpoint; `enabled` false while a dependency (host, row) is not chosen yet. */
 export function useApi<T>(path: string, params: Record<string, string | number | boolean | undefined | null> = {}, enabled = true) {
   const url = `${path}${Object.keys(params).length ? `?${qs(params)}` : ''}`
   return useQuery<T, ApiError>({
     queryKey: [url],
-    queryFn: () => request<T>(url),
+    queryFn: () => request<T>(demoUrl(url) ?? url),
     enabled,
     placeholderData: keepPreviousData,
     staleTime: Infinity,
@@ -52,6 +83,7 @@ export async function uploadFlows(file: File) {
 export type DaptModel = 'lag' | 'world'
 export interface DaptMeta {
   days: string[]
+  labels?: Record<string, string>
   onsets_by_day: Record<string, number>
   K: number
   L: number
