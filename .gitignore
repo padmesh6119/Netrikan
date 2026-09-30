@@ -1,6 +1,6 @@
 # ---- large datasets: download separately, see README ----
 data/cic-ids2018/
-data/dapt2020/
+# data/dapt2020/ — tracked so the demo app has data on Render
 data/processed
 /storage/
 *.7CcE4fEA
