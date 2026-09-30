@@ -104,14 +104,17 @@ export function SiteLayout({ children }: { children: ReactNode }) {
   )
 }
 
+// Grouped like the Dashboard home: Home | Forecast | Respond | Evidence
 const SECTIONS = [
-  { to: '/dashboard', label: 'Home', end: true },
-  { to: '/dashboard/dapt', label: 'DAPT2020' },
-  { to: '/dashboard/zeek', label: 'ZeekData24' },
-  { to: '/dashboard/response', label: 'Response' },
-  { to: '/dashboard/labs/cic17', label: 'CIC-IDS2017' },
-  { to: '/dashboard/labs/ctu13', label: 'CTU-13' },
-  { to: '/dashboard/zero-shot', label: 'Zero-shot' },
+  [{ to: '/dashboard', label: 'Home', end: true }],
+  [
+    { to: '/dashboard/dapt', label: 'DAPT2020' },
+    { to: '/dashboard/zeek', label: 'ZeekData24' },
+    { to: '/dashboard/labs/cic17', label: 'CIC-IDS2017' },
+    { to: '/dashboard/labs/ctu13', label: 'CTU-13' },
+  ],
+  [{ to: '/dashboard/response', label: 'Response' }],
+  [{ to: '/dashboard/zero-shot', label: 'Zero-shot' }],
 ]
 
 /** The Dashboard tab: a dense analyst app with its own section bar. */
@@ -119,21 +122,26 @@ export function DashboardLayout() {
   return (
     <>
       <div className="sticky top-15 z-20 border-b border-line bg-page/85 backdrop-blur-md">
-        <nav aria-label="Dashboard sections" className="mx-auto flex max-w-[1400px] gap-1 overflow-x-auto px-4 [scrollbar-width:none] sm:px-6 lg:px-10">
-          {SECTIONS.map((s) => (
-            <NavLink
-              key={s.to}
-              to={s.to}
-              end={s.end}
-              className={({ isActive }) =>
-                clsx(
-                  '-mb-px shrink-0 border-b-2 px-3 py-2.5 text-[13px] font-medium transition-colors duration-200',
-                  isActive ? 'border-accent text-ink' : 'border-transparent text-muted hover:text-ink',
-                )
-              }
-            >
-              {s.label}
-            </NavLink>
+        <nav aria-label="Dashboard sections" className="mx-auto flex max-w-[1400px] items-center overflow-x-auto px-4 [scrollbar-width:none] sm:px-6 lg:px-10">
+          {SECTIONS.map((group, g) => (
+            <div key={g} className="flex shrink-0 items-center gap-1">
+              {g > 0 && <span aria-hidden className="mx-2 h-4 w-px bg-line-strong" />}
+              {group.map((s) => (
+                <NavLink
+                  key={s.to}
+                  to={s.to}
+                  end={'end' in s ? s.end : false}
+                  className={({ isActive }) =>
+                    clsx(
+                      '-mb-px shrink-0 border-b-2 px-3 py-2.5 text-[13px] font-medium transition-colors duration-200',
+                      isActive ? 'border-accent text-ink' : 'border-transparent text-muted hover:text-ink',
+                    )
+                  }
+                >
+                  {s.label}
+                </NavLink>
+              ))}
+            </div>
           ))}
         </nav>
       </div>
