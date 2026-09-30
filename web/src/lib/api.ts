@@ -37,6 +37,8 @@ const DEMO_MAP: Record<string, string> = {
   '/api/zeroshot': '/demo-zeroshot.json',
   '/api/response/incidents': '/demo-incidents.json',
   '/api/response/incident': '/demo-incident-detail.json',
+  '/api/corpus/cic17/meta': '/demo-corpus-cic17-meta.json',
+  '/api/corpus/ctu13/meta': '/demo-corpus-ctu13-meta.json',
 }
 
 function demoUrl(url: string): string | null {
@@ -57,6 +59,15 @@ function demoUrl(url: string): string | null {
     if (src === '2019-07-18') return '/demo-summary-0718.json'
   }
   if (path === '/api/dapt/explain') return '/demo-explain.json'
+  if (path === '/api/corpus/cic17') return '/demo-corpus-cic17-data.json'
+  if (path === '/api/corpus/ctu13') return '/demo-corpus-ctu13-data.json'
+  if (path === '/api/corpus/cic17/host') return '/demo-corpus-host.json'
+  if (path === '/api/corpus/ctu13/host') return '/demo-corpus-host.json'
+  if (path === '/api/z24/week') return '/demo-z24-week.json'
+  if (path === '/api/z24/structure') return '/demo-z24-structure.json'
+  if (path === '/api/z24/recognize/host') return '/demo-z24-recog-host.json'
+  if (path === '/api/z24/recognize/explain') return '/demo-z24-recog-explain.json'
+  if (path === '/api/z24/forecast') return '/demo-z24-forecast.json'
   return null
 }
 

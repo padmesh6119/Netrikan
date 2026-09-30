@@ -1,0 +1,1 @@
+{"name": "cic17", "label": "CIC-IDS 2017", "trained_on": ["dapt2020"], "slices": {"all": "All traffic", "web": "Web attacks", "dos": "DoS attacks", "brute": "Brute force"}, "detectors": {"iforest": "Isolation Forest", "surprise": "Surprise encoder", "gbdt": "Gradient Boosted DT", "volume": "Volume anomaly", "fanout": "Fan-out anomaly"}, "budgets": [0.5, 1.0, 2.0]}

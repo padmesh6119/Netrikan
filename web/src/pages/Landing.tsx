@@ -126,9 +126,9 @@ function Intro() {
   return (
     <>
       {geo && (
-        <motion.div aria-hidden className="pointer-events-none fixed top-0 left-0 z-40" style={{ width: geo.W, height: geo.H, x, y, scale, transformOrigin: '0 0' }}
+        <motion.div aria-hidden className="pointer-events-none fixed top-0 left-0 z-40" style={{ width: geo.W, height: geo.H, x, y, scale, transformOrigin: '0 0', ...(theme === 'light' && { filter: 'grayscale(1) invert(1) brightness(0.4)' }) }}
           initial={{ opacity: introDone ? 1 : 0 }} animate={{ opacity: 1 }} transition={{ duration: 1.2, ease: EASE }}>
-          <EvilEye className="h-full w-full" {...EYE_PROPS} lightMode={theme === 'light'} />
+          <EvilEye className="h-full w-full" {...EYE_PROPS} lightMode={false} />
         </motion.div>
       )}
       {/* The intro screen collapses as the eye docks, so the hero rises into place with no empty gap. */}
