@@ -85,7 +85,7 @@ function TopBar() {
           }}
           className="block h-15 w-36 overflow-hidden rounded-md focus-visible:outline-2 focus-visible:outline-accent"
         >
-          {!intro && <EvilEye className="h-full w-full" {...EYE_PROPS} backgroundColor={HEADER_BG[shown]} lightMode={shown === 'light'} />}
+          {!intro && <EvilEye className="h-full w-full" {...EYE_PROPS} backgroundColor={HEADER_BG[shown]} lightMode={shown === 'light'} {...(shown === 'light' && { eyeColor: '#111111', intensity: 2.8, glowIntensity: 0.5 })} />}
         </Link>
         <div className="flex items-center justify-end gap-3">
           <label className="hidden items-center gap-2 text-[12.5px] text-muted md:flex">
