@@ -22,6 +22,8 @@ models/*
 !models/BEST.txt
 # reliability diagrams are a deliverable, and small
 !models/reliability*.png
+# demo GBDT models shipped with the app
+!models/demo/
 
 # ---- logs and scratch ----
 *.log
