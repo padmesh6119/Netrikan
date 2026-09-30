@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Netrikan · Attack forecasting</title>
+    <script>
+      // Dark by default; a saved choice wins ('system' follows the OS, so no data-theme is set).
+      (function () {
+        var t = 'dark'
+        try { t = localStorage.getItem('netrikan-theme') || 'dark' } catch (e) {}
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t
+        document.documentElement.dataset.themeChoice = t
+      })()
+    </script>
+    <script type="module" crossorigin src="/assets/index-Tn2afqbp.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-B1yZyDtI.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
