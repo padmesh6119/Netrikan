@@ -12,3 +12,5 @@ results/tmp/
 models/
 CSECICIDS2018_improved*
 *.zip
+web/node_modules/
+web/dist/

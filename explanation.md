@@ -16,7 +16,7 @@ This is a study guide for presenting Netrikan. It covers what the product does, 
    - the probability of an attack starting in the next 5 minutes;
    - the likely ATT&CK stage or technique;
    - the features driving that prediction (TreeSHAP).
-5. Shows it all in a Streamlit dashboard with a risk timeline, explanations, a network heatmap and a benchmark page.
+5. Shows it all in a React console (FastAPI backend) with a network heatmap, click-to-explain risk timelines, a benchmark page and an incident-response dashboard that maps each alert to MITRE D3FEND countermeasures.
 
 **What makes it different:** every claim is tested against a simpler baseline and a "shuffle control". Results that failed are reported alongside the ones that worked. Most competitors only report wins.
 
@@ -128,7 +128,7 @@ model ladder
 metrics + registry
       │  src/netrikan/metrics.py     (PR/ROC-AUC, recall at alarm budget, lead time, ECE/Brier, bootstrap CIs)
       ▼
-Streamlit app (app/) + CLI (scripts/infer.py)
+FastAPI (api/) + React console (web/) + CLI (scripts/infer.py)
 ```
 
 ### 5.1 State vector (features.py)
@@ -297,10 +297,10 @@ ROC-AUC per unseen attack family (0.5 = chance):
 
 ## 8. The app, page by page (use this for the demo video)
 
-Start with `make demo`, then open http://localhost:8501. The left sidebar is the **dataset chooser**.
+Start with `make demo` (after `make web-install` once), then open http://localhost:8000. The top bar has two tabs: **Overview** (a landing page built from live results) and **Dashboard** (the analyst views, with a section bar: Home, DAPT2020, ZeekData24, Response, CIC-IDS2017, CTU-13, Zero-shot). Every control is in the URL, so any view can be bookmarked or shared.
 
-### Page 1: DAPT2020 · pentest campaign (default)
-The sidebar has:
+### Page 1: DAPT2020 · host forecasting
+The toolbar has:
 - a capture day, scored by the model trained on the *other* days;
 - an option to upload your own CSV;
 - a risk model choice (LightGBM + lags, or world model);
@@ -309,26 +309,33 @@ The sidebar has:
 The headline row shows flows, hosts, alert minutes, false alarms per host-hour, attack onsets, how many were warned early, and the median lead time.
 
 Tabs:
-1. **Risk timeline:**
-   - a per-host line of P(attack in next 5 min);
-   - the dashed threshold, red alert dots, and shaded true-attack bands coloured by stage;
-   - a host ranking table.
-2. **Explain a prediction:**
-   - pick a high-risk minute to see the probability, what actually happened next, and the predicted stage bar chart;
-   - a **TreeSHAP** bar chart of driving features;
+1. **Network:**
+   - a heatmap of risk for every host and minute, with true attack minutes as a stage-coloured strip under each row;
+   - a host ranking table and the list of attack onsets with warned/missed. Clicking a host or onset opens it in Investigate.
+2. **Investigate a host:**
+   - the per-host line of P(attack in next 5 min), with threshold, alert dots and true-attack bands; **click any minute** to explain it;
+   - the probability, what actually happened next, and the predicted stage;
+   - a **TreeSHAP** chart of driving features;
    - the **world-model forward simulation** (simulated vs actually observed, 5 minutes ahead);
    - the raw flows around that minute.
-3. **Network heatmap:** risk for every host over time, above the true attack minutes.
-4. **Benchmark & evidence:**
+3. **Benchmark & evidence:**
    - the leave-one-day-out table including logistic regression, F1/P/R/FPR and the shuffle rows;
    - per-day ROC-AUC, the within-day secondary table and the stage table;
    - a written "what this does and doesn't support".
-5. **How it works:** the pipeline and stage mapping.
+4. **How it works:** the pipeline and stage mapping.
 
-**Best demo moment:** pick **2019-07-16**, host **192.168.3.29**. Show risk rising before the reconnaissance bands, then open "Explain a prediction" on the top minute.
+**Best demo moment:** pick **2019-07-16**, host **192.168.3.29**. Show risk rising before the reconnaissance bands, then click the top minute in Investigate.
 
-### Page 2: UWF-ZeekData24 · scripted campaign
-The sidebar has a week (attack or benign), the recognizer threshold, the forecast model and the alert budget.
+### Incident response (Respond)
+Pick DAPT2020 or ZeekData24 telemetry. Every run of alert minutes becomes an incident in a triage **queue** (priority P1-P3, status New / Investigating / Contained / Resolved, saved in the browser). Selecting one shows:
+- the MITRE ATT&CK tactic/technique on the left and the **MITRE D3FEND countermeasures** on the right, as a checklist, with actions filled in from this host's peers and ports;
+- a stage-agnostic first response, plus the stage-specific playbook (marked "hypothesis" on DAPT, where the stage model is at chance);
+- the risk around the incident, TreeSHAP drivers, top peers and ports, and example iptables rules (templates, never applied);
+- **Copy report** puts a Markdown incident report on the clipboard.
+"Show ground truth" reveals whether an attack actually followed each incident.
+
+### Page 2: UWF-ZeekData24 · attacker campaigns
+The toolbar has a week (attack or benign), the recognizer threshold, the forecast model and the alert budget.
 1. **Recognize techniques:**
    - a per-technique table (flagged vs true minutes, recall, precision);
    - a timeline of recognized vs true technique minutes for one host;
@@ -348,7 +355,7 @@ The sidebar has a week (attack or benign), the recognizer threshold, the forecas
 
 ### Pages 3 and 4: CIC-IDS2017 and CTU-13
 Both are **zero-shot**: they are scored by detectors that never saw them.
-- **Sidebar:**
+- **Toolbar:**
   - the CIC slice (Friday scan + DDoS / Wednesday Heartbleed / both);
   - the detector (IsolationForest, GRU surprise, supervised, volume, fan-out);
   - the alert budget.
@@ -356,7 +363,7 @@ Both are **zero-shot**: they are scored by detectors that never saw them.
 - **Demo moment:** on CIC Friday, IsolationForest catches the DDoS minutes. Then switch to the supervised model and watch recall drop. That shows why we use anomaly scoring for unseen attacks.
 
 ### Page 5: Zero-shot transfer across labs
-The mean-ROC-AUC headline for each detector, a dot chart for all 13 unseen families, the full table and the conclusions.
+The mean-ROC-AUC headline for each detector, a table of all 13 unseen families with inline score bars (0.5 tick = chance) and the conclusions.
 
 **Also available:** a CLI, `make infer CSV=file.csv`, which writes per-host-minute risk, stage and the top 3 drivers.
 
@@ -370,7 +377,8 @@ make test         # 15 leakage/correctness tests
 make demo-train   # DAPT2020 models (~2 min)
 make z24-train    # ZeekData24 models (~8 min)
 make zero-shot    # cross-lab experiment (~2 min)
-make demo         # the app, fully offline
+make web-install  # once, needs Node 20+
+make demo         # the console + API on http://localhost:8000, fully offline
 make audit        # regenerate the data audit numbers
 ```
 Raw data lives in `data/` and is not in git.
@@ -471,11 +479,13 @@ Yes. No network calls; everything loads from local files.
 | `src/netrikan/campaign.py` | ZeekData24 recognizer, forecaster ladder, GRU world model |
 | `src/netrikan/surprise.py` | GRU next-minute surprise detector |
 | `src/netrikan/metrics.py` | All metrics, alarm budgets, lead time, bootstrap |
-| `src/netrikan/infer.py` | Inference helpers shared by the app and CLI |
+| `src/netrikan/infer.py` | Inference helpers shared by the API and CLI |
 | `scripts/train_demo.py`, `train_z24.py`, `zero_shot.py` | Training + evaluation runs |
 | `scripts/infer.py` | CLI scoring |
-| `app/demo_app.py` | App entry point with dataset chooser |
-| `app/views/*.py`, `app/newdata.py` | The five app pages |
+| `api/main.py`, `api/dapt.py`, `api/z24.py`, `api/corpus.py` | FastAPI endpoints over the trained models |
+| `api/response.py` | Incidents, ATT&CK → D3FEND playbook, containment templates |
+| `web/src/pages/*.tsx` | The console pages (React + TypeScript) |
+| `web/src/components/charts/*.tsx` | SVG charts: timeline, heatmap, SHAP bars, rollout, histograms |
 | `results/registry.csv` | Every experiment's hypothesis, prediction, outcome |
 | `results/*/metrics.json` | All reported numbers |
 | `tests/` | 15 leakage and correctness tests |

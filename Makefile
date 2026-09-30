@@ -1,7 +1,7 @@
 PY := .venv/bin/python
 LGB := .venv/lib/python3.12/site-packages/lightgbm/lib/lib_lightgbm.dylib
 
-.PHONY: setup fix-lightgbm-macos audit test demo-train z24-train zero-shot demo infer
+.PHONY: setup fix-lightgbm-macos audit test demo-train z24-train zero-shot web-install web-build api web demo infer
 setup:
 	/opt/homebrew/bin/python3.12 -m venv .venv
 	.venv/bin/pip install -r requirements.txt
@@ -31,8 +31,23 @@ z24-train:
 zero-shot:
 	$(PY) scripts/zero_shot.py
 
-demo:
-	.venv/bin/streamlit run app/demo_app.py
+# React console (web/) + FastAPI (api/). Needs Node 20+ once, for the build; runtime is fully offline.
+web-install:
+	cd web && npm ci
+
+web-build:
+	cd web && npm run build
+
+# Development: run `make api` and `make web` in two terminals, open http://localhost:5173
+api:
+	.venv/bin/uvicorn api.main:app --reload --port 8000
+
+web:
+	cd web && npm run dev
+
+# Built console + API on one port: http://localhost:8000
+demo: web-build
+	.venv/bin/uvicorn api.main:app --port 8000
 
 # usage: make infer CSV=path/to/flows.csv
 infer:
