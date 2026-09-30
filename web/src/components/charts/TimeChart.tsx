@@ -1,6 +1,7 @@
 import { bisector } from 'd3-array'
 import { scaleLinear, scaleUtc } from 'd3-scale'
 import { line as d3line } from 'd3-shape'
+import { motion } from 'motion/react'
 import { useMemo, useState, type ReactNode } from 'react'
 import { hhmm, stamp, tick } from '../../lib/format'
 import { AXIS_TEXT, Tip, TipRow, useWidth } from './core'
@@ -73,6 +74,7 @@ export function TimeChart({ series, bands = [], rules = [], points = [], thresho
     )
   }, [series, x, y])
 
+  const drawKey = base ? `${base.t[0]}-${base.t.length}-${base.v[0]}-${base.v[base.v.length - 1]}` : ''
   if (!base || !base.t.length) return <div ref={ref} style={{ height }} />
   const xt = x.ticks(Math.max(2, Math.floor(iw / 110)))
   const fmt = tick
@@ -91,9 +93,11 @@ export function TimeChart({ series, bands = [], rules = [], points = [], thresho
       {width > 0 && (
         <svg width={width} height={height} className="block overflow-visible" role="img" aria-label={yLabel}>
           <g transform={`translate(${M.left},${M.top})`}>
-            {bands.map((b, k) => (
-              <rect key={k} x={x(b.start)} y={0} width={Math.max(1.5, x(b.end) - x(b.start))} height={ih} style={{ fill: b.color }} opacity={0.3} />
-            ))}
+            <motion.g key={'bands' + drawKey} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
+              {bands.map((b, k) => (
+                <rect key={k} x={x(b.start)} y={0} width={Math.max(1.5, x(b.end) - x(b.start))} height={ih} style={{ fill: b.color }} opacity={0.3} />
+              ))}
+            </motion.g>
             {yt.map((v) => (
               <g key={v} transform={`translate(0,${y(v)})`}>
                 <line x2={iw} style={{ stroke: v === 0 ? 'var(--axis)' : 'var(--grid)' }} />
@@ -110,12 +114,20 @@ export function TimeChart({ series, bands = [], rules = [], points = [], thresho
             {rules.map((r, k) => (
               <line key={k} x1={x(r.t + 30_000)} x2={x(r.t + 30_000)} y1={0} y2={ih} style={{ stroke: r.color }} strokeWidth={1.25} opacity={0.75} />
             ))}
-            {series.map((s, k) => (
-              <path key={s.id} d={paths[k]} fill="none" style={{ stroke: s.color }} strokeWidth={k === 0 ? 2 : 1.5} strokeDasharray={s.dashed ? '4 3' : undefined} strokeLinejoin="round" strokeLinecap="round" />
-            ))}
-            {points.map((p, k) => (
-              <circle key={k} cx={x(p.t + 30_000)} cy={y(p.v)} r={4} style={{ fill: p.color, stroke: 'var(--surface)' }} strokeWidth={2} />
-            ))}
+            {series.map((s, k) =>
+              s.dashed ? (
+                <motion.path key={s.id + drawKey} d={paths[k]} fill="none" style={{ stroke: s.color }} strokeWidth={1.5} strokeDasharray="4 3" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }} />
+              ) : (
+                // Lines draw themselves in left to right whenever the data changes (new host, day or model).
+                <motion.path key={s.id + drawKey} d={paths[k]} fill="none" style={{ stroke: s.color }} strokeWidth={k === 0 ? 2 : 1.5} strokeLinejoin="round" strokeLinecap="round"
+                  initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }} />
+              ),
+            )}
+            <motion.g key={'pts' + drawKey} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4, delay: 0.7 }}>
+              {points.map((p, k) => (
+                <circle key={k} cx={x(p.t + 30_000)} cy={y(p.v)} r={4} style={{ fill: p.color, stroke: 'var(--surface)' }} strokeWidth={2} />
+              ))}
+            </motion.g>
             {threshold && (
               <g transform={`translate(0,${y(threshold.v)})`}>
                 <line x2={iw} style={{ stroke: 'var(--ink-2)' }} strokeDasharray="5 4" strokeWidth={1} />

@@ -1,12 +1,15 @@
 import { ArrowRight, Brain, ChartLineUp, Crosshair, Graph, ListMagnifyingGlass, Waveform } from '@phosphor-icons/react'
-import { motion, useReducedMotion } from 'motion/react'
-import { useMemo, type ReactNode } from 'react'
+import { animate, motion, useMotionValue, useReducedMotion } from 'motion/react'
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
+import { EYE_ASPECT, EYE_PROPS, REPLAY_INTRO } from '../components/brand'
 import { TimeChart, toBands } from '../components/charts/TimeChart'
+import EvilEye from '../components/EvilEye'
 import { Legend } from '../components/ui'
 import { useApi, type DaptMeta, type DaptScores, type IncidentDetail, type IncidentList, type ZeroShot } from '../lib/api'
 import { STAGE_COLOR } from '../lib/colors'
 import { num, pct } from '../lib/format'
+import { useResolvedTheme } from '../lib/theme'
 
 const EASE = [0.16, 1, 0.3, 1] as const
 const HERO_HOST = '192.168.3.29'
@@ -24,6 +27,123 @@ function Reveal({ children, delay = 0, className }: { children: ReactNode; delay
 }
 
 const wrap = 'mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-10'
+
+// ---------------------------------------------------------------- intro: the eye opens large, then springs into the header
+// Plays once per page load ("boot"). The first scroll, key, swipe or click docks the eye with a spring and collapses the
+// intro screen so the hero rises into view. After that the eye stays docked, also when scrolling back up.
+let introDone = false
+
+interface Geo { W: number; H: number; sx: number; sy: number; ex: number; ey: number; es: number }
+
+function measure(): Geo {
+  const vw = window.innerWidth, vh = window.innerHeight
+  const W = Math.min(vw * 0.92, 920)
+  const H = W / EYE_ASPECT
+  const slot = document.getElementById('eye-slot')?.getBoundingClientRect()
+  return {
+    W, H,
+    sx: (vw - W) / 2, sy: vh * 0.42 - H / 2, // intro: centred, slightly above the middle
+    ex: slot?.left ?? (vw - 144) / 2, ey: slot?.top ?? 0, es: (slot?.width ?? 144) / W, // docked: exactly on the header slot
+  }
+}
+
+const SPRING = { type: 'spring', stiffness: 140, damping: 22, mass: 1 } as const
+
+function Intro() {
+  const theme = useResolvedTheme()
+  const reduce = useReducedMotion()
+  const [docked, setDocked] = useState(introDone)
+  const [geo, setGeo] = useState<Geo | null>(null)
+  const x = useMotionValue(0), y = useMotionValue(0), scale = useMotionValue(1)
+  const mounted = useRef(false)
+
+  // Place the eye: at the intro position, or on the header slot once docked (resize keeps it there).
+  useEffect(() => {
+    const place = (animateIt: boolean) => {
+      const g = measure()
+      setGeo(g)
+      const to = docked ? { x: g.ex, y: g.ey, scale: g.es } : { x: g.sx, y: g.sy, scale: 1 }
+      if (animateIt && !reduce) {
+        animate(x, to.x, SPRING)
+        animate(y, to.y, SPRING)
+        animate(scale, to.scale, SPRING)
+      } else {
+        x.set(to.x)
+        y.set(to.y)
+        scale.set(to.scale)
+      }
+    }
+    place(mounted.current)
+    mounted.current = true
+    const onResize = () => place(false)
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [docked, reduce, x, y, scale])
+
+  // Clicking the header eye on this page replays the intro: back to the top, the eye springs down to the centre.
+  useEffect(() => {
+    const replay = () => {
+      introDone = false
+      window.scrollTo({ top: 0, behavior: 'instant' })
+      setDocked(false)
+    }
+    window.addEventListener(REPLAY_INTRO, replay)
+    return () => window.removeEventListener(REPLAY_INTRO, replay)
+  }, [])
+
+  // While the intro shows, the page doesn't scroll: the first intent to move on docks the eye instead.
+  useEffect(() => {
+    if (docked) return
+    const root = document.documentElement
+    window.scrollTo(0, 0)
+    root.style.overflow = 'hidden'
+    const dock = () => {
+      introDone = true
+      setDocked(true)
+    }
+    const onWheel = (e: WheelEvent) => e.deltaY > 4 && dock()
+    let startY = 0
+    const onTouchStart = (e: TouchEvent) => { startY = e.touches[0].clientY }
+    const onTouchMove = (e: TouchEvent) => startY - e.touches[0].clientY > 12 && dock()
+    const onKey = (e: KeyboardEvent) => ['ArrowDown', 'PageDown', ' ', 'End', 'Enter'].includes(e.key) && dock()
+    // Any scroll that still gets through (scrollbar drag, programmatic scroll, anchor jump) also docks.
+    const onScroll = () => window.scrollY > 2 && dock()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('wheel', onWheel, { passive: true })
+    window.addEventListener('touchstart', onTouchStart, { passive: true })
+    window.addEventListener('touchmove', onTouchMove, { passive: true })
+    window.addEventListener('keydown', onKey)
+    return () => {
+      root.style.overflow = ''
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('wheel', onWheel)
+      window.removeEventListener('touchstart', onTouchStart)
+      window.removeEventListener('touchmove', onTouchMove)
+      window.removeEventListener('keydown', onKey)
+    }
+  }, [docked])
+
+  return (
+    <>
+      {geo && (
+        <motion.div aria-hidden className="pointer-events-none fixed top-0 left-0 z-40" style={{ width: geo.W, height: geo.H, x, y, scale, transformOrigin: '0 0' }}
+          initial={{ opacity: introDone ? 1 : 0 }} animate={{ opacity: 1 }} transition={{ duration: 1.2, ease: EASE }}>
+          <EvilEye className="h-full w-full" {...EYE_PROPS} lightMode={theme === 'light'} />
+        </motion.div>
+      )}
+      {/* The intro screen collapses as the eye docks, so the hero rises into place with no empty gap. */}
+      <motion.section aria-label="Netrikan" className="relative overflow-hidden" initial={false}
+        animate={{ height: docked ? 0 : '100dvh' }} transition={reduce ? { duration: 0 } : { duration: 0.75, ease: EASE }}
+        onClick={() => { introDone = true; setDocked(true) }}>
+        <motion.div animate={{ opacity: docked ? 0 : 1, y: docked ? -24 : 0 }} transition={{ duration: 0.35 }}
+          className="absolute inset-x-0 top-[calc(42dvh+min(92vw,920px)/4.8+20px)] px-4 text-center">
+          <p className="text-[34px] font-semibold tracking-[-0.03em] sm:text-[44px]">Netrikan</p>
+          <p className="mt-2 text-[15px] text-ink-2">Network attack forecasting, offline.</p>
+        </motion.div>
+      </motion.section>
+    </>
+  )
+}
 
 // ---------------------------------------------------------------- hero: a real forecast from a held-out day
 function LiveForecast() {
@@ -63,7 +183,7 @@ function LiveForecast() {
 
 function Hero() {
   const reduce = useReducedMotion()
-  const item = (i: number) => ({ initial: reduce ? false : { opacity: 0, y: 16 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.7, delay: 0.08 * i, ease: EASE } })
+  const item = (i: number) => ({ initial: reduce ? false : { opacity: 0, y: 16 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, amount: 0.3 }, transition: { duration: 0.7, delay: 0.08 * i, ease: EASE } })
   return (
     <section className={`${wrap} grid items-center gap-10 pt-14 pb-20 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-14 lg:pt-20 lg:pb-28`}>
       <div>
@@ -275,6 +395,7 @@ function Footer() {
 export default function LandingPage() {
   return (
     <>
+      <Intro />
       <Hero />
       <HowItWorks />
       <Evidence />

@@ -1,5 +1,6 @@
 import { scaleUtc } from 'd3-scale'
-import { useMemo, useState } from 'react'
+import { motion } from 'motion/react'
+import { useId, useMemo, useState } from 'react'
 import { seq } from '../../lib/colors'
 import { stamp, tick } from '../../lib/format'
 import { AXIS_TEXT, Tip, TipRow, useWidth } from './core'
@@ -24,6 +25,7 @@ export function Heatmap({ rows, host, t, v, max = 1, marker, markerColor, marker
 }) {
   const [ref, width] = useWidth<HTMLDivElement>()
   const [hover, setHover] = useState<{ k: number; px: number; py: number } | null>(null)
+  const clip = useId().replace(/:/g, '')
   const iw = Math.max(0, width - LABEL_W - 12)
   const height = rows.length * ROW + 26
 
@@ -57,7 +59,14 @@ export function Heatmap({ rows, host, t, v, max = 1, marker, markerColor, marker
               <rect x={LABEL_W} y={3} width={iw} height={ROW - 9} style={{ fill: 'var(--seq-0)' }} rx={2} />
             </g>
           ))}
+          <defs>
+            {/* A scan line sweeps the cells in from left to right when the data loads. */}
+            <clipPath id={clip}>
+              <motion.rect key={`${t.length}-${t[0]}`} x={0} y={0} height={rows.length * ROW} initial={{ width: 0 }} animate={{ width: iw + 2 }} transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }} />
+            </clipPath>
+          </defs>
           <g transform={`translate(${LABEL_W},0)`}>
+            <g clipPath={`url(#${clip})`}>
             {t.map((tt, k) => (
               <rect key={k} x={x(tt)} y={host[k] * ROW + 3} width={cw + 0.4} height={ROW - 9} style={{ fill: seq(Math.min(1, v[k] / max)) }} />
             ))}
@@ -65,6 +74,7 @@ export function Heatmap({ rows, host, t, v, max = 1, marker, markerColor, marker
               t.map((tt, k) =>
                 marker[k] > 0 ? <rect key={`m${k}`} x={x(tt)} y={host[k] * ROW + ROW - 5} width={Math.max(cw, 1.5)} height={3} style={{ fill: markerColor?.(marker[k]) ?? 'var(--critical)' }} /> : null,
               )}
+            </g>
             {x.ticks(Math.max(2, Math.floor(iw / 110))).map((tt) => (
               <text key={+tt} x={x(tt)} y={rows.length * ROW + 16} textAnchor="middle" style={AXIS_TEXT} className="tnum">
                 {tick(tt)}

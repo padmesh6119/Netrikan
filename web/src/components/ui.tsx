@@ -1,6 +1,9 @@
 import clsx from 'clsx'
 import { Info, MagnifyingGlass, Warning } from '@phosphor-icons/react'
-import type { ReactNode } from 'react'
+import { animate, motion, useInView, useReducedMotion } from 'motion/react'
+import { useEffect, useId, useRef, type ReactNode } from 'react'
+
+export const EASE = [0.16, 1, 0.3, 1] as const
 
 export function Card({ title, subtitle, actions, children, className, pad = true }: {
   title?: ReactNode
@@ -11,7 +14,13 @@ export function Card({ title, subtitle, actions, children, className, pad = true
   pad?: boolean
 }) {
   return (
-    <section className={clsx('rounded-xl border border-line bg-surface', className)}>
+    <motion.section
+      className={clsx('rounded-xl border border-line bg-surface', className)}
+      initial={{ opacity: 0, y: 14 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.08 }}
+      transition={{ duration: 0.5, ease: EASE }}
+    >
       {(title || actions) && (
         <header className="flex flex-wrap items-start justify-between gap-3 px-5 pt-4">
           <div className="min-w-0">
@@ -22,27 +31,57 @@ export function Card({ title, subtitle, actions, children, className, pad = true
         </header>
       )}
       <div className={clsx(pad && 'p-5', pad && (title || actions) && 'pt-3')}>{children}</div>
-    </section>
+    </motion.section>
   )
 }
 
+/** Counts a numeric string ("31,856", "0.69", "82%", "5 min", "5 / 15") up from zero the first time it is seen. */
+export function CountUp({ value }: { value: ReactNode }) {
+  const ref = useRef<HTMLSpanElement>(null)
+  const inView = useInView(ref, { once: true })
+  const reduce = useReducedMotion()
+  const m = typeof value === 'string' ? /^(-?[\d,]*\.?\d+)(.*)$/.exec(value) : null
+  useEffect(() => {
+    const el = ref.current
+    if (!el || !m || !inView || reduce) return
+    const raw = m[1]
+    const target = parseFloat(raw.replace(/,/g, ''))
+    const decimals = raw.includes('.') ? raw.split('.')[1].length : 0
+    const commas = raw.includes(',')
+    const fmt = (v: number) => {
+      const t = v.toFixed(decimals)
+      return (commas ? Number(t).toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals }) : t) + m[2]
+    }
+    const c = animate(0, target, { duration: 0.9, ease: EASE, onUpdate: (v) => { el.textContent = fmt(v) } })
+    return () => c.stop()
+  }, [inView, reduce, m?.[1], m?.[2]]) // eslint-disable-line react-hooks/exhaustive-deps
+  return <span ref={ref}>{value}</span>
+}
+
+const statItem = { hidden: { opacity: 0, y: 12 }, show: { opacity: 1, y: 0, transition: { duration: 0.45, ease: EASE } } }
+
 export function Stat({ label, value, hint, tone }: { label: string; value: ReactNode; hint?: ReactNode; tone?: 'critical' | 'good' }) {
   return (
-    <div className="min-w-0 rounded-xl border border-line bg-surface px-4 py-3.5">
+    <motion.div variants={statItem} className="min-w-0 rounded-xl border border-line bg-surface px-4 py-3.5 transition-colors duration-200 hover:border-line-strong">
       <div className="truncate text-[12px] font-medium text-muted">{label}</div>
-      <div className={clsx('mt-1 text-[22px] font-semibold leading-tight tracking-tight', tone === 'critical' && 'text-critical', tone === 'good' && 'text-good-ink')}>
-        {value}
+      <div className={clsx('mt-1 text-[22px] font-semibold leading-tight tracking-tight tnum', tone === 'critical' && 'text-critical', tone === 'good' && 'text-good-ink')}>
+        <CountUp value={value} />
       </div>
       {hint && <div className="mt-1 text-[12px] leading-snug text-ink-2">{hint}</div>}
-    </div>
+    </motion.div>
   )
 }
 
 export function StatRow({ children }: { children: ReactNode }) {
-  return <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-5">{children}</div>
+  return (
+    <motion.div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-5" initial="hidden" animate="show" variants={{ show: { transition: { staggerChildren: 0.06 } } }}>
+      {children}
+    </motion.div>
+  )
 }
 
 export function Tabs<T extends string>({ value, onChange, items }: { value: T; onChange: (v: T) => void; items: { id: T; label: string; count?: ReactNode }[] }) {
+  const id = useId()
   return (
     <div role="tablist" className="flex gap-1 overflow-x-auto border-b border-line [scrollbar-width:none]">
       {items.map((it) => (
@@ -52,10 +91,11 @@ export function Tabs<T extends string>({ value, onChange, items }: { value: T; o
           aria-selected={value === it.id}
           onClick={() => onChange(it.id)}
           className={clsx(
-            '-mb-px flex shrink-0 items-center gap-2 border-b-2 px-3 py-2.5 text-[13.5px] font-medium transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-accent',
-            value === it.id ? 'border-accent text-ink' : 'border-transparent text-muted hover:text-ink',
+            'relative flex shrink-0 items-center gap-2 px-3 py-2.5 text-[13.5px] font-medium transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-accent',
+            value === it.id ? 'text-ink' : 'text-muted hover:text-ink',
           )}
         >
+          {value === it.id && <motion.span layoutId={`tab-${id}`} className="absolute inset-x-1 -bottom-px h-0.5 rounded-full bg-accent" transition={{ type: 'spring', stiffness: 420, damping: 36 }} />}
           {it.label}
           {it.count != null && <span className="rounded-full bg-surface-2 px-1.5 text-[11px] text-ink-2 tnum">{it.count}</span>}
         </button>
@@ -70,6 +110,7 @@ export function Segmented<T extends string | number>({ value, onChange, items, s
   items: { id: T; label: ReactNode; title?: string }[]
   size?: 'sm' | 'md'
 }) {
+  const id = useId()
   return (
     <div className="inline-flex w-fit rounded-lg border border-line bg-surface-2 p-0.5">
       {items.map((it) => (
@@ -78,12 +119,15 @@ export function Segmented<T extends string | number>({ value, onChange, items, s
           title={it.title}
           onClick={() => onChange(it.id)}
           className={clsx(
-            'rounded-md font-medium whitespace-nowrap transition-colors duration-200 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-accent',
+            'relative rounded-md font-medium whitespace-nowrap transition-colors duration-200 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-accent',
             size === 'sm' ? 'px-2 py-1 text-[12px]' : 'px-3 py-1.5 text-[13px]',
-            value === it.id ? 'bg-surface text-ink shadow-sm ring-1 ring-line' : 'text-ink-2 hover:text-ink',
+            value === it.id ? 'text-ink' : 'text-ink-2 hover:text-ink',
           )}
         >
-          {it.label}
+          {value === it.id && (
+            <motion.span layoutId={`seg-${id}`} className="absolute inset-0 rounded-md bg-surface shadow-sm ring-1 ring-line" transition={{ type: 'spring', stiffness: 460, damping: 36 }} />
+          )}
+          <span className="relative">{it.label}</span>
         </button>
       ))}
     </div>

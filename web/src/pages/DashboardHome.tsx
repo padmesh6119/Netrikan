@@ -1,4 +1,5 @@
 import { ArrowRight } from '@phosphor-icons/react'
+import { motion } from 'motion/react'
 import { Link } from 'react-router-dom'
 import { PageHeader } from '../components/ui'
 import { useApi, type CorpusData, type IncidentList, type ZeroShot } from '../lib/api'
@@ -44,7 +45,7 @@ export default function DashboardHome() {
         Every view runs the trained models on held-out data. Start with a forecast, then follow an alert into the response queue.
       </PageHeader>
 
-      <section aria-labelledby="h-forecast">
+      <motion.section initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.08, ease: [0.16, 1, 0.3, 1] }} aria-labelledby="h-forecast">
         <h2 id="h-forecast" className="mb-2 text-[13px] font-medium text-muted">Forecast</h2>
         <div className="divide-y divide-line overflow-hidden rounded-xl border border-line bg-surface">
           <Row to="/dashboard/dapt" title="DAPT2020 host forecasting" body="Per-host risk that an attack starts in the next 5 minutes, with stage, TreeSHAP drivers and the world model's simulated future."
@@ -56,23 +57,23 @@ export default function DashboardHome() {
           <Row to="/dashboard/labs/ctu13" title="CTU-13 scenario 4" body="Botnet spam, ICMP and C&C traffic from a 2011 university network, scored the same way."
             metric={ctu.data ? pct(ctu.data.caught) : undefined} metricLabel="Attack minutes caught, 2 alerts/h" />
         </div>
-      </section>
+      </motion.section>
 
-      <section aria-labelledby="h-respond">
+      <motion.section initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.16, ease: [0.16, 1, 0.3, 1] }} aria-labelledby="h-respond">
         <h2 id="h-respond" className="mb-2 text-[13px] font-medium text-muted">Respond</h2>
         <div className="overflow-hidden rounded-xl border border-line bg-surface">
           <Row to="/dashboard/response" title="Incident response" body="Alerts become prioritised incidents with MITRE D3FEND countermeasures and containment rules built from the host's real peers and ports."
             metric={p1 != null ? String(p1) : undefined} metricLabel="P1 incidents on Wed 17 Jul" />
         </div>
-      </section>
+      </motion.section>
 
-      <section aria-labelledby="h-evidence">
+      <motion.section initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.24, ease: [0.16, 1, 0.3, 1] }} aria-labelledby="h-evidence">
         <h2 id="h-evidence" className="mb-2 text-[13px] font-medium text-muted">Evidence</h2>
         <div className="overflow-hidden rounded-xl border border-line bg-surface">
           <Row to="/dashboard/zero-shot" title="Zero-shot transfer" body="Leave-one-corpus-out across four labs: what generalises to attacks nobody trained on, and what does not."
             metric={iso != null ? num(iso) : undefined} metricLabel="Mean ROC-AUC, IsolationForest" />
         </div>
-      </section>
+      </motion.section>
 
       {dm.data && (
         <p className="max-w-[80ch] text-[12.5px] leading-relaxed text-muted">
