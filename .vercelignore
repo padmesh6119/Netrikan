@@ -1,0 +1,8 @@
+requirements.txt
+.python-version
+pyproject.toml
+api/
+src/
+data/
+models/
+scripts/
