@@ -1,4 +1,4 @@
-import { IconContext } from '@phosphor-icons/react'
+import { IconContext, WarningDiamond } from '@phosphor-icons/react'
 import clsx from 'clsx'
 import { motion, MotionConfig } from 'motion/react'
 import { Suspense, useEffect, useState, type ReactNode } from 'react'
@@ -106,6 +106,15 @@ function TopBar() {
   )
 }
 
+function DemoBanner() {
+  return (
+    <div className="flex items-center justify-center gap-2 border-b border-amber-500/30 bg-amber-500/10 px-4 py-2 text-[12.5px] text-amber-600 dark:text-amber-400">
+      <WarningDiamond weight="fill" className="size-3.5 shrink-0" />
+      <span>Frontend demo — backend offline. Live packet analysis and file uploads are unavailable.</span>
+    </div>
+  )
+}
+
 export function SiteLayout({ children }: { children: ReactNode }) {
   useScrollTopOnNavigate()
   return (
@@ -115,6 +124,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
         Skip to content
       </a>
       <TopBar />
+      <DemoBanner />
       <main id="main">{children}</main>
     </IconContext.Provider>
     </MotionConfig>
