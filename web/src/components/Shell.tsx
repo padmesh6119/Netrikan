@@ -11,15 +11,14 @@ type Theme = 'system' | 'light' | 'dark'
 
 function useTheme() {
   const [theme, setTheme] = useState<Theme>(() => {
-    const t = document.documentElement.dataset.theme
-    return t === 'light' || t === 'dark' ? t : 'system'
+    const t = document.documentElement.dataset.themeChoice
+    return t === 'light' || t === 'system' ? t : 'dark' // dark is the default
   })
   useEffect(() => {
     if (theme === 'system') delete document.documentElement.dataset.theme
     else document.documentElement.dataset.theme = theme
     try {
-      if (theme === 'system') localStorage.removeItem('netrikan-theme')
-      else localStorage.setItem('netrikan-theme', theme)
+      localStorage.setItem('netrikan-theme', theme) // 'system' is stored too, so it isn't replaced by the dark default
     } catch {
       /* storage unavailable */
     }
