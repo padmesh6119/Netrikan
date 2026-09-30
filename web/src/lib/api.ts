@@ -219,7 +219,10 @@ export interface Incident {
   technique: string | null
   recent?: string[]
   outcome?: 'attack' | 'no_attack'
+  /** Warning inside the 5-minute forecast horizon (0 = none). */
   lead_min?: number | null
+  /** Minutes from the first alert of the merged run to the attack; not a forecast horizon. */
+  run_min?: number | null
   true_tactic?: string | null
 }
 export interface IncidentList {

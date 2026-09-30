@@ -140,6 +140,14 @@ def rules(host: str, tg: dict, key: str | None) -> list[str]:
     return r
 
 
+def horizon_lead(alarm: np.ndarray, onset: int, start: int, K: int) -> int:
+    """Warning lead as the evaluation measures it (metrics.lead_times): minutes between the earliest alert in the
+    K minutes before the attack onset and the onset itself. 0 = no alert inside the horizon. Never exceeds K."""
+    lo = max(int(start), onset - K)
+    hit = np.flatnonzero(alarm[lo:onset])
+    return int(onset - lo - hit[0]) if len(hit) else 0
+
+
 def priority(score: float) -> str:
     return "P1" if score >= 0.7 else "P2" if score >= 0.4 else "P3"
 
@@ -165,7 +173,9 @@ def dapt_incidents(source: str, model: str, thr: float):
             e = min(b + tab.K, int(tab.end[a]) - 1)
             hit = np.flatnonzero(tab.attack[a:e + 1])
             inc["outcome"] = "attack" if len(hit) else "no_attack"
-            inc["lead_min"] = int(hit[0]) if len(hit) else None  # minutes from first alert to the first attack minute
+            # lead_min: warning inside the forecast horizon (<= K); run_min: first alert of the merged run to the attack
+            inc["lead_min"] = horizon_lead(p >= thr, a + int(hit[0]), tab.start[a], tab.K) if len(hit) else None
+            inc["run_min"] = int(hit[0]) if len(hit) else None
             inc["true_tactic"] = STAGE_NAMES[int(tab.stage[a + hit[0]])] if len(hit) else None
         out.append(inc)
     return out
@@ -194,7 +204,9 @@ def z24_incidents(week: str, rung: str, budget: float):
                         "priority": priority(score), "score": score, "tactic": TECH_TACTIC[t], "playbook_key": TECH_TACTIC_KEY[t],
                         "tactic_p": None, "technique": t,
                         "recent": [TECHS[k] for k in np.flatnonzero(recent)],
-                        "outcome": "attack" if len(hit) else "no_attack", "lead_min": int(hit[0]) if len(hit) else None, "true_tactic": None})
+                        "outcome": "attack" if len(hit) else "no_attack", "true_tactic": None,
+                        "lead_min": horizon_lead((pj >= thr) & ~S.F[:, j], a + int(hit[0]), S.start[a], K) if len(hit) else None,
+                        "run_min": int(hit[0]) if len(hit) else None})
     out.sort(key=lambda r: r["start"])
     return out
 

@@ -91,6 +91,7 @@ export default function ResponsePage() {
   const labelled = list.data?.labelled
   const confirmed = incidents.filter((i) => i.outcome === 'attack')
   const leads = confirmed.map((i) => i.lead_min ?? 0).filter((v) => v > 0).sort((a, b) => a - b)
+  const horizon = dataset === 'dapt' ? (dm.data?.K ?? 5) : (zm.data?.K ?? 5)
 
   return (
     <>
@@ -148,7 +149,8 @@ export default function ResponsePage() {
           {labelled ? (
             <>
               <Stat label="Followed by a real attack" value={pct(incidents.length ? confirmed.length / incidents.length : null)} hint={`${confirmed.length} of ${incidents.length} incidents (ground truth)`} />
-              <Stat label="Median warning before attack" value={leads.length ? `${leads[Math.floor(leads.length / 2)]} min` : '-'} hint="First alert → first attack minute" />
+              <Stat label={`Median warning (${horizon}-min horizon)`} value={leads.length ? `${leads[Math.floor(leads.length / 2)]} min` : '-'}
+                hint={`Earliest alert within ${horizon} min of the attack. Missed attacks raise no incident; see the forecast pages.`} />
             </>
           ) : (
             <Stat label="Ground truth" value="-" hint="Not in this capture" />
@@ -290,7 +292,7 @@ function IncidentView({ params, status, done, onStatus, onToggle, showTruth, dat
               <Badge tone={STATUS[status].tone}>{STATUS[status].label}</Badge>
               {showTruth && inc.outcome && (
                 <Badge tone={inc.outcome === 'attack' ? 'critical' : 'neutral'}>
-                  Ground truth: {inc.outcome === 'attack' ? `attack followed${inc.true_tactic ? ` (${inc.true_tactic})` : ''}` : 'no attack followed'}
+                  Ground truth: {inc.outcome === 'attack' ? `attack followed${inc.true_tactic ? ` (${inc.true_tactic})` : ''}, ${inc.lead_min ? `warned ${inc.lead_min} min ahead` : 'no alert in the 5 min before it'}` : 'no attack followed'}
                 </Badge>
               )}
             </div>
